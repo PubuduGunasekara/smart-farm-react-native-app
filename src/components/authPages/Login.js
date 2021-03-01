@@ -104,6 +104,9 @@ const styles = StyleSheet.create({
 });
 
 const Login = ({ currentUser, userLogin, loginError, navigation, loading }) => {
+  useEffect(() => {
+    loginErrorFunc();
+  }, [loginError]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

@@ -1,20 +1,28 @@
 import React, { useState } from "react";
 import {
   View,
+  Text,
   TextInput,
   Button,
   StyleSheet,
   ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  StatusBar,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import firebase from "firebase";
+import { Feather } from "@expo/vector-icons";
+
+import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { userRegister } from "../../redux/actions/userRegister";
 
 const styles = StyleSheet.create({
-  container: {
+  spinnerContainer: {
     flex: 1,
     justifyContent: "center",
   },
@@ -23,9 +31,99 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
   },
+  container: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+  },
+
+  text: {
+    paddingTop: 10,
+    marginLeft: 28,
+  },
+
+  text1: {
+    paddingTop: 100,
+    fontSize: 18,
+  },
+
+  image1: {
+    paddingLeft: 160,
+    paddingTop: 70,
+  },
+
+  row: {
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    height: 20,
+    paddingRight: 50,
+    marginBottom: 30,
+  },
+
+  row2: {
+    marginTop: -50,
+    flexDirection: "column",
+    alignItems: "flex-end",
+    height: 20,
+    marginRight: 230,
+    paddingBottom: 300,
+  },
+
+  centerView: {
+    paddingTop: 70,
+    paddingLeft: 40,
+  },
+
+  inputWrap: {
+    flex: 1,
+    borderColor: "#000000",
+    borderBottomWidth: 0.5,
+    marginBottom: 20,
+    paddingTop: 30,
+  },
+
+  txtinput: {
+    borderColor: "#000000",
+    borderBottomWidth: 0.5,
+    fontSize: 18,
+  },
+
+  link1: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 17,
+    color: "#ffffff",
+    fontWeight: "600",
+    marginTop: 8,
+  },
+
+  link2: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginLeft: 22,
+    color: "#ffffff",
+    fontWeight: "600",
+    marginTop: 8,
+  },
+
+  submitContainer: {
+    backgroundColor: "#008080",
+    flexDirection: "row",
+    // alignItems: 'flex-end',
+    height: 40,
+    width: 100,
+    marginLeft: 172,
+    marginBottom: 100,
+    marginTop: 30,
+  },
 });
 
-const Register = ({ registerError, registerSuccess, userRegister }) => {
+const Register = ({
+  registerError,
+  registerSuccess,
+  userRegister,
+  navigation,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -58,48 +156,123 @@ const Register = ({ registerError, registerSuccess, userRegister }) => {
 
   if (loading) {
     return (
-      <View style={[styles.container, styles.horizontal]}>
+      <View style={[styles.spinnerContainer, styles.horizontal]}>
         <ActivityIndicator size="large" color="#00ff00" />
       </View>
     );
   }
 
   return (
-    <View>
-      <TextInput
-        value={firstName}
-        placeholder="First name"
-        onChangeText={(firstName) => setFirstName(firstName)}
+    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+      <TopHeaderWithGoBack
+        title={"Register"}
+        navigationFunc={navigation.goBack}
       />
-      <TextInput
-        value={lastName}
-        placeholder="Last name"
-        onChangeText={(lastName) => setLastName(lastName)}
-      />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={(email) => setEmail(email)}
-      />
-      <TextInput
-        value={password}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TextInput
-        value={confirmPassword}
-        placeholder="Confirm password"
-        secureTextEntry={true}
-        onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-      />
-      <Button
-        onPress={() => {
-          onSignUp();
-        }}
-        title="SIgn Up"
-      />
-    </View>
+      <View>
+        <StatusBar barStyle="dark-content" />
+        <View
+          style={{
+            marginTop: 50,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        ></View>
+      </View>
+
+      <View style={styles.row}>
+        <TouchableOpacity>
+          <View style={styles.image1}>
+            <Feather name="user" size={50} />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.centerView}>
+        <View style={styles.row}>
+          <View style={styles.inputWrap}>
+            <TextInput style={styles.txtinput} placeholder="First name" />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.inputWrap}>
+            <TextInput style={styles.txtinput} placeholder="Last name" />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.inputWrap}>
+            <TextInput style={styles.txtinput} placeholder="Email" />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.inputWrap}>
+            <TextInput style={styles.txtinput} placeholder="Password" />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View style={styles.inputWrap}>
+            <TextInput style={styles.txtinput} placeholder="Confirm password" />
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <View>
+            <TouchableOpacity style={styles.submitContainer}>
+              <Text style={styles.link1}>Register</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.row2}>
+          <TouchableOpacity style={styles.submitContainer}>
+            <Text style={styles.link2}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View></View>
+    </KeyboardAvoidingView>
+    // <View style={{ backgroundColor: "white" }}>
+    //   <TopHeaderWithGoBack
+    //     title={"Register"}
+    //     navigationFunc={navigation.goBack}
+    //   />
+    //   <TextInput
+    //     value={firstName}
+    //     placeholder="First name"
+    //     onChangeText={(firstName) => setFirstName(firstName)}
+    //   />
+    //   <TextInput
+    //     value={lastName}
+    //     placeholder="Last name"
+    //     onChangeText={(lastName) => setLastName(lastName)}
+    //   />
+    //   <TextInput
+    //     value={email}
+    //     placeholder="Email"
+    //     onChangeText={(email) => setEmail(email)}
+    //   />
+    //   <TextInput
+    //     value={password}
+    //     placeholder="Password"
+    //     secureTextEntry={true}
+    //     onChangeText={(password) => setPassword(password)}
+    //   />
+    //   <TextInput
+    //     value={confirmPassword}
+    //     placeholder="Confirm password"
+    //     secureTextEntry={true}
+    //     onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+    //   />
+    //   <Button
+    //     onPress={() => {
+    //       onSignUp();
+    //     }}
+    //     title="SIgn Up"
+    //   />
+    // </View>
   );
 };
 

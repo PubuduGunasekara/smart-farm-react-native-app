@@ -24,9 +24,7 @@ const styles = StyleSheet.create({
 export const Providers = ({}) => {
   return (
     <Provider store={store}>
-      <SafeAreaView style={styles.container}>
-        <Index />
-      </SafeAreaView>
+      <Index />
     </Provider>
   );
 };
