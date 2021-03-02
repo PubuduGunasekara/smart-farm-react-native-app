@@ -82,28 +82,33 @@ const ShiftAllocation = ({ navigation }) => {
 
   const [isSelectedCheckBox, setSelectionCheckBox] = useState(false);
 
+  const [WorkGroupLeve, setWorkGroupLevel] = useState("");
+
+  const [checkBoxVal, setcheckBoxVal] = useState([
+    { id: "1", name: "one" },
+    { id: "2", name: "two" },
+    { id: "3", name: "three" },
+    { id: "4", name: "four" },
+    { id: "5", name: "five" },
+    { id: "6", name: "six" },
+  ]);
+
   useEffect(() => {}, [date]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === "ios");
     setDate(currentDate);
-    console.log(
-      "Current date from on date change ",
-      currentDate.toDateString()
-    );
   };
   const onChangeTIMEFROM = (event, selectedTimeFrom) => {
     const current = selectedTimeFrom || date;
     setShowTimeFrom(Platform.OS === "ios");
     settimeFrom(current);
-    console.log("Current time from ", current.toTimeString());
   };
   const onChangeTIMETO = (event, selectedTimeTo) => {
     const current = selectedTimeTo || date;
     setShowTimeTo(Platform.OS === "ios");
     settimeTo(current);
-    console.log("Current time from to ", current.toTimeString());
   };
   console.log(
     "date state",
@@ -111,7 +116,9 @@ const ShiftAllocation = ({ navigation }) => {
     "time from state",
     timeFrom.toTimeString(),
     "time to state",
-    timeTo.toTimeString()
+    timeTo.toTimeString(),
+    "work group level",
+    WorkGroupLeve
   );
 
   const showDatepicker = () => {
@@ -264,12 +271,17 @@ const ShiftAllocation = ({ navigation }) => {
           </View>
           <View style={{ flex: 1 }}>
             <Picker
-              selectedValue={null}
+              selectedValue={WorkGroupLeve}
+              onValueChange={(itemValue, itemIndex) =>
+                setWorkGroupLevel(itemValue)
+              }
               color="#008080"
               style={{ margin: 0, padding: 0 }}
             >
-              <Picker.Item label="User 1" value="user1" />
-              <Picker.Item label="User 2" value="user2" />
+              <Picker.Item label="Admin Level" value="0" />
+              <Picker.Item label="Controller Admin Level" value="1" />
+              <Picker.Item label="Food & Water controller Level" value="2" />
+              <Picker.Item label="Cleaning Controller Level" value="3" />
             </Picker>
           </View>
         </View>
@@ -287,7 +299,7 @@ const ShiftAllocation = ({ navigation }) => {
               Workers
             </Text>
           </View>
-          <ScrollView height={300} style={{ margin: 20, marginTop: 0 }}>
+          <ScrollView height={250} style={{ margin: 20, marginTop: 0 }}>
             <View
               style={{
                 shadowColor: "#000",
@@ -301,7 +313,47 @@ const ShiftAllocation = ({ navigation }) => {
                 elevation: 100,
               }}
             >
-              <View style={{ flexDirection: "row" }}>
+              {
+                /* {checkBoxVal.map((item, key) => {
+                return (
+                  <View key={item.id} style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 5 }}>
+                      <Text>Name :{item.name} </Text>
+                    </View>
+
+                    <View style={{ flex: 1 }}>
+                      <CheckBox
+                        value={item.id}
+                        style={{ alignSelf: "center" }}
+                      />
+                    </View>
+                  </View>
+                );
+              })} */
+                //   checkBoxVal.map((item, index) => {
+                //     return (
+                //       <View key={index} style={{ flex: 5, flexDirection: "row" }}>
+                //         <Text>
+                //           Name :{item.name} id : {item.id}
+                //         </Text>
+                //         <CheckBox
+                //           value={item.id}
+                //           onValueChange={(val) => {
+                //             console.log(val);
+                //           }}
+                //           style={{ alignSelf: "center" }}
+                //         />
+                //       </View>
+                //     );
+                //   })
+                checkBoxVal.map((item, key) => (
+                  <View key={key}>
+                    <Text>{item.name}</Text>
+                  </View>
+                ))
+              }
+
+              {/* <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 5 }}>
                   <Text>Name : </Text>
                 </View>
@@ -313,77 +365,7 @@ const ShiftAllocation = ({ navigation }) => {
                     style={{ alignSelf: "center" }}
                   />
                 </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View>
+              </View> */}
             </View>
           </ScrollView>
         </View>
