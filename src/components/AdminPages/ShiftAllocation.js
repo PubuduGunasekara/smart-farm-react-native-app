@@ -10,13 +10,16 @@ import {
   Platform,
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
-// import Button from "../helperComponents/Button";
-// import { colors } from "theme";
 import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-community/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { FlatList } from "react-native-gesture-handler";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
+
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { ListUsers } from "../../redux/actions/shiftActions/ListUsersToShiftAllocation";
 
 const styles = StyleSheet.create({
   root: {
@@ -63,7 +66,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const ShiftAllocation = ({ navigation }) => {
+const ShiftAllocation = ({
+  navigation,
+  ListUsers,
+  loading,
+  userList,
+  userIdList,
+  userListError,
+  userListSuccess,
+}) => {
   const [date, setDate] = useState(new Date());
   const [timeFrom, settimeFrom] = useState(new Date());
   const [timeTo, settimeTo] = useState(new Date());
@@ -80,20 +91,21 @@ const ShiftAllocation = ({ navigation }) => {
   const [showTimeFrom, setShowTimeFrom] = useState(false);
   const [showTimeTo, setShowTimeTo] = useState(false);
 
-  const [isSelectedCheckBox, setSelectionCheckBox] = useState(false);
-
   const [WorkGroupLeve, setWorkGroupLevel] = useState("");
 
-  const [checkBoxVal, setcheckBoxVal] = useState([
-    { id: "1", name: "one" },
-    { id: "2", name: "two" },
-    { id: "3", name: "three" },
-    { id: "4", name: "four" },
-    { id: "5", name: "five" },
-    { id: "6", name: "six" },
-  ]);
+  const [data, setdata] = useState([]);
 
-  useEffect(() => {}, [date]);
+  useEffect(() => {
+    if (userIdList && userIdList) {
+      const usersFinalList = userList.map((item, index) => {
+        return {
+          ...item,
+          id: userIdList[index],
+        };
+      });
+      setdata(usersFinalList);
+    }
+  }, [userList, userIdList]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -131,6 +143,74 @@ const ShiftAllocation = ({ navigation }) => {
 
   const showTimeTopicker = () => {
     setShowTimeTo(true);
+  };
+
+  const onValueChange = (itemSelected, index) => {
+    const newData = data.map((item) => {
+      if (item.uid == itemSelected.id) {
+        return {
+          ...item,
+          selected: !item.selected,
+        };
+      }
+      return {
+        ...item,
+        selected: item.selected,
+      };
+    });
+    console.log(itemSelected);
+    setdata(newData);
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <View style={{ flex: 5, flexDirection: "row" }}>
+        <Text>
+          Name :{item.firstName} id : {item.id}
+        </Text>
+        <CheckBox
+          style={{ width: 40, height: 40 }}
+          disabled={false}
+          value={item.selected}
+          onValueChange={() => onValueChange(item, index)}
+          style={{ alignSelf: "center" }}
+        />
+      </View>
+    );
+  };
+
+  const onShowItemsSelected = () => {
+    const listSelected = userList.filter((item) => item.selected == true);
+    let alert = "";
+    const dataArray = [];
+    listSelected.forEach((item) => {
+      alert = alert + `${item.firstName},` + item.id + `\n`;
+      dataArray[{ item }];
+    });
+
+    console.log(listSelected);
+    Alert.alert(alert);
+  };
+
+  const showData = () => {
+    return (
+      <View>
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+    );
+  };
+
+  const submitWorkGroupLevel = ({ level }) => {
+    setWorkGroupLevel(level);
+    ListUsers({ level });
+  };
+
+  const onsubmit = () => {
+    onShowItemsSelected();
   };
 
   return (
@@ -272,12 +352,13 @@ const ShiftAllocation = ({ navigation }) => {
           <View style={{ flex: 1 }}>
             <Picker
               selectedValue={WorkGroupLeve}
-              onValueChange={(itemValue, itemIndex) =>
-                setWorkGroupLevel(itemValue)
+              onValueChange={(level, itemIndex) =>
+                submitWorkGroupLevel({ level })
               }
               color="#008080"
               style={{ margin: 0, padding: 0 }}
             >
+              <Picker.Item label="Select Access Level" />
               <Picker.Item label="Admin Level" value="0" />
               <Picker.Item label="Controller Admin Level" value="1" />
               <Picker.Item label="Food & Water controller Level" value="2" />
@@ -313,59 +394,7 @@ const ShiftAllocation = ({ navigation }) => {
                 elevation: 100,
               }}
             >
-              {
-                /* {checkBoxVal.map((item, key) => {
-                return (
-                  <View key={item.id} style={{ flexDirection: "row" }}>
-                    <View style={{ flex: 5 }}>
-                      <Text>Name :{item.name} </Text>
-                    </View>
-
-                    <View style={{ flex: 1 }}>
-                      <CheckBox
-                        value={item.id}
-                        style={{ alignSelf: "center" }}
-                      />
-                    </View>
-                  </View>
-                );
-              })} */
-                //   checkBoxVal.map((item, index) => {
-                //     return (
-                //       <View key={index} style={{ flex: 5, flexDirection: "row" }}>
-                //         <Text>
-                //           Name :{item.name} id : {item.id}
-                //         </Text>
-                //         <CheckBox
-                //           value={item.id}
-                //           onValueChange={(val) => {
-                //             console.log(val);
-                //           }}
-                //           style={{ alignSelf: "center" }}
-                //         />
-                //       </View>
-                //     );
-                //   })
-                checkBoxVal.map((item, key) => (
-                  <View key={key}>
-                    <Text>{item.name}</Text>
-                  </View>
-                ))
-              }
-
-              {/* <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 5 }}>
-                  <Text>Name : </Text>
-                </View>
-
-                <View style={{ flex: 1 }}>
-                  <CheckBox
-                    value={isSelectedCheckBox}
-                    onValueChange={setSelectionCheckBox}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-              </View> */}
+              {showData()}
             </View>
           </ScrollView>
         </View>
@@ -374,7 +403,13 @@ const ShiftAllocation = ({ navigation }) => {
             <Button color="#008080" title="Cancel" onPress={() => {}} />
           </View>
           <View style={{ flex: 2, marginLeft: 25 }}>
-            <Button color="#008080" title="Submit" onPress={() => {}} />
+            <Button
+              color="#008080"
+              title="Submit"
+              onPress={() => {
+                onsubmit();
+              }}
+            />
           </View>
         </View>
       </View>
@@ -382,4 +417,19 @@ const ShiftAllocation = ({ navigation }) => {
   );
 };
 
-export default ShiftAllocation;
+const mapStateToProps = (store) => ({
+  loading: store.loadinReducer.loading,
+  userList: store.shiftReducer.userList,
+  userIdList: store.shiftReducer.userIdList,
+  userListSuccess: store.shiftReducer.userListSuccess,
+  userListError: store.shiftReducer.userListError,
+});
+const mapDispatchProps = (dispatch) =>
+  bindActionCreators(
+    {
+      ListUsers,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchProps)(ShiftAllocation);

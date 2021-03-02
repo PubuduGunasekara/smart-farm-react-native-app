@@ -43,7 +43,7 @@ export const controllerReducer = (
       };
     case CLEANING_ERROR:
       return {
-        state,
+        ...state,
         cleaning_error: action.payload,
       };
 
@@ -69,7 +69,7 @@ export const controllerReducer = (
       };
     case FOOD_ERROR:
       return {
-        state,
+        ...state,
         food_error: action.payload,
       };
 
