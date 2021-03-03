@@ -4,7 +4,6 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
-  // USER_ID_LIST_ACCESS_LEVEL,
 } from "../../constants";
 
 export const ListUsers = ({ level }) => {
@@ -17,7 +16,6 @@ export const ListUsers = ({ level }) => {
 
     const db = firebase.firestore().collection("user");
     const users = [];
-    // const userId = [];
 
     db.where("accessLevel", "==", `${level}`)
       .get()
@@ -25,22 +23,18 @@ export const ListUsers = ({ level }) => {
         if (querySnapshot) {
           querySnapshot.forEach((doc) => {
             users.push({
-              ...doc.data(),
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              accessLevel: doc.data().accessLevel,
               id: doc.id,
             });
-            // users.push(doc.data());
-            // userId.push(doc.id);
 
             console.log("users: ", users);
-            // console.log("users Id: ", userId);
             dispatch({
               type: USER_LIST_ACCESS_LEVEL,
               payload: users,
             });
-            // dispatch({
-            //   type: USER_ID_LIST_ACCESS_LEVEL,
-            //   payload: userId,
-            // });
+
             dispatch({
               type: USER_LIST_SUCCESS,
               payload: true,
@@ -52,26 +46,6 @@ export const ListUsers = ({ level }) => {
           });
         }
       })
-      // .then((data) => {
-      //   console.log("users: ", users);
-      //   // console.log("users Id: ", userId);
-      //   dispatch({
-      //     type: USER_LIST_ACCESS_LEVEL,
-      //     payload: users,
-      //   });
-      //   // dispatch({
-      //   //   type: USER_ID_LIST_ACCESS_LEVEL,
-      //   //   payload: userId,
-      //   // });
-      //   dispatch({
-      //     type: USER_LIST_SUCCESS,
-      //     payload: true,
-      //   });
-      //   dispatch({
-      //     type: LOADING,
-      //     payload: false,
-      //   });
-      // })
       .catch((err) => {
         dispatch({
           type: SHIFT_ERROR,
@@ -83,72 +57,42 @@ export const ListUsers = ({ level }) => {
         });
         console.log("shift error ", err);
       });
+  };
+};
 
-    // db.where("accessLevel", "==", `${level}`).onSnapshot((querySnapshot) => {
-    //   if (querySnapshot) {
-    //     querySnapshot.forEach((doc) => {
-    //       users.push(doc.data());
-    //     });
-    //     querySnapshot.forEach((doc) => {
-    //       console.log(doc);
-    //     });
+export const shiftAllocate = ({
+  date,
+  timeFrom,
+  timeTo,
+  selectedUsersList,
+  WorkGroupLevel,
+}) => {
+  return (dispatch) => {
+    console.log(
+      "from backend",
+      date.toDateString(),
+      timeFrom.toTimeString(),
+      timeTo.toTimeString(),
+      selectedUsersList,
+      WorkGroupLevel
+    );
+    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const db = firebase.firestore();
 
-    //     dispatch({
-    //       type: USER_LIST_ACCESS_LEVEL,
-    //       payload: users,
-    //     });
-    //     console.log(users);
-    //     dispatch({
-    //       type: USER_LIST_SUCCESS,
-    //       payload: true,
-    //     });
-    //     dispatch({
-    //       type: LOADING,
-    //       payload: false,
-    //     });
-    //   } else {
-    //     dispatch({
-    //       type: USER_LIST_ACCESS_LEVEL,
-    //       payload: [],
-    //     });
+    const data = {
+      date,
+      timeFrom,
+      timeTo,
+      WorkGroupLevel,
+      selectedUsersList,
+      createdAt: timestamp,
+    };
 
-    //     dispatch({
-    //       type: USER_LIST_SUCCESS,
-    //       payload: false,
-    //     });
-    //     dispatch({
-    //       type: LOADING,
-    //       payload: false,
-    //     });
-    //   }
-    // });
-
-    //   .then((data) => {
-
-    //     // dispatch({
-    //     //   type: USER_LIST_ACCESS_LEVEL,
-    //     //   payload: users,
-    //     // });
-    //     // console.log(users);
-    //     // dispatch({
-    //     //   type: USER_LIST_SUCCESS,
-    //     //   payload: true,
-    //     // });
-    //     // dispatch({
-    //     //   type: LOADING,
-    //     //   payload: false,
-    //     // });
-    //   })
-    //   .catch((err) => {
-    //     // dispatch({
-    //     //   type: SHIFT_ERROR,
-    //     //   payload: "SOMETHING WENT WRONG!",
-    //     // });
-    //     // dispatch({
-    //     //   type: LOADING,
-    //     //   payload: false,
-    //     // });
-    //     console.log("shift error ", err);
-    //   });
+    db.collection("shift")
+      .add(data)
+      .then((data) => {
+        console.log("success: ", data);
+      })
+      .catch((err) => {});
   };
 };

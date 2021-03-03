@@ -19,7 +19,10 @@ import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWith
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ListUsers } from "../../redux/actions/shiftActions/ListUsersToShiftAllocation";
+import {
+  ListUsers,
+  shiftAllocate,
+} from "../../redux/actions/shiftActions/ListUsersToShiftAllocation";
 
 const styles = StyleSheet.create({
   root: {
@@ -69,6 +72,7 @@ const styles = StyleSheet.create({
 const ShiftAllocation = ({
   navigation,
   ListUsers,
+  shiftAllocate,
   loading,
   userList,
   // userIdList,
@@ -94,10 +98,12 @@ const ShiftAllocation = ({
   const [WorkGroupLeve, setWorkGroupLevel] = useState("");
 
   const [data, setdata] = useState(userList);
-  const [selectedCheckboxUsers, setselectedCheckboxUsers] = useState([]);
 
   useEffect(() => {
     setdata(userList);
+    navigation.addListener("blur", () => {
+      setdata([]);
+    });
   }, [userList]);
 
   const onChangeDate = (event, selectedDate) => {
@@ -115,18 +121,16 @@ const ShiftAllocation = ({
     setShowTimeTo(Platform.OS === "ios");
     settimeTo(current);
   };
-  console.log(
-    "date state",
-    date.toDateString(),
-    "time from state",
-    timeFrom.toTimeString(),
-    "time to state",
-    timeTo.toTimeString(),
-    "work group level",
-    WorkGroupLeve,
-    "selected users names: ",
-    selectedCheckboxUsers
-  );
+  // console.log(
+  //   "date state",
+  //   date.toDateString(),
+  //   "time from state",
+  //   timeFrom.toTimeString(),
+  //   "time to state",
+  //   timeTo.toTimeString(),
+  //   "work group level",
+  //   WorkGroupLeve
+  // );
 
   const showDatepicker = () => {
     setShowDate(true);
@@ -171,19 +175,19 @@ const ShiftAllocation = ({
   };
 
   /**this function used to get the selected checkbox values */
-  const onShowItemsSelected = () => {
-    const listSelected = data.filter((item) => item.selected == true);
-    setselectedCheckboxUsers(listSelected);
-    // let alert = "";
-    // const dataArray = [];
-    // listSelected.forEach((item) => {
-    //   alert = alert + `${item.firstName}`;
-    //   dataArray[{ item }];
-    // });
+  // const onShowItemsSelected = () => {
+  //   const listSelected = data.filter((item) => item.selected == true);
+  //   setselectedCheckboxUsers(listSelected);
+  //   // let alert = "";
+  //   // const dataArray = [];
+  //   // listSelected.forEach((item) => {
+  //   //   alert = alert + `${item.firstName}`;
+  //   //   dataArray[{ item }];
+  //   // });
 
-    // console.log("list", listSelected);
-    // Alert.alert(alert);
-  };
+  //   // console.log("list", listSelected);
+  //   // Alert.alert(alert);
+  // };
 
   const showData = () => {
     return (
@@ -203,7 +207,14 @@ const ShiftAllocation = ({
   };
 
   const onsubmit = () => {
-    onShowItemsSelected();
+    const listSelected = data.filter((item) => item.selected == true);
+    shiftAllocate({
+      date: date,
+      timeFrom: timeFrom,
+      timeTo: timeTo,
+      selectedUsersList: listSelected,
+      WorkGroupLevel: WorkGroupLeve,
+    });
   };
 
   return (
@@ -351,7 +362,7 @@ const ShiftAllocation = ({
               color="#008080"
               style={{ margin: 0, padding: 0 }}
             >
-              <Picker.Item label="Select Access Level" />
+              <Picker.Item label="Select Access Level" value="4" />
               <Picker.Item label="Admin Level" value="0" />
               <Picker.Item label="Controller Admin Level" value="1" />
               <Picker.Item label="Food & Water controller Level" value="2" />
@@ -421,6 +432,7 @@ const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
       ListUsers,
+      shiftAllocate,
     },
     dispatch
   );
