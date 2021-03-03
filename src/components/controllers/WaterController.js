@@ -48,7 +48,7 @@ const WaterController = ({
   }, [water_open_close_status, navigation]);
 
   if (water_error) {
-    return alert(water_error);
+    alert(water_error);
   }
 
   if (loading) {

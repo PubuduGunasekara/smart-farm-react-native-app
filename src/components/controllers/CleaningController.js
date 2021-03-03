@@ -103,7 +103,7 @@ const CleaningController = ({
   };
 
   if (cleaning_error) {
-    return alert(cleaning_error);
+    alert(cleaning_error);
   }
 
   if (loading) {

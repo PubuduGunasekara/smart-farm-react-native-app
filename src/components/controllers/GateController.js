@@ -48,7 +48,7 @@ const GateController = ({
   }, [gate_open_close_status, navigation]);
 
   if (gate_error) {
-    return alert(gate_error);
+    alert(gate_error);
   }
 
   if (loading) {

@@ -2,11 +2,12 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
+  LOADING_MAIN,
   // USER_ID_LIST_ACCESS_LEVEL,
 } from "../constants";
 
 export const shiftReducer = (
-  state = { userList: null, userIdList: null },
+  state = { userList: null, userIdList: null, loadingShift: false },
   action
 ) => {
   switch (action.type) {
@@ -29,6 +30,11 @@ export const shiftReducer = (
       return {
         ...state,
         userListError: action.payload,
+      };
+    case LOADING_MAIN:
+      return {
+        ...state,
+        loadingShift: action.payload,
       };
     default:
       return state;

@@ -4,6 +4,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
+  LOADING_MAIN,
 } from "../../constants";
 
 export const ListUsers = ({ level }) => {
@@ -36,13 +37,14 @@ export const ListUsers = ({ level }) => {
             });
 
             dispatch({
-              type: USER_LIST_SUCCESS,
-              payload: true,
-            });
-            dispatch({
               type: LOADING,
               payload: false,
             });
+          });
+        } else {
+          dispatch({
+            type: LOADING,
+            payload: false,
           });
         }
       })
@@ -76,6 +78,12 @@ export const shiftAllocate = ({
       selectedUsersList,
       WorkGroupLevel
     );
+
+    dispatch({
+      type: LOADING_MAIN,
+      payload: true,
+    });
+
     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
     const db = firebase.firestore();
 
@@ -92,7 +100,38 @@ export const shiftAllocate = ({
       .add(data)
       .then((data) => {
         console.log("success: ", data);
+        dispatch({
+          type: USER_LIST_SUCCESS,
+          payload: true,
+        });
+        dispatch({
+          type: LOADING_MAIN,
+          payload: false,
+        });
       })
-      .catch((err) => {});
+      .catch((err) => {
+        dispatch({
+          type: LOADING_MAIN,
+          payload: false,
+        });
+        dispatch({
+          type: SHIFT_ERROR,
+          payload: "SOMETHING WENT WRONG!",
+        });
+        dispatch({
+          type: USER_LIST_SUCCESS,
+          payload: false,
+        });
+        console.log("shift upload error: ", err);
+      });
+  };
+};
+
+export const success_false = () => {
+  return (dispatch) => {
+    dispatch({
+      type: USER_LIST_SUCCESS,
+      payload: false,
+    });
   };
 };

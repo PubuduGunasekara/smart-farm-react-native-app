@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
   Button,
+  ActivityIndicator,
   Platform,
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
@@ -22,9 +23,19 @@ import { bindActionCreators } from "redux";
 import {
   ListUsers,
   shiftAllocate,
+  success_false,
 } from "../../redux/actions/shiftActions/ListUsersToShiftAllocation";
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
   root: {
     flex: 1,
     flexDirection: "column",
@@ -72,10 +83,11 @@ const styles = StyleSheet.create({
 const ShiftAllocation = ({
   navigation,
   ListUsers,
+  success_false,
   shiftAllocate,
   loading,
+  loadingShift,
   userList,
-  // userIdList,
   userListError,
   userListSuccess,
 }) => {
@@ -104,7 +116,10 @@ const ShiftAllocation = ({
     navigation.addListener("blur", () => {
       setdata([]);
     });
-  }, [userList]);
+    navigation.addListener("focus", () => {
+      setdata([]);
+    });
+  }, [userList, userListError, userListSuccess]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -121,16 +136,6 @@ const ShiftAllocation = ({
     setShowTimeTo(Platform.OS === "ios");
     settimeTo(current);
   };
-  // console.log(
-  //   "date state",
-  //   date.toDateString(),
-  //   "time from state",
-  //   timeFrom.toTimeString(),
-  //   "time to state",
-  //   timeTo.toTimeString(),
-  //   "work group level",
-  //   WorkGroupLeve
-  // );
 
   const showDatepicker = () => {
     setShowDate(true);
@@ -174,21 +179,6 @@ const ShiftAllocation = ({
     );
   };
 
-  /**this function used to get the selected checkbox values */
-  // const onShowItemsSelected = () => {
-  //   const listSelected = data.filter((item) => item.selected == true);
-  //   setselectedCheckboxUsers(listSelected);
-  //   // let alert = "";
-  //   // const dataArray = [];
-  //   // listSelected.forEach((item) => {
-  //   //   alert = alert + `${item.firstName}`;
-  //   //   dataArray[{ item }];
-  //   // });
-
-  //   // console.log("list", listSelected);
-  //   // Alert.alert(alert);
-  // };
-
   const showData = () => {
     return (
       <View>
@@ -201,20 +191,63 @@ const ShiftAllocation = ({
     );
   };
 
+  if (userListError) {
+    alert(userListError);
+  }
+
+  if (loadingShift) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#008080" />
+      </View>
+    );
+  }
+
+  if (userListSuccess === true) {
+    Alert.alert(
+      "SUCCESS",
+      "SHIFT ALLOCATION SUCCESS.",
+      [
+        // {
+        //   text: "Cancel",
+        //   onPress: () => console.log("Cancel Pressed"),
+        //   style: "cancel",
+        // },
+        {
+          text: "OK",
+          onPress: () => (success_false(), navigation.navigate("Home")),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
   const submitWorkGroupLevel = ({ level }) => {
+    if (level === "4") {
+      return alert("Please select Work group.");
+    }
     setWorkGroupLevel(level);
     ListUsers({ level });
   };
 
   const onsubmit = () => {
-    const listSelected = data.filter((item) => item.selected == true);
-    shiftAllocate({
-      date: date,
-      timeFrom: timeFrom,
-      timeTo: timeTo,
-      selectedUsersList: listSelected,
-      WorkGroupLevel: WorkGroupLeve,
-    });
+    if (!data) {
+      return alert("Please select work group and allocate users.");
+    } else {
+      const listSelected = data.filter((item) => item.selected == true);
+      if (listSelected.length !== 0) {
+        //alert(listSelected.length);
+        shiftAllocate({
+          date: date,
+          timeFrom: timeFrom,
+          timeTo: timeTo,
+          selectedUsersList: listSelected,
+          WorkGroupLevel: WorkGroupLeve,
+        });
+      } else {
+        return alert("Please allocate users.");
+      }
+    }
   };
 
   return (
@@ -398,7 +431,19 @@ const ShiftAllocation = ({
                 elevation: 100,
               }}
             >
-              {data ? showData() : <Text>No data</Text>}
+              {data ? (
+                <View>
+                  {loading ? (
+                    <View style={[styles.container, styles.horizontal]}>
+                      <ActivityIndicator size="large" color="#008080" />
+                    </View>
+                  ) : (
+                    showData()
+                  )}
+                </View>
+              ) : (
+                <Text>No data</Text>
+              )}
             </View>
           </ScrollView>
         </View>
@@ -424,15 +469,16 @@ const ShiftAllocation = ({
 const mapStateToProps = (store) => ({
   loading: store.loadinReducer.loading,
   userList: store.shiftReducer.userList,
-  // userIdList: store.shiftReducer.userIdList,
   userListSuccess: store.shiftReducer.userListSuccess,
   userListError: store.shiftReducer.userListError,
+  loadingShift: store.shiftReducer.loadingShift,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
       ListUsers,
       shiftAllocate,
+      success_false,
     },
     dispatch
   );

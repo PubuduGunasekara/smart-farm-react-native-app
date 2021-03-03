@@ -135,7 +135,7 @@ const FoodController = ({
   };
 
   if (food_error) {
-    return alert(food_error);
+    alert(food_error);
   }
 
   if (loading) {
