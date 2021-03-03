@@ -4,7 +4,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
-  USER_ID_LIST_ACCESS_LEVEL,
+  // USER_ID_LIST_ACCESS_LEVEL,
 } from "../../constants";
 
 export const ListUsers = ({ level }) => {
@@ -17,34 +17,33 @@ export const ListUsers = ({ level }) => {
 
     const db = firebase.firestore().collection("user");
     const users = [];
-    const userId = [];
+    // const userId = [];
 
     db.where("accessLevel", "==", `${level}`)
       .get()
       .then((querySnapshot) => {
         if (querySnapshot) {
           querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            //   console.log(doc.id, " => ", doc.data());
-            querySnapshot.forEach((doc) => {
-              users.push(doc.data());
-              userId.push(doc.id);
+            users.push({
+              ...doc.data(),
+              id: doc.id,
             });
+            // users.push(doc.data());
+            // userId.push(doc.id);
           });
         }
       })
       .then((data) => {
         console.log("users: ", users);
-        console.log("users Id: ", userId);
+        // console.log("users Id: ", userId);
         dispatch({
           type: USER_LIST_ACCESS_LEVEL,
           payload: users,
         });
-        dispatch({
-          type: USER_ID_LIST_ACCESS_LEVEL,
-          payload: userId,
-        });
-        console.log(users);
+        // dispatch({
+        //   type: USER_ID_LIST_ACCESS_LEVEL,
+        //   payload: userId,
+        // });
         dispatch({
           type: USER_LIST_SUCCESS,
           payload: true,
@@ -74,7 +73,7 @@ export const ListUsers = ({ level }) => {
     //     querySnapshot.forEach((doc) => {
     //       console.log(doc);
     //     });
-    //     console.log(users);
+
     //     dispatch({
     //       type: USER_LIST_ACCESS_LEVEL,
     //       payload: users,
@@ -93,7 +92,7 @@ export const ListUsers = ({ level }) => {
     //       type: USER_LIST_ACCESS_LEVEL,
     //       payload: [],
     //     });
-    //     console.log(users);
+
     //     dispatch({
     //       type: USER_LIST_SUCCESS,
     //       payload: false,
@@ -106,7 +105,7 @@ export const ListUsers = ({ level }) => {
     // });
 
     //   .then((data) => {
-    //     console.log(users);
+
     //     // dispatch({
     //     //   type: USER_LIST_ACCESS_LEVEL,
     //     //   payload: users,

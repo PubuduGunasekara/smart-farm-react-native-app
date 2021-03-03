@@ -23,7 +23,7 @@ export const userRequestReview = () => {
         const users = [];
 
         if (querySnapshot) {
-          console.log("NO USER REQUEST FOUND", querySnapshot);
+          //console.log("NO USER REQUEST FOUND", querySnapshot);
           querySnapshot.forEach((documentSnapshot) => {
             //console.log("from action", documentSnapshot.data().password);
             users.push({

@@ -71,7 +71,7 @@ const ShiftAllocation = ({
   ListUsers,
   loading,
   userList,
-  userIdList,
+  // userIdList,
   userListError,
   userListSuccess,
 }) => {
@@ -95,17 +95,17 @@ const ShiftAllocation = ({
 
   const [data, setdata] = useState([]);
 
-  useEffect(() => {
-    if (userIdList && userIdList) {
-      const usersFinalList = userList.map((item, index) => {
-        return {
-          ...item,
-          id: userIdList[index],
-        };
-      });
-      setdata(usersFinalList);
-    }
-  }, [userList, userIdList]);
+  // useEffect(() => {
+  //   if (userIdList && userIdList) {
+  //     const usersFinalList = userList.map((item, index) => {
+  //       return {
+  //         ...item,
+  //         id: userIdList[index],
+  //       };
+  //     });
+  //     setdata(usersFinalList);
+  //   }
+  // }, [userList, userIdList]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -146,7 +146,7 @@ const ShiftAllocation = ({
   };
 
   const onValueChange = (itemSelected, index) => {
-    const newData = data.map((item) => {
+    const newData = userList.map((item) => {
       if (item.uid == itemSelected.id) {
         return {
           ...item,
@@ -159,7 +159,8 @@ const ShiftAllocation = ({
       };
     });
     console.log(itemSelected);
-    setdata(newData);
+    userList = newData;
+    //setdata(newData);
   };
 
   const renderItem = ({ item, index }) => {
@@ -196,7 +197,7 @@ const ShiftAllocation = ({
     return (
       <View>
         <FlatList
-          data={data}
+          data={userList}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
@@ -420,7 +421,7 @@ const ShiftAllocation = ({
 const mapStateToProps = (store) => ({
   loading: store.loadinReducer.loading,
   userList: store.shiftReducer.userList,
-  userIdList: store.shiftReducer.userIdList,
+  // userIdList: store.shiftReducer.userIdList,
   userListSuccess: store.shiftReducer.userListSuccess,
   userListError: store.shiftReducer.userListError,
 });

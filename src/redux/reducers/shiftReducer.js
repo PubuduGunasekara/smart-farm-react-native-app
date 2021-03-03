@@ -2,7 +2,7 @@ import {
   USER_LIST_SUCCESS,
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
-  USER_ID_LIST_ACCESS_LEVEL,
+  // USER_ID_LIST_ACCESS_LEVEL,
 } from "../constants";
 
 export const shiftReducer = (
@@ -15,11 +15,11 @@ export const shiftReducer = (
         ...state,
         userList: action.payload,
       };
-    case USER_ID_LIST_ACCESS_LEVEL:
-      return {
-        ...state,
-        userIdList: action.payload,
-      };
+    // case USER_ID_LIST_ACCESS_LEVEL:
+    //   return {
+    //     ...state,
+    //     userIdList: action.payload,
+    //   };
     case USER_LIST_SUCCESS:
       return {
         ...state,

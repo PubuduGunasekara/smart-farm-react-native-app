@@ -98,7 +98,7 @@ export const checkLoginState = () => {
     //   type: LOADING,
     //   payload: true,
     // });
-    firebase.auth().onAuthStateChanged(function (user) {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // dispatch({
         //   type: LOADING,
