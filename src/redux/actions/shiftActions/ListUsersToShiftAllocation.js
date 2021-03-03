@@ -30,29 +30,48 @@ export const ListUsers = ({ level }) => {
             });
             // users.push(doc.data());
             // userId.push(doc.id);
+
+            console.log("users: ", users);
+            // console.log("users Id: ", userId);
+            dispatch({
+              type: USER_LIST_ACCESS_LEVEL,
+              payload: users,
+            });
+            // dispatch({
+            //   type: USER_ID_LIST_ACCESS_LEVEL,
+            //   payload: userId,
+            // });
+            dispatch({
+              type: USER_LIST_SUCCESS,
+              payload: true,
+            });
+            dispatch({
+              type: LOADING,
+              payload: false,
+            });
           });
         }
       })
-      .then((data) => {
-        console.log("users: ", users);
-        // console.log("users Id: ", userId);
-        dispatch({
-          type: USER_LIST_ACCESS_LEVEL,
-          payload: users,
-        });
-        // dispatch({
-        //   type: USER_ID_LIST_ACCESS_LEVEL,
-        //   payload: userId,
-        // });
-        dispatch({
-          type: USER_LIST_SUCCESS,
-          payload: true,
-        });
-        dispatch({
-          type: LOADING,
-          payload: false,
-        });
-      })
+      // .then((data) => {
+      //   console.log("users: ", users);
+      //   // console.log("users Id: ", userId);
+      //   dispatch({
+      //     type: USER_LIST_ACCESS_LEVEL,
+      //     payload: users,
+      //   });
+      //   // dispatch({
+      //   //   type: USER_ID_LIST_ACCESS_LEVEL,
+      //   //   payload: userId,
+      //   // });
+      //   dispatch({
+      //     type: USER_LIST_SUCCESS,
+      //     payload: true,
+      //   });
+      //   dispatch({
+      //     type: LOADING,
+      //     payload: false,
+      //   });
+      // })
       .catch((err) => {
         dispatch({
           type: SHIFT_ERROR,

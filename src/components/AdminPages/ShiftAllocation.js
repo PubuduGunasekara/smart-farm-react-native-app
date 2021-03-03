@@ -93,19 +93,12 @@ const ShiftAllocation = ({
 
   const [WorkGroupLeve, setWorkGroupLevel] = useState("");
 
-  const [data, setdata] = useState([]);
+  const [data, setdata] = useState(userList);
+  const [selectedCheckboxUsers, setselectedCheckboxUsers] = useState([]);
 
-  // useEffect(() => {
-  //   if (userIdList && userIdList) {
-  //     const usersFinalList = userList.map((item, index) => {
-  //       return {
-  //         ...item,
-  //         id: userIdList[index],
-  //       };
-  //     });
-  //     setdata(usersFinalList);
-  //   }
-  // }, [userList, userIdList]);
+  useEffect(() => {
+    setdata(userList);
+  }, [userList]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -130,7 +123,9 @@ const ShiftAllocation = ({
     "time to state",
     timeTo.toTimeString(),
     "work group level",
-    WorkGroupLeve
+    WorkGroupLeve,
+    "selected users names: ",
+    selectedCheckboxUsers
   );
 
   const showDatepicker = () => {
@@ -146,8 +141,8 @@ const ShiftAllocation = ({
   };
 
   const onValueChange = (itemSelected, index) => {
-    const newData = userList.map((item) => {
-      if (item.uid == itemSelected.id) {
+    const newData = data.map((item) => {
+      if (item.id == itemSelected.id) {
         return {
           ...item,
           selected: !item.selected,
@@ -158,46 +153,43 @@ const ShiftAllocation = ({
         selected: item.selected,
       };
     });
-    console.log(itemSelected);
-    userList = newData;
-    //setdata(newData);
+    setdata(newData);
   };
 
   const renderItem = ({ item, index }) => {
     return (
       <View style={{ flex: 5, flexDirection: "row" }}>
-        <Text>
-          Name :{item.firstName} id : {item.id}
-        </Text>
+        <Text>Name :{item.firstName}</Text>
         <CheckBox
           style={{ width: 40, height: 40 }}
           disabled={false}
           value={item.selected}
           onValueChange={() => onValueChange(item, index)}
-          style={{ alignSelf: "center" }}
         />
       </View>
     );
   };
 
+  /**this function used to get the selected checkbox values */
   const onShowItemsSelected = () => {
-    const listSelected = userList.filter((item) => item.selected == true);
-    let alert = "";
-    const dataArray = [];
-    listSelected.forEach((item) => {
-      alert = alert + `${item.firstName},` + item.id + `\n`;
-      dataArray[{ item }];
-    });
+    const listSelected = data.filter((item) => item.selected == true);
+    setselectedCheckboxUsers(listSelected);
+    // let alert = "";
+    // const dataArray = [];
+    // listSelected.forEach((item) => {
+    //   alert = alert + `${item.firstName}`;
+    //   dataArray[{ item }];
+    // });
 
-    console.log(listSelected);
-    Alert.alert(alert);
+    // console.log("list", listSelected);
+    // Alert.alert(alert);
   };
 
   const showData = () => {
     return (
       <View>
         <FlatList
-          data={userList}
+          data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
@@ -350,7 +342,7 @@ const ShiftAllocation = ({
               Work Group
             </Text>
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 2 }}>
             <Picker
               selectedValue={WorkGroupLeve}
               onValueChange={(level, itemIndex) =>
@@ -395,7 +387,7 @@ const ShiftAllocation = ({
                 elevation: 100,
               }}
             >
-              {showData()}
+              {data ? showData() : <Text>No data</Text>}
             </View>
           </ScrollView>
         </View>
