@@ -72,7 +72,7 @@ export const shiftAllocate = ({
   return (dispatch) => {
     console.log(
       "from backend",
-      date.toDateString(),
+      date,
       timeFrom.toTimeString(),
       timeTo.toTimeString(),
       selectedUsersList,
@@ -99,6 +99,12 @@ export const shiftAllocate = ({
     db.collection("shift")
       .add(data)
       .then((data) => {
+        selectedUsersList.map((item) => {
+          db.collection("user").doc(item.id).update({
+            shiftDate: date,
+          });
+        });
+
         console.log("success: ", data);
         dispatch({
           type: USER_LIST_SUCCESS,

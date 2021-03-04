@@ -236,12 +236,27 @@ const ShiftAllocation = ({
     } else {
       const listSelected = data.filter((item) => item.selected == true);
       if (listSelected.length !== 0) {
-        //alert(listSelected.length);
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        var shiftDate = day + "-" + month + "-" + year;
+        // alert(shiftDate);
+
+        const listSelectedWithDate = listSelected.map((item, index) => {
+          return {
+            ...item,
+            shiftDate: shiftDate,
+            timeFrom: timeFrom,
+            timeTo: timeTo,
+          };
+        });
+
         shiftAllocate({
-          date: date,
+          date: shiftDate,
           timeFrom: timeFrom,
           timeTo: timeTo,
-          selectedUsersList: listSelected,
+          selectedUsersList: listSelectedWithDate,
           WorkGroupLevel: WorkGroupLeve,
         });
       } else {
@@ -396,7 +411,7 @@ const ShiftAllocation = ({
               style={{ margin: 0, padding: 0 }}
             >
               <Picker.Item label="Select Access Level" value="4" />
-              <Picker.Item label="Admin Level" value="0" />
+              {/* <Picker.Item label="Admin Level" value="0" /> */}
               <Picker.Item label="Controller Admin Level" value="1" />
               <Picker.Item label="Food & Water controller Level" value="2" />
               <Picker.Item label="Cleaning Controller Level" value="3" />

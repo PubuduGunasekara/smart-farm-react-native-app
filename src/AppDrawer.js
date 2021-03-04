@@ -72,7 +72,7 @@ function UserSideDrawer() {
       />
       <Drawer.Screen
         name="MyShift"
-        options={{ title: "My Allocation" }}
+        options={{ title: "My Shifts" }}
         component={MyShift}
       />
       <Drawer.Screen

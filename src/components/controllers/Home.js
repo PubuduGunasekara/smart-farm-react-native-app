@@ -1,9 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Button } from "react-native";
 
 import { connect } from "react-redux";
 
 const Home = ({ navigation, currentUser }) => {
+  const [date, setdate] = useState(currentUser.shiftDate);
+  const [currentDate, setcurrentDate] = useState("");
+  useEffect(() => {
+    var day = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+
+    var shiftDate = day + "-" + month + "-" + year;
+    setcurrentDate(shiftDate);
+
+    // navigation.addListener("blur", () => {
+    //   settodayDate(currentUser.shiftDate.toDate().getDate());
+    //   settodayeMonth(currentUser.shiftDate.toDate().getMonth() + 1);
+    //   settodayYear(currentUser.shiftDate.toDate().getFullYear());
+    // });
+    // navigation.addListener("focus", () => {
+    //   settodayDate(currentUser.shiftDate.toDate().getDate());
+    //   settodayeMonth(currentUser.shiftDate.toDate().getMonth() + 1);
+    //   settodayYear(currentUser.shiftDate.toDate().getFullYear());
+    // });
+  }, [currentUser, navigation]);
+  // console.log("date: ", todayDate, "month: ", todayeMonth, "year: ", todayYear);
+  // console.log(currentUser.shiftDate.toDate());
   function levelZero() {
     return (
       <View>
@@ -127,18 +150,33 @@ const Home = ({ navigation, currentUser }) => {
       </View>
     );
   }
+
+  function showMessage() {
+    return (
+      <View>
+        <Text
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          Please check My Shift tab for your SHIFT DETAILS.
+        </Text>
+      </View>
+    );
+  }
+
   function selectHomeStack() {
     if (currentUser.accessLevel === "0") {
       return levelZero();
-    }
-    if (currentUser.accessLevel === "1") {
+    } else if (currentUser.accessLevel === "1" && date === currentDate) {
       return levelOne();
-    }
-    if (currentUser.accessLevel === "2") {
+    } else if (currentUser.accessLevel === "2" && date === currentDate) {
       return levelTwo();
-    }
-    if (currentUser.accessLevel === "3") {
+    } else if (currentUser.accessLevel === "3" && date === currentDate) {
       return levelThree();
+    } else {
+      return showMessage();
     }
   }
 
