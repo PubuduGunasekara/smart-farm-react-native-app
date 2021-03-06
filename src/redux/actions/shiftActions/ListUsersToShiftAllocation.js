@@ -7,7 +7,7 @@ import {
   LOADING_MAIN,
 } from "../../constants";
 
-export const ListUsers = ({ level }) => {
+export const ListUsers = ({ level, date }) => {
   return (dispatch) => {
     console.log("access level ", level);
     dispatch({
@@ -18,32 +18,48 @@ export const ListUsers = ({ level }) => {
     const db = firebase.firestore().collection("user");
     const users = [];
 
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+
+    var todayDate = day + "-" + month + "-" + year;
+    console.log("todayDate", todayDate);
     db.where("accessLevel", "==", `${level}`)
       .get()
       .then((querySnapshot) => {
         if (querySnapshot) {
           querySnapshot.forEach((doc) => {
-            users.push({
-              firstName: doc.data().firstName,
-              lastName: doc.data().lastName,
-              accessLevel: doc.data().accessLevel,
-              id: doc.id,
-            });
+            if (doc.data().shiftDate !== todayDate) {
+              users.push({
+                firstName: doc.data().firstName,
+                lastName: doc.data().lastName,
+                accessLevel: doc.data().accessLevel,
+                id: doc.id,
+                shiftDate: doc.data().shiftDate,
+              });
+            }
+          });
+          console.log("users: ", users);
+          dispatch({
+            type: USER_LIST_ACCESS_LEVEL,
+            payload: users,
+          });
 
-            console.log("users: ", users);
-            dispatch({
-              type: USER_LIST_ACCESS_LEVEL,
-              payload: users,
-            });
-
-            dispatch({
-              type: LOADING,
-              payload: false,
-            });
+          dispatch({
+            type: LOADING,
+            payload: false,
+          });
+          dispatch({
+            type: SHIFT_ERROR,
+            payload: false,
           });
         } else {
           dispatch({
             type: LOADING,
+            payload: false,
+          });
+          dispatch({
+            type: SHIFT_ERROR,
             payload: false,
           });
         }
@@ -68,6 +84,7 @@ export const shiftAllocate = ({
   timeTo,
   selectedUsersList,
   WorkGroupLevel,
+  shiftId,
 }) => {
   return (dispatch) => {
     console.log(
@@ -76,7 +93,9 @@ export const shiftAllocate = ({
       timeFrom.toTimeString(),
       timeTo.toTimeString(),
       selectedUsersList,
-      WorkGroupLevel
+      WorkGroupLevel,
+      "shift ID ",
+      shiftId
     );
 
     dispatch({
@@ -97,7 +116,8 @@ export const shiftAllocate = ({
     };
 
     db.collection("shift")
-      .add(data)
+      .doc(shiftId)
+      .set(data)
       .then((data) => {
         selectedUsersList.map((item) => {
           db.collection("user").doc(item.id).update({

@@ -20,6 +20,7 @@ export const viewMyShift = ({ accessLevel, shiftDate }) => {
     var timeTo = "";
     var timeFrom = "";
     var id = "";
+    var shiftId = "";
 
     db.where("date", "==", `${shiftDate}`)
       .where("WorkGroupLevel", "==", `${accessLevel}`)
@@ -35,6 +36,7 @@ export const viewMyShift = ({ accessLevel, shiftDate }) => {
               timeFrom = item.timeFrom;
               timeTo = item.timeTo;
               id = item.id;
+              shiftId = item.shiftId;
             }
           });
 
@@ -44,11 +46,20 @@ export const viewMyShift = ({ accessLevel, shiftDate }) => {
               timeFrom,
               timeTo,
               id,
+              shiftId,
             };
             console.log("show object: ", data);
             dispatch({
               type: MY_SHIFT_DATA,
               payload: data,
+            });
+            dispatch({
+              type: MY_SHIFT_ERROR,
+              payload: false,
+            });
+            dispatch({
+              type: LOADING,
+              payload: false,
             });
           } else {
             dispatch({
@@ -59,15 +70,15 @@ export const viewMyShift = ({ accessLevel, shiftDate }) => {
               type: MY_SHIFT_DATA,
               payload: "",
             });
+            dispatch({
+              type: MY_SHIFT_ERROR,
+              payload: false,
+            });
+            dispatch({
+              type: LOADING,
+              payload: false,
+            });
           }
-          dispatch({
-            type: MY_SHIFT_ERROR,
-            payload: false,
-          });
-          dispatch({
-            type: LOADING,
-            payload: false,
-          });
         } else {
           dispatch({
             type: EMPTY_RECORD,

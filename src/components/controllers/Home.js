@@ -72,6 +72,12 @@ const Home = ({ navigation, currentUser }) => {
             navigation.navigate("ShiftAllocation");
           }}
         />
+        <Button
+          title="Shift Change Requests"
+          onPress={() => {
+            navigation.navigate("ShiftChangeRequests");
+          }}
+        />
       </View>
     );
   }

@@ -111,6 +111,8 @@ const ShiftAllocation = ({
 
   const [data, setdata] = useState(userList);
 
+  const [checkDateSelect, setcheckDateSelect] = useState(false);
+
   useEffect(() => {
     setdata(userList);
     navigation.addListener("blur", () => {
@@ -125,6 +127,7 @@ const ShiftAllocation = ({
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === "ios");
     setDate(currentDate);
+    setcheckDateSelect(true);
   };
   const onChangeTIMEFROM = (event, selectedTimeFrom) => {
     const current = selectedTimeFrom || date;
@@ -167,10 +170,14 @@ const ShiftAllocation = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ flex: 5, flexDirection: "row" }}>
-        <Text>Name :{item.firstName}</Text>
+      <View style={{ flex: 1, flexDirection: "row" }}>
+        <View style={{ marginTop: 7, flexDirection: "row", flex: 6 }}>
+          <Text style={{ marginRight: 5 }}>{item.firstName}</Text>
+          <Text>{item.lastName}</Text>
+        </View>
+
         <CheckBox
-          style={{ width: 40, height: 40 }}
+          style={{ width: 40, height: 40, flex: 1 }}
           disabled={false}
           value={item.selected}
           onValueChange={() => onValueChange(item, index)}
@@ -181,7 +188,20 @@ const ShiftAllocation = ({
 
   const showData = () => {
     return (
-      <View>
+      <View
+        style={{
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          flex: 1,
+          elevation: 100,
+          margin: 20,
+        }}
+      >
         <FlatList
           data={data}
           renderItem={renderItem}
@@ -223,11 +243,15 @@ const ShiftAllocation = ({
   }
 
   const submitWorkGroupLevel = ({ level }) => {
-    if (level === "4") {
-      return alert("Please select Work group.");
+    if (checkDateSelect) {
+      if (level === "4") {
+        return alert("Please select Work group.");
+      }
+      setWorkGroupLevel(level);
+      ListUsers({ level, date });
+    } else {
+      alert("Please select the Date first");
     }
-    setWorkGroupLevel(level);
-    ListUsers({ level });
   };
 
   const onsubmit = () => {
@@ -242,6 +266,10 @@ const ShiftAllocation = ({
 
         var shiftDate = day + "-" + month + "-" + year;
         // alert(shiftDate);
+        var min = 1;
+        var max = 1000000;
+        var rand = min + Math.random() * (max - min);
+        var shiftId = `${rand}`;
 
         const listSelectedWithDate = listSelected.map((item, index) => {
           return {
@@ -249,6 +277,7 @@ const ShiftAllocation = ({
             shiftDate: shiftDate,
             timeFrom: timeFrom,
             timeTo: timeTo,
+            shiftId: shiftId,
           };
         });
 
@@ -258,6 +287,7 @@ const ShiftAllocation = ({
           timeTo: timeTo,
           selectedUsersList: listSelectedWithDate,
           WorkGroupLevel: WorkGroupLeve,
+          shiftId: shiftId,
         });
       } else {
         return alert("Please allocate users.");
@@ -285,9 +315,9 @@ const ShiftAllocation = ({
           </Text>
           <View style={{ flex: 5, alignContent: "flex-start" }}>
             <Button
-              color="#008080"
+              color={checkDateSelect ? "#008080" : "#000000"}
               onPress={showDatepicker}
-              title={date.toDateString()}
+              title={checkDateSelect ? date.toDateString() : "Select Date"}
             />
           </View>
         </View>
@@ -432,20 +462,8 @@ const ShiftAllocation = ({
               Workers
             </Text>
           </View>
-          <ScrollView height={250} style={{ margin: 20, marginTop: 0 }}>
-            <View
-              style={{
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 100,
-              }}
-            >
+          <ScrollView height="45%" style={{ margin: 20, marginTop: 0 }}>
+            <View>
               {data ? (
                 <View>
                   {loading ? (
@@ -453,11 +471,33 @@ const ShiftAllocation = ({
                       <ActivityIndicator size="large" color="#008080" />
                     </View>
                   ) : (
-                    showData()
+                    <View>
+                      {data.length !== 0 ? (
+                        showData()
+                      ) : (
+                        <Text
+                          style={{
+                            justifyContent: "center",
+                            alignSelf: "center",
+                            color: "#d3d3d3",
+                          }}
+                        >
+                          All users of this work group has a shift for this date
+                        </Text>
+                      )}
+                    </View>
                   )}
                 </View>
               ) : (
-                <Text>No data</Text>
+                <Text
+                  style={{
+                    justifyContent: "center",
+                    alignSelf: "center",
+                    color: "#d3d3d3",
+                  }}
+                >
+                  No data
+                </Text>
               )}
             </View>
           </ScrollView>

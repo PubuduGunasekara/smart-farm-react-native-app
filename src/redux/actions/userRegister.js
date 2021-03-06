@@ -30,7 +30,7 @@ export const userRegister = ({ firstName, lastName, email, password }) => {
           type: USER_REGISTER_ERROR,
           payload: error,
         });
-        alert(error);
+        console.log(error);
       });
   };
 };

@@ -10,7 +10,7 @@ import Communication from "../src/components/AdminPages/Communication";
 
 import CommunicationUser from "../src/components/UserPages/CommunicationUser";
 import MyActivities from "../src/components/UserPages/MyActivities";
-import MyShift from "../src/components/UserPages/MyShift";
+import MyShiftHome from "../src/components/UserPages/MyShift";
 import ReportIncident from "../src/components/UserPages/ReportIncident";
 import ViewIncident from "../src/components/UserPages/ViewIncident";
 import Home from "../src/components/controllers/Home";
@@ -73,7 +73,7 @@ function UserSideDrawer() {
       <Drawer.Screen
         name="MyShift"
         options={{ title: "My Shifts" }}
-        component={MyShift}
+        component={MyShiftHome}
       />
       <Drawer.Screen
         name="ReportIncident"

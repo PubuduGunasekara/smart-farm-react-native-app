@@ -13,6 +13,8 @@ import ManageUser from "../components/AdminPages/ManageUser";
 import ShiftAllocation from "../components/AdminPages/ShiftAllocation";
 import Home from "../components/controllers/Home";
 import viewSingleUserRequest from "../components/AdminPages/viewSingleUserRequest";
+import ShiftChangeRequests from "../../src/components/AdminPages/ShiftRequestAndModify/ShiftChangeRequests";
+import ModifyShiftFromRequests from "../../src/components/AdminPages/ShiftRequestAndModify/ModifyShiftFromRequests";
 
 import About from "../components/About";
 import AllActivities from "../components/AdminPages/AllActivities";
@@ -200,6 +202,62 @@ const AllStacks = ({ navigation, logout }) => {
           },
         }}
         component={ApproveUser}
+      />
+
+      <Stack.Screen
+        name="ShiftChangeRequests"
+        options={{
+          headerTitle: `Shift Change Requests`,
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  logout();
+                }}
+              >
+                <Text>Sign out</Text>
+              </TouchableOpacity>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              >
+                <AntDesign name="Search" size={100} color="red" />
+              </TouchableOpacity>
+            );
+          },
+        }}
+        component={ShiftChangeRequests}
+      />
+
+      <Stack.Screen
+        name="ModifyShiftFromRequests"
+        options={{
+          headerTitle: `Modify Shift From Requests`,
+          headerRight: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  logout();
+                }}
+              >
+                <Text>Sign out</Text>
+              </TouchableOpacity>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <TouchableOpacity
+                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+              >
+                <AntDesign name="Search" size={100} color="red" />
+              </TouchableOpacity>
+            );
+          },
+        }}
+        component={ModifyShiftFromRequests}
       />
 
       <Stack.Screen
