@@ -24,7 +24,13 @@ import {
   ListUsers,
   shiftAllocate,
   success_false,
+  success_false_user_list_loading_success,
 } from "../../redux/actions/shiftActions/ListUsersToShiftAllocation";
+
+import {
+  ListUsersFromDateCheck,
+  success_false_user_list_loading_date_success,
+} from "../../redux/actions/shiftActions/ListShiftDetailsAndUpdateAction";
 
 const styles = StyleSheet.create({
   container: {
@@ -90,6 +96,12 @@ const ShiftAllocation = ({
   userList,
   userListError,
   userListSuccess,
+  ListUsersFromDateCheck,
+  userListDateCheck,
+  // userListDateCheckLoadingSuccessStatus,
+  // userListLoadingSuccessStatus,
+  // success_false_user_list_loading_success,
+  // success_false_user_list_loading_date_success,
 }) => {
   const [date, setDate] = useState(new Date());
   const [timeFrom, settimeFrom] = useState(new Date());
@@ -109,26 +121,43 @@ const ShiftAllocation = ({
 
   const [WorkGroupLeve, setWorkGroupLevel] = useState("");
 
-  const [data, setdata] = useState(userList);
+  const [listUsers, setListUsers] = useState([]);
+  const [listUsersDateCheck, setListUsersDateCheck] = useState([]);
+  const [data, setdata] = useState([]);
 
   const [checkDateSelect, setcheckDateSelect] = useState(false);
 
   useEffect(() => {
-    setdata(userList);
+    setListUsers(userList);
+    setListUsersDateCheck(userListDateCheck);
     navigation.addListener("blur", () => {
       setdata([]);
     });
     navigation.addListener("focus", () => {
       setdata([]);
     });
-  }, [userList, userListError, userListSuccess]);
+  }, [
+    userList,
+    userListError,
+    userListSuccess,
+    userListDateCheck,
+    // userListDateCheckLoadingSuccessStatus,
+    // userListLoadingSuccessStatus,
+  ]);
 
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDate(Platform.OS === "ios");
     setDate(currentDate);
     setcheckDateSelect(true);
+    setdata([]);
+    setWorkGroupLevel("");
   };
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  var shiftDate = day + "-" + month + "-" + year;
   const onChangeTIMEFROM = (event, selectedTimeFrom) => {
     const current = selectedTimeFrom || date;
     setShowTimeFrom(Platform.OS === "ios");
@@ -150,6 +179,63 @@ const ShiftAllocation = ({
 
   const showTimeTopicker = () => {
     setShowTimeTo(true);
+  };
+
+  const mapUserList = () => {
+    if (userList && userListDateCheck) {
+      var flag = false;
+      const List = listUsers.map((item) => {
+        // console.log("user list date check", userListDateCheck);
+        flag = false;
+        return {
+          ...item,
+          selected: listUsersDateCheck.map((item2) => {
+            if (item.id === item2.id) {
+              flag = true;
+              return "1";
+            } else {
+              if (flag === true) {
+                return "1";
+              } else {
+                flag = false;
+                return "2";
+              }
+            }
+          }),
+        };
+      });
+      const List2 = List.map((item) => {
+        if (item.selected[item.selected.length - 1] == "1") {
+          return {
+            firstName: item.firstName,
+            lastName: item.lastName,
+            accessLevel: item.accessLevel,
+            id: item.id,
+            selected: true,
+          };
+        } else {
+          return {
+            firstName: item.firstName,
+            lastName: item.lastName,
+            accessLevel: item.accessLevel,
+            id: item.id,
+            selected: false,
+          };
+        }
+      });
+      const listSelected = List2.filter((item) => item.selected == false);
+      const listSelectedWithDetails = listSelected.map((item, index) => {
+        return {
+          ...item,
+          shiftDate: shiftDate,
+          timeFrom: timeFrom,
+          timeTo: timeTo,
+        };
+      });
+      // success_false_user_list_loading_success();
+      // success_false_user_list_loading_date_success();
+      setdata(listSelectedWithDetails);
+    }
   };
 
   const onValueChange = (itemSelected, index) => {
@@ -215,7 +301,7 @@ const ShiftAllocation = ({
     alert(userListError);
   }
 
-  if (loadingShift) {
+  if (loadingShift || loading) {
     return (
       <View style={[styles.container, styles.horizontal]}>
         <ActivityIndicator size="large" color="#008080" />
@@ -246,13 +332,69 @@ const ShiftAllocation = ({
     if (checkDateSelect) {
       if (level === "4") {
         return alert("Please select Work group.");
+      } else {
+        setWorkGroupLevel(level);
+        ListUsers({ level, date: date });
+        ListUsersFromDateCheck({
+          shiftDate: shiftDate,
+          accessLevel: level,
+        });
+        setdata([]);
       }
-      setWorkGroupLevel(level);
-      ListUsers({ level, date });
     } else {
       alert("Please select the Date first");
     }
   };
+
+  // const submitWorkGroupLevel = ({ level }) => {
+  //   if (level === "4") {
+  //     return alert("Please select Work group.");
+  //   } else {
+  //     if (checkDateSelect) {
+  //       if (level === "4") {
+  //         return alert("Please select Work group.");
+  //       }
+  //       setWorkGroupLevel(level);
+  //       ListUsers({ level, date: date });
+  //       ListUsersFromDateCheck({
+  //         shiftDate: shiftDate,
+  //         accessLevel: level,
+  //       });
+  //       if (
+  //         userListLoadingSuccessStatus === true &&
+  //         userListDateCheckLoadingSuccessStatus === true
+  //       ) {
+  //         mapUserList();
+  //       }
+  //     } else {
+  //       alert("Please select the Date first");
+  //     }
+  //   }
+
+  //   // setWorkGroupLevel(level);
+  //   // ListUsers({ level });
+  //   // if (checkDateSelect) {
+  //   //   if (level === "4") {
+  //   //     return alert("Please select Work group.");
+  //   //   }
+  //   //   setWorkGroupLevel(level);
+  //   //   ListUsers({ level, date });
+  //   //   ListUsersFromDateCheck({
+  //   //     shiftDate: shiftDate,
+  //   //     accessLevel: level,
+  //   //   });
+  //   //   if (loading) {
+  //   //     return (
+  //   //       <View style={[styles.container, styles.horizontal]}>
+  //   //         <ActivityIndicator size="large" color="#008080" />
+  //   //       </View>
+  //   //     );
+  //   //   }
+  //   //   mapUserList();
+  //   // } else {
+  //   //   alert("Please select the Date first");
+  //   // }
+  // };
 
   const onsubmit = () => {
     if (!data) {
@@ -260,11 +402,6 @@ const ShiftAllocation = ({
     } else {
       const listSelected = data.filter((item) => item.selected == true);
       if (listSelected.length !== 0) {
-        var day = date.getDate();
-        var month = date.getMonth() + 1;
-        var year = date.getFullYear();
-
-        var shiftDate = day + "-" + month + "-" + year;
         // alert(shiftDate);
         var min = 1;
         var max = 1000000;
@@ -417,8 +554,8 @@ const ShiftAllocation = ({
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flex: 1 }}>
+        <View style={{ marginTop: 10 }}>
+          <View>
             <Text
               style={{
                 flex: 1,
@@ -431,21 +568,35 @@ const ShiftAllocation = ({
               Work Group
             </Text>
           </View>
-          <View style={{ flex: 2 }}>
-            <Picker
-              selectedValue={WorkGroupLeve}
-              onValueChange={(level, itemIndex) =>
-                submitWorkGroupLevel({ level })
-              }
-              color="#008080"
-              style={{ margin: 0, padding: 0 }}
-            >
-              <Picker.Item label="Select Access Level" value="4" />
-              {/* <Picker.Item label="Admin Level" value="0" /> */}
-              <Picker.Item label="Controller Admin Level" value="1" />
-              <Picker.Item label="Food & Water controller Level" value="2" />
-              <Picker.Item label="Cleaning Controller Level" value="3" />
-            </Picker>
+          <View style={{ flexDirection: "row" }}>
+            <View style={{ flex: 2 }}>
+              <Picker
+                selectedValue={WorkGroupLeve}
+                onValueChange={(level, itemIndex) =>
+                  submitWorkGroupLevel({ level })
+                }
+                color="#008080"
+                style={{ margin: 0, padding: 0 }}
+              >
+                <Picker.Item label="Select Access Level" value="4" />
+                {/* <Picker.Item label="Admin Level" value="0" /> */}
+                <Picker.Item label="Controller Admin Level" value="1" />
+                <Picker.Item label="Food & Water controller Level" value="2" />
+                <Picker.Item label="Cleaning Controller Level" value="3" />
+              </Picker>
+            </View>
+            <View>
+              <Button
+                disabled={
+                  checkDateSelect && WorkGroupLeve !== "" ? false : true
+                }
+                color="#008080"
+                title="Show"
+                onPress={() => {
+                  mapUserList();
+                }}
+              />
+            </View>
           </View>
         </View>
 
@@ -527,6 +678,10 @@ const mapStateToProps = (store) => ({
   userListSuccess: store.shiftReducer.userListSuccess,
   userListError: store.shiftReducer.userListError,
   loadingShift: store.shiftReducer.loadingShift,
+  userListDateCheck: store.shiftReducer.userListDateCheck,
+  userListDateCheckLoadingSuccessStatus:
+    store.shiftReducer.userListDateCheckLoadingSuccessStatus,
+  userListLoadingSuccessStatus: store.shiftReducer.userListLoadingSuccessStatus,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
@@ -534,6 +689,9 @@ const mapDispatchProps = (dispatch) =>
       ListUsers,
       shiftAllocate,
       success_false,
+      ListUsersFromDateCheck,
+      success_false_user_list_loading_success,
+      success_false_user_list_loading_date_success,
     },
     dispatch
   );

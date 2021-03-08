@@ -14,6 +14,11 @@ import {
   SHIFT_DETAILS_FOR_MODIFY,
   USER_LIST_FOR_SHIFT_UPDATE,
   SHIFT_MODIFY_UPDATE_STATUS,
+  SHIFT_DATE_CHECKER,
+  USER_LIST_DATE_CHECK,
+  LIST_DATE_CHECK_IDS,
+  USER_LIST_LOADING_SUCCESS,
+  USER_LIST_DATE_CHECK_LOADING_SUCCESS,
   // USER_ID_LIST_ACCESS_LEVEL,
 } from "../constants";
 
@@ -24,10 +29,19 @@ export const shiftReducer = (
     loadingShift: false,
     shiftRequestMessagesDelete: [],
     userListForShiftUpdate: [],
+    userListDateCheckLoadingSuccessStatus: false,
+    userListLoadingSuccessStatus: false,
   },
   action
 ) => {
   switch (action.type) {
+    //check shift date status
+    case SHIFT_DATE_CHECKER:
+      return {
+        ...state,
+        shiftDateStatus: action.payload,
+      };
+
     case USER_LIST_ACCESS_LEVEL:
       return {
         ...state,
@@ -115,6 +129,30 @@ export const shiftReducer = (
       return {
         ...state,
         shiftModifyUpdate: action.payload,
+      };
+
+    case USER_LIST_DATE_CHECK:
+      return {
+        ...state,
+        userListDateCheck: action.payload,
+      };
+
+    case LIST_DATE_CHECK_IDS:
+      return {
+        ...state,
+        listDateCheckIds: action.payload,
+      };
+
+    case USER_LIST_LOADING_SUCCESS:
+      return {
+        ...state,
+        userListLoadingSuccessStatus: action.payload,
+      };
+
+    case USER_LIST_DATE_CHECK_LOADING_SUCCESS:
+      return {
+        ...state,
+        userListDateCheckLoadingSuccessStatus: action.payload,
       };
 
     default:

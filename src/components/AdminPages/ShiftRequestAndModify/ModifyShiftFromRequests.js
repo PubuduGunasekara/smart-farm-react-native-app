@@ -13,10 +13,13 @@ import CheckBox from "@react-native-community/checkbox";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import {
-  ListShiftDetails,
   ListUsersForModify,
   UpdateModifiedShift,
   success_false,
+  ListUsersFromDateCheck,
+  ListDateCheckIdsFunc,
+  addDateCkeckDoc,
+  deleteDateCkeckDoc,
 } from "../../../redux/actions/shiftActions/ListShiftDetailsAndUpdateAction";
 
 import TopHeaderWithGoBack from "../../helperComponents/topHeaderWithGoBack";
@@ -35,9 +38,6 @@ const styles = StyleSheet.create({
 
 function ModifyShiftFromRequests({
   route,
-  ListShiftDetails,
-  shiftDetailsListError,
-  shiftDetailsForEdit,
   navigation,
   userListForShiftUpdate,
   ListUsersForModify,
@@ -45,6 +45,12 @@ function ModifyShiftFromRequests({
   shiftModifyUpdate,
   loading,
   success_false,
+  userListDateCheck,
+  ListUsersFromDateCheck,
+  listDateCheckIds,
+  ListDateCheckIdsFunc,
+  addDateCkeckDoc,
+  deleteDateCkeckDoc,
 }) {
   const {
     shiftId,
@@ -55,30 +61,90 @@ function ModifyShiftFromRequests({
     requestId,
   } = route.params;
   const [userList, setUserList] = useState([]);
+  const [
+    initialUserListWithSelected,
+    setinitialUserListWithSelected,
+  ] = useState([]);
+  const [usersListOfAccessLevel, setUsersListOfAccessLevel] = useState([]);
+  const [usersListDateChecked, setUsersListDateChecked] = useState([]);
+  const [dateCkeckedIds, setDateCkeckedIds] = useState([]);
+  const [requestBtnToggler, setrequestBtnToggler] = useState(false);
   useEffect(() => {
-    ListShiftDetails({ shiftId, shiftDate });
-    ListUsersForModify({ accessLevel });
-    if (userListForShiftUpdate) {
-      mapUserList();
+    // ListUsersForModify({ accessLevel });
+    // ListUsersFromDateCheck({ shiftDate, accessLevel });
+    // ListDateCheckIdsFunc({ shiftDate, accessLevel });
+    // setrequestBtnToggler(false);
+    if (userListForShiftUpdate && userListDateCheck && listDateCheckIds) {
+      setUsersListOfAccessLevel(userListForShiftUpdate);
+      setUsersListDateChecked(userListDateCheck);
+      setDateCkeckedIds(listDateCheckIds);
     }
-  }, []);
+  }, [userListForShiftUpdate, userListDateCheck, listDateCheckIds]);
 
-  console.log(shiftId, accessLevel, shiftDate, timeTo, timeFrom, requestId);
+  // console.log("list date ckeck ids", listDateCheckIds);
+  // console.log("userListForShiftUpdate", userListForShiftUpdate);
+  // console.log(shiftId, accessLevel, shiftDate, timeTo, timeFrom, requestId);
+
+  // const mapUserList = () => {
+  //   const List = userListForShiftUpdate.map((item) => {
+  //     if (item.shiftDate == shiftDate) {
+  //       return {
+  //         ...item,
+  //         selected: true,
+  //       };
+  //     }
+  //     return {
+  //       ...item,
+  //       selected: false,
+  //     };
+  //   });
+  //   setUserList(List);
+  // };
 
   const mapUserList = () => {
-    const List = userListForShiftUpdate.map((item) => {
-      if (item.shiftDate == shiftDate) {
-        return {
-          ...item,
-          selected: true,
-        };
-      }
+    var flag = false;
+    const List = usersListOfAccessLevel.map((item) => {
+      // console.log("user list date check", userListDateCheck);
+      flag = false;
       return {
         ...item,
-        selected: false,
+        selected: usersListDateChecked.map((item2) => {
+          if (item.id === item2.id) {
+            flag = true;
+
+            return "1";
+          } else {
+            if (flag === true) {
+              return "1";
+            } else {
+              flag = false;
+              return "2";
+            }
+          }
+        }),
       };
     });
-    setUserList(List);
+    const List2 = List.map((item) => {
+      if (item.selected[item.selected.length - 1] == "1") {
+        return {
+          firstName: item.firstName,
+          lastName: item.lastName,
+          accessLevel: item.accessLevel,
+          id: item.id,
+          selected: true,
+        };
+      } else {
+        return {
+          firstName: item.firstName,
+          lastName: item.lastName,
+          accessLevel: item.accessLevel,
+          id: item.id,
+          selected: false,
+        };
+      }
+    });
+    setinitialUserListWithSelected(List2);
+    setUserList(List2);
   };
 
   if (loading) {
@@ -124,12 +190,24 @@ function ModifyShiftFromRequests({
       >
         {userList.length === 0 ? (
           <View>
-            <Button
-              title="Refresh"
-              onPress={() => {
-                mapUserList();
-              }}
-            />
+            {requestBtnToggler === false ? (
+              <Button
+                title="Request Data"
+                onPress={() => {
+                  ListUsersForModify({ accessLevel });
+                  ListUsersFromDateCheck({ shiftDate, accessLevel });
+                  ListDateCheckIdsFunc({ shiftDate, accessLevel });
+                  setrequestBtnToggler(true);
+                }}
+              />
+            ) : (
+              <Button
+                title="Your data is ready. Click to show"
+                onPress={() => {
+                  mapUserList();
+                }}
+              />
+            )}
           </View>
         ) : (
           <FlatList
@@ -161,6 +239,75 @@ function ModifyShiftFromRequests({
   };
 
   const onsubmit = () => {
+    // console.log("initialUserListWithSelected", initialUserListWithSelected);
+    // console.log("userList", userList);
+    var flag = false;
+    var temp = "";
+    const initListWithDateCheckId = initialUserListWithSelected.map((item) => {
+      flag = false;
+      return {
+        ...item,
+        DateCheckId: dateCkeckedIds.map((item2) => {
+          if (item.id === item2.userId) {
+            flag = true;
+            temp = item2.id;
+            return item2.id;
+          } else {
+            if (flag === true) {
+              return temp;
+            } else {
+              flag = false;
+            }
+          }
+        }),
+      };
+    });
+    console.log("date check with ids", initListWithDateCheckId);
+    initListWithDateCheckId.map((item) => {
+      userList.map((item2) => {
+        if (item.id === item2.id) {
+          if (item.selected !== item2.selected) {
+            if (item.selected === true && item2.selected === false) {
+              deleteDateCkeckDoc({
+                DateCheckId: item.DateCheckId[item.DateCheckId.length - 1],
+              });
+            } else {
+              addDateCkeckDoc({
+                accessLevel: item2.accessLevel,
+                firstName: item2.firstName,
+                lastName: item2.lastName,
+                userId: item2.id,
+                shiftDate: shiftDate,
+                shiftId: shiftId,
+              });
+            }
+          }
+        }
+      });
+    });
+
+    // const List2 = List.map((item) => {
+    //   if (item.selected[0] == "1") {
+    //     console.log("zero", item.selected[0]);
+    //     return {
+    //       firstName: item.firstName,
+    //       lastName: item.lastName,
+    //       accessLevel: item.accessLevel,
+    //       id: item.id,
+    //       selected: true,
+    //     };
+    //   } else {
+    //     console.log("one", item.selected.length);
+    //     return {
+    //       firstName: item.firstName,
+    //       lastName: item.lastName,
+    //       accessLevel: item.accessLevel,
+    //       id: item.id,
+    //       selected: false,
+    //     };
+    //   }
+    // });
+
     const listSelected = userList.filter((item) => item.selected == true);
     const listSelectedWithDetails = listSelected.map((item, index) => {
       return {
@@ -174,14 +321,8 @@ function ModifyShiftFromRequests({
     UpdateModifiedShift({
       shiftId,
       selectedUsersList: listSelectedWithDetails,
-      requestId,
     });
-    console.log("listSelected", listSelectedWithDetails);
   };
-
-  if (shiftDetailsListError) {
-    alert(shiftDetailsListError);
-  }
 
   if (shiftModifyUpdate === true) {
     Alert.alert(
@@ -204,8 +345,14 @@ function ModifyShiftFromRequests({
     );
   }
 
-  if (shiftDetailsForEdit && userListForShiftUpdate) {
-    if (shiftDetailsForEdit.date < shiftDate) {
+  var day = new Date().getDate();
+  var month = new Date().getMonth() + 1;
+  var year = new Date().getFullYear();
+
+  var today = day + "-" + month + "-" + year;
+
+  if (usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds) {
+    if (shiftDate < today) {
       Alert.alert(
         "SUCCESS",
         "This is a old shift",
@@ -231,18 +378,12 @@ function ModifyShiftFromRequests({
         title={"Modify Shift"}
         navigationFunc={navigation.goBack}
       />
-      {shiftDetailsForEdit && userListForShiftUpdate ? (
+      {usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds ? (
         <View>
           <View>
-            <Text>Shift Date : {shiftDetailsForEdit.date}</Text>
-            <Text>
-              Shift Time From :{" "}
-              {shiftDetailsForEdit.timeTo.toDate().toTimeString()}
-            </Text>
-            <Text>
-              Shift Time To :{" "}
-              {shiftDetailsForEdit.timeFrom.toDate().toTimeString()}
-            </Text>
+            <Text>Shift Date : {shiftDate}</Text>
+            <Text>Shift Time From : {timeTo.toDate().toTimeString()}</Text>
+            <Text>Shift Time To : {timeFrom.toDate().toTimeString()}</Text>
           </View>
           <View style={{ flexDirection: "column", marginTop: 10 }}>
             <View>
@@ -287,19 +428,21 @@ function ModifyShiftFromRequests({
 
 const mapStateToProps = (store) => ({
   loading: store.loadinReducer.loading,
-  shiftDetailsListError: store.shiftReducer.userListError, //used the same reducer type for shift_error
-  shiftDetailsForEdit: store.shiftReducer.shiftDetailsForEdit,
   userListForShiftUpdate: store.shiftReducer.userListForShiftUpdate,
   shiftModifyUpdate: store.shiftReducer.shiftModifyUpdate,
-  loading: store.loadinReducer.loading,
+  userListDateCheck: store.shiftReducer.userListDateCheck,
+  listDateCheckIds: store.shiftReducer.listDateCheckIds,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
-      ListShiftDetails,
       ListUsersForModify,
       UpdateModifiedShift,
       success_false,
+      ListUsersFromDateCheck,
+      ListDateCheckIdsFunc,
+      addDateCkeckDoc,
+      deleteDateCkeckDoc,
     },
     dispatch
   );

@@ -5,9 +5,10 @@ import {
   USER_LIST_ACCESS_LEVEL,
   SHIFT_ERROR,
   LOADING_MAIN,
+  USER_LIST_LOADING_SUCCESS,
 } from "../../constants";
 
-export const ListUsers = ({ level, date }) => {
+export const ListUsers = ({ level }) => {
   return (dispatch) => {
     console.log("access level ", level);
     dispatch({
@@ -15,34 +16,31 @@ export const ListUsers = ({ level, date }) => {
       payload: true,
     });
 
-    const db = firebase.firestore().collection("user");
+    const db = firebase.firestore();
     const users = [];
 
-    var day = date.getDate();
-    var month = date.getMonth() + 1;
-    var year = date.getFullYear();
-
-    var todayDate = day + "-" + month + "-" + year;
-    console.log("todayDate", todayDate);
-    db.where("accessLevel", "==", `${level}`)
+    db.collection("user")
+      .where("accessLevel", "==", `${level}`)
       .get()
       .then((querySnapshot) => {
         if (querySnapshot) {
           querySnapshot.forEach((doc) => {
-            if (doc.data().shiftDate !== todayDate) {
-              users.push({
-                firstName: doc.data().firstName,
-                lastName: doc.data().lastName,
-                accessLevel: doc.data().accessLevel,
-                id: doc.id,
-                shiftDate: doc.data().shiftDate,
-              });
-            }
+            users.push({
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              accessLevel: doc.data().accessLevel,
+              id: doc.id,
+              shiftDate: doc.data().shiftDate,
+            });
           });
           console.log("users: ", users);
           dispatch({
             type: USER_LIST_ACCESS_LEVEL,
             payload: users,
+          });
+          dispatch({
+            type: USER_LIST_LOADING_SUCCESS,
+            payload: true,
           });
 
           dispatch({
@@ -68,6 +66,10 @@ export const ListUsers = ({ level, date }) => {
         dispatch({
           type: SHIFT_ERROR,
           payload: "SOMETHING WENT WRONG!",
+        });
+        dispatch({
+          type: USER_LIST_LOADING_SUCCESS,
+          payload: true,
         });
         dispatch({
           type: LOADING,
@@ -120,8 +122,13 @@ export const shiftAllocate = ({
       .set(data)
       .then((data) => {
         selectedUsersList.map((item) => {
-          db.collection("user").doc(item.id).update({
+          db.collection("shiftDateCheker").add({
+            userId: item.id,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            accessLevel: WorkGroupLevel,
             shiftDate: date,
+            shiftId: shiftId,
           });
         });
 
@@ -157,6 +164,15 @@ export const success_false = () => {
   return (dispatch) => {
     dispatch({
       type: USER_LIST_SUCCESS,
+      payload: false,
+    });
+  };
+};
+
+export const success_false_user_list_loading_success = () => {
+  return (dispatch) => {
+    dispatch({
+      type: USER_LIST_LOADING_SUCCESS,
       payload: false,
     });
   };
