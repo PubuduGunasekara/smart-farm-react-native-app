@@ -31,6 +31,10 @@ import {
   ListUsersFromDateCheck,
   success_false_user_list_loading_date_success,
 } from "../../redux/actions/shiftActions/ListShiftDetailsAndUpdateAction";
+import {
+  CheckShiftExist,
+  CheckShiftExist_setFalse,
+} from "../../redux/actions/shiftActions/checkShiftDate";
 
 const styles = StyleSheet.create({
   container: {
@@ -98,6 +102,9 @@ const ShiftAllocation = ({
   userListSuccess,
   ListUsersFromDateCheck,
   userListDateCheck,
+  CheckShiftExist,
+  shiftExistStatus,
+  CheckShiftExist_setFalse,
   // userListDateCheckLoadingSuccessStatus,
   // userListLoadingSuccessStatus,
   // success_false_user_list_loading_success,
@@ -124,23 +131,28 @@ const ShiftAllocation = ({
   const [listUsers, setListUsers] = useState([]);
   const [listUsersDateCheck, setListUsersDateCheck] = useState([]);
   const [data, setdata] = useState([]);
+  const [shiftExistValue, setshiftExistValue] = useState(false);
 
   const [checkDateSelect, setcheckDateSelect] = useState(false);
 
   useEffect(() => {
+    setshiftExistValue(shiftExistStatus);
     setListUsers(userList);
     setListUsersDateCheck(userListDateCheck);
     navigation.addListener("blur", () => {
       setdata([]);
+      setshiftExistValue(false);
     });
     navigation.addListener("focus", () => {
       setdata([]);
+      setshiftExistValue(false);
     });
   }, [
     userList,
     userListError,
     userListSuccess,
     userListDateCheck,
+    shiftExistStatus,
     // userListDateCheckLoadingSuccessStatus,
     // userListLoadingSuccessStatus,
   ]);
@@ -572,9 +584,10 @@ const ShiftAllocation = ({
             <View style={{ flex: 2 }}>
               <Picker
                 selectedValue={WorkGroupLeve}
-                onValueChange={(level, itemIndex) =>
-                  submitWorkGroupLevel({ level })
-                }
+                onValueChange={(level, itemIndex) => {
+                  CheckShiftExist({ shiftDate, WorkGroupLevel: level });
+                  submitWorkGroupLevel({ level });
+                }}
                 color="#008080"
                 style={{ margin: 0, padding: 0 }}
               >
@@ -593,7 +606,26 @@ const ShiftAllocation = ({
                 color="#008080"
                 title="Show"
                 onPress={() => {
-                  mapUserList();
+                  shiftExistValue === false
+                    ? mapUserList()
+                    : Alert.alert(
+                        "Alert",
+                        "Already have a shift for this group on this day.Please view all shift and update.",
+                        [
+                          // {
+                          //   text: "Cancel",
+                          //   onPress: () => console.log("Cancel Pressed"),
+                          //   style: "cancel",
+                          // },
+                          {
+                            text: "OK",
+                            onPress: () =>
+                              CheckShiftExist_setFalse(),
+                              // navigation.navigate("Home")
+                          },
+                        ],
+                        { cancelable: false }
+                      );
                 }}
               />
             </View>
@@ -682,6 +714,7 @@ const mapStateToProps = (store) => ({
   userListDateCheckLoadingSuccessStatus:
     store.shiftReducer.userListDateCheckLoadingSuccessStatus,
   userListLoadingSuccessStatus: store.shiftReducer.userListLoadingSuccessStatus,
+  shiftExistStatus: store.shiftReducer.shiftExistStatus,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
@@ -692,6 +725,8 @@ const mapDispatchProps = (dispatch) =>
       ListUsersFromDateCheck,
       success_false_user_list_loading_success,
       success_false_user_list_loading_date_success,
+      CheckShiftExist,
+      CheckShiftExist_setFalse,
     },
     dispatch
   );

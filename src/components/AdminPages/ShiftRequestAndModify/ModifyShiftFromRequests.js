@@ -351,26 +351,26 @@ function ModifyShiftFromRequests({
 
   var today = day + "-" + month + "-" + year;
 
-  if (usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds) {
-    if (shiftDate < today) {
-      Alert.alert(
-        "SUCCESS",
-        "This is a old shift",
-        [
-          // {
-          //   text: "Cancel",
-          //   onPress: () => console.log("Cancel Pressed"),
-          //   style: "cancel",
-          // },
-          {
-            text: "OK",
-            onPress: () => navigation.goBack(),
-          },
-        ],
-        { cancelable: false }
-      );
-    }
-  }
+  // if (usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds) {
+  //   if (shiftDate < today) {
+  //     Alert.alert(
+  //       "SUCCESS",
+  //       "This is a old shift",
+  //       [
+  //         // {
+  //         //   text: "Cancel",
+  //         //   onPress: () => console.log("Cancel Pressed"),
+  //         //   style: "cancel",
+  //         // },
+  //         {
+  //           text: "OK",
+  //           onPress: () => navigation.goBack(),
+  //         },
+  //       ],
+  //       { cancelable: false }
+  //     );
+  //   }
+  // }
 
   return (
     <View>

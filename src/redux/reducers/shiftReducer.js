@@ -19,6 +19,9 @@ import {
   LIST_DATE_CHECK_IDS,
   USER_LIST_LOADING_SUCCESS,
   USER_LIST_DATE_CHECK_LOADING_SUCCESS,
+  ALL_SHIFT_DATA,
+  ALL_SHIFT_ERROR,
+  SHIFT_EXIST,
   // USER_ID_LIST_ACCESS_LEVEL,
 } from "../constants";
 
@@ -153,6 +156,24 @@ export const shiftReducer = (
       return {
         ...state,
         userListDateCheckLoadingSuccessStatus: action.payload,
+      };
+
+    case ALL_SHIFT_DATA:
+      return {
+        ...state,
+        allShiftData: action.payload,
+      };
+
+    case ALL_SHIFT_ERROR:
+      return {
+        ...state,
+        allShiftError: action.payload,
+      };
+
+    case SHIFT_EXIST:
+      return {
+        ...state,
+        shiftExistStatus: action.payload,
       };
 
     default:

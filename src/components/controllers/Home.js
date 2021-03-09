@@ -92,6 +92,13 @@ const Home = ({
           }}
         />
         <Button
+          title="All shifts"
+          onPress={() => {
+            navigation.navigate("ViewAllShifts");
+          }}
+        />
+
+        <Button
           title="Shift Change Requests"
           onPress={() => {
             navigation.navigate("ShiftChangeRequests");
