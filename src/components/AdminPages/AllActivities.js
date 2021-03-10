@@ -1,12 +1,166 @@
-import React from "react";
-import { View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  Button,
+  Platform,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 
-const AllActivities = () => {
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { showAllActivities } from "../../redux/actions/activityActions";
+
+import DateTimePicker from "@react-native-community/datetimepicker";
+
+import TopHeaderWithGoBack from "../helperComponents/topHeaderWithGoBack";
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
+});
+
+const AllActivities = ({
+  showAllActivities,
+  loading,
+  allActivities,
+  currentUser,
+  navigation,
+}) => {
+  const [showDate, setShowDate] = useState(false);
+  const [date, setDate] = useState(new Date());
+
+  const [checkDateSelect, setcheckDateSelect] = useState(false);
+  const [activities, setactivities] = useState(allActivities);
+
+  useEffect(() => {
+    setactivities(allActivities);
+  }, [allActivities]);
+  const showDatepicker = () => {
+    setShowDate(true);
+  };
+
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDate(Platform.OS === "ios");
+    setDate(currentDate);
+    setcheckDateSelect(true);
+
+    var day = currentDate.getDate(); //change theese values
+    var month = currentDate.getMonth() + 1;
+    var year = currentDate.getFullYear();
+
+    var activityDate = day + "-" + month + "-" + year;
+
+    showAllActivities({
+      activityDate: activityDate,
+    });
+  };
+
+  const renderItem = ({ item, index }) => {
+    return (
+      <View style={{ marginTop: 7, flexDirection: "row" }}>
+        <Text style={{ marginRight: 5, color: "black" }}>
+          First name : {item.firstName}
+        </Text>
+        <Text>created at: {item.createdAt.toDate().toTimeString()}</Text>
+      </View>
+    );
+  };
+
+  const showActivities = () => {
+    return (
+      <View
+        style={{
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          flex: 1,
+          elevation: 100,
+          margin: 20,
+        }}
+      >
+        <FlatList
+          data={activities}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#008080" />
+      </View>
+    );
+  }
+
   return (
     <View>
-      <Text>AllActivities</Text>
+      <TopHeaderWithGoBack
+        title={"All Activities"}
+        navigationFunc={navigation.goBack}
+      />
+
+      <View style={{ flexDirection: "row", margin: 20 }}>
+        <View style={{ flex: 5, alignContent: "flex-start" }}>
+          <Button
+            color={checkDateSelect ? "#008080" : "#000000"}
+            onPress={showDatepicker}
+            title={checkDateSelect ? date.toDateString() : "Select Date"}
+          />
+        </View>
+      </View>
+
+      {showDate && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode="date"
+          is24Hour={true}
+          display="default"
+          onChange={onChangeDate}
+        />
+      )}
+      <View>
+        {activities.length !== 0 && activities ? (
+          <ScrollView height="45%" style={{ margin: 20, marginTop: 0 }}>
+            <View>{showActivities()}</View>
+          </ScrollView>
+        ) : (
+          <Text>No activities</Text>
+        )}
+      </View>
     </View>
   );
 };
 
-export default AllActivities;
+const mapStateToProps = (store) => ({
+  loading: store.loadinReducer.loading,
+  allActivities: store.activityReducer.allActivities,
+  currentUser: store.userReducer.user,
+});
+const mapDispatchProps = (dispatch) =>
+  bindActionCreators(
+    {
+      showAllActivities,
+    },
+    dispatch
+  );
+
+export default connect(mapStateToProps, mapDispatchProps)(AllActivities);

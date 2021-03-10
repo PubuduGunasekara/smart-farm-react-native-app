@@ -1,9 +1,9 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerActions } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import CleaningController from "../components/controllers/CleaningController";
 import FoodController from "../components/controllers/FoodController";
 import GateController from "../components/controllers/GateController";
@@ -16,6 +16,7 @@ import viewSingleUserRequest from "../components/AdminPages/viewSingleUserReques
 import ShiftChangeRequests from "../../src/components/AdminPages/ShiftRequestAndModify/ShiftChangeRequests";
 import ModifyShiftFromRequests from "../../src/components/AdminPages/ShiftRequestAndModify/ModifyShiftFromRequests";
 import ViewAllShifts from "../../src/components/AdminPages/ViewAllShifts";
+import Notifications from "../../src/components/UserPages/Notifications";
 
 import About from "../components/About";
 import AllActivities from "../components/AdminPages/AllActivities";
@@ -41,25 +42,51 @@ const AllStacks = ({ navigation, logout }) => {
         name="Home"
         component={Home}
         options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
           headerTitle: `Home`,
           headerRight: () => {
             return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row" }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      logout();
+                    }}
+                  >
+                    <Text>Sign out</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             );
           },
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
         })}
@@ -371,6 +398,60 @@ const AllStacks = ({ navigation, logout }) => {
           },
         }}
         component={viewSingleUserRequest}
+      />
+
+      <Stack.Screen
+        name="Notifications"
+        component={Notifications}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitle: `Notifications`,
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row" }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-on"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      logout();
+                    }}
+                  >
+                    <Text>Sign out</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
       />
 
       {/* <Stack.Screen

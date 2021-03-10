@@ -21,6 +21,7 @@ import {
   addDateCkeckDoc,
   deleteDateCkeckDoc,
 } from "../../../redux/actions/shiftActions/ListShiftDetailsAndUpdateAction";
+import { addNotifications } from "../../../redux/actions/notificationActions";
 
 import TopHeaderWithGoBack from "../../helperComponents/topHeaderWithGoBack";
 
@@ -51,6 +52,7 @@ function ModifyShiftFromRequests({
   ListDateCheckIdsFunc,
   addDateCkeckDoc,
   deleteDateCkeckDoc,
+  addNotifications,
 }) {
   const {
     shiftId,
@@ -268,10 +270,26 @@ function ModifyShiftFromRequests({
         if (item.id === item2.id) {
           if (item.selected !== item2.selected) {
             if (item.selected === true && item2.selected === false) {
+              addNotifications({
+                userId: item2.id,
+                firstName: item2.firstName,
+                lastName: item2.lastName,
+                accessLevel: item2.accessLevel,
+                type: "DELETED",
+                message: `shift deleted on ${shiftDate}`,
+              });
               deleteDateCkeckDoc({
                 DateCheckId: item.DateCheckId[item.DateCheckId.length - 1],
               });
             } else {
+              addNotifications({
+                userId: item2.id,
+                firstName: item2.firstName,
+                lastName: item2.lastName,
+                accessLevel: item2.accessLevel,
+                type: "ADD",
+                message: `New shift added on ${shiftDate}`,
+              });
               addDateCkeckDoc({
                 accessLevel: item2.accessLevel,
                 firstName: item2.firstName,
@@ -443,6 +461,7 @@ const mapDispatchProps = (dispatch) =>
       ListDateCheckIdsFunc,
       addDateCkeckDoc,
       deleteDateCkeckDoc,
+      addNotifications,
     },
     dispatch
   );

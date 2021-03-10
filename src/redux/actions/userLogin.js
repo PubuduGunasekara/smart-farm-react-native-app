@@ -3,6 +3,7 @@ import firebase from "firebase";
 
 export const userLogin = ({ email, password }) => {
   return (dispatch) => {
+    var userDetails = {};
     dispatch({
       type: LOADING,
       payload: true,
@@ -26,6 +27,15 @@ export const userLogin = ({ email, password }) => {
               //console.log("User exists: ", documentSnapshot.exists);
 
               if (documentSnapshot.exists) {
+                userDetails = {
+                  userId: documentSnapshot.id,
+                  accessLevel: documentSnapshot.data().accessLevel,
+                  email: documentSnapshot.data().email,
+                  firstName: documentSnapshot.data().firstName,
+                  lastName: documentSnapshot.data().lastName,
+                  shiftDate: documentSnapshot.data().shiftDate,
+                  shiftStatus: documentSnapshot.data().shiftStatus,
+                };
                 //console.log("User data: ", documentSnapshot.data());
                 dispatch({
                   type: LOADING,
@@ -37,7 +47,7 @@ export const userLogin = ({ email, password }) => {
                 });
                 dispatch({
                   type: USER_LOGIN,
-                  payload: documentSnapshot.data(),
+                  payload: userDetails,
                 });
               }
             })
@@ -94,6 +104,7 @@ export const userLogin = ({ email, password }) => {
 export const checkLoginState = () => {
   const db = firebase.firestore();
   return (dispatch) => {
+    var userDetails = {};
     // dispatch({
     //   type: LOADING,
     //   payload: true,
@@ -121,13 +132,22 @@ export const checkLoginState = () => {
               //   type: LOADING,
               //   payload: false,
               // });
+              userDetails = {
+                userId: documentSnapshot.id,
+                accessLevel: documentSnapshot.data().accessLevel,
+                email: documentSnapshot.data().email,
+                firstName: documentSnapshot.data().firstName,
+                lastName: documentSnapshot.data().lastName,
+                shiftDate: documentSnapshot.data().shiftDate,
+                shiftStatus: documentSnapshot.data().shiftStatus,
+              };
               dispatch({
                 type: USER_LOGIN_ERROR,
                 payload: null,
               });
               dispatch({
                 type: USER_LOGIN,
-                payload: documentSnapshot.data(),
+                payload: userDetails,
               });
             }
           })

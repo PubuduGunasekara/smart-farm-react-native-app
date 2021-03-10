@@ -13,6 +13,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { GateControllerActionOOPENCLOSE } from "../../redux/actions/controllerActions/gateControllerAction";
 
+import { addActivity } from "../../redux/actions/activityActions";
+
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
 
 const styles = StyleSheet.create({
@@ -33,9 +35,19 @@ const GateController = ({
   gate_error,
   loading,
   gate_open_close_status,
+  addActivity,
+  currentUser,
 }) => {
   const [buttonEnable, setbuttonEnable] = useState(true);
   const [buttonEnableON, setbuttonEnableON] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
     if (gate_open_close_status === true) {
@@ -60,8 +72,31 @@ const GateController = ({
   }
 
   const handleOnOff = ({ openStatus }) => {
-    if (openStatus === "1" || openStatus === "0") {
+    // if (openStatus === "1" || openStatus === "0") {
+    //   GateControllerActionOOPENCLOSE({ openStatus });
+
+    // }
+    if (openStatus === "1") {
       GateControllerActionOOPENCLOSE({ openStatus });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "ON",
+        message: "Gate open",
+      });
+    }
+    if (openStatus === "0") {
+      GateControllerActionOOPENCLOSE({ openStatus });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "OFF",
+        message: "Gate close",
+      });
     }
   };
 
@@ -133,11 +168,13 @@ const mapStateToProps = (store) => ({
   loading: store.loadinReducer.loading,
   gate_error: store.controllerReducer.gate_error,
   gate_open_close_status: store.controllerReducer.gate_open_close_status,
+  currentUser: store.userReducer.user,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
       GateControllerActionOOPENCLOSE,
+      addActivity,
     },
     dispatch
   );

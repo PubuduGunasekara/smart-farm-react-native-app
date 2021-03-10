@@ -17,6 +17,7 @@ import {
   FoodControllerActionFORWARD_BACKWARD,
   FoodControllerActionCapOnOff,
 } from "../../redux/actions/controllerActions/foodControllerAction";
+import { addActivity } from "../../redux/actions/activityActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
@@ -45,6 +46,8 @@ const FoodController = ({
   food_error,
   motor_speed_status_value,
   food_cap_status,
+  addActivity,
+  currentUser,
 }) => {
   const [buttonEnable, setbuttonEnable] = useState(true);
   const [buttonEnableON, setbuttonEnableON] = useState(false);
@@ -63,6 +66,13 @@ const FoodController = ({
   const [buttonEnable_food_cap_off, setbuttonEnable_food_cap_off] = useState(
     false
   );
+  const [date, setDate] = useState(new Date());
+
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
     navigation.addListener("blur", () => {
@@ -116,6 +126,27 @@ const FoodController = ({
       } else {
         FoodControllerActionCapOnOff({ openCloseStatus: "2" });
       }
+    }
+
+    if (motorStopStartStatus === "1") {
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "ON",
+        message: "Food controller on",
+      });
+    }
+    if (motorStopStartStatus === "0") {
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "OFF",
+        message: "Food controller off",
+      });
     }
   };
 
@@ -311,6 +342,7 @@ const mapStateToProps = (store) => ({
   motor_direction_status: store.controllerReducer.motor_direction_status,
   motor_speed_status_value: store.controllerReducer.motor_speed_status,
   food_cap_status: store.controllerReducer.food_cap_status,
+  currentUser: store.userReducer.user,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
@@ -319,6 +351,7 @@ const mapDispatchProps = (dispatch) =>
       FoodControllerActionSpeedLevel,
       FoodControllerActionFORWARD_BACKWARD,
       FoodControllerActionCapOnOff,
+      addActivity,
     },
     dispatch
   );

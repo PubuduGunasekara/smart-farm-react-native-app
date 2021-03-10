@@ -14,6 +14,8 @@ import MyShiftHome from "../src/components/UserPages/MyShift";
 import ReportIncident from "../src/components/UserPages/ReportIncident";
 import ViewIncident from "../src/components/UserPages/ViewIncident";
 import Home from "../src/components/controllers/Home";
+import AllActivityStack from "../src/components/extraStackPages/adminStack/activityStack";
+import MyActivityStack from "../src/components/extraStackPages/userStack/activityStack";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -29,9 +31,9 @@ function AdminSideDrawer() {
         component={AllStacks}
       />
       <Drawer.Screen
-        name="AllActivities"
+        name="AllActivityStack"
         options={{ title: "All Activities" }}
-        component={AllActivities}
+        component={AllActivityStack}
       />
       <Drawer.Screen
         name="ShiftAllocation"
@@ -66,9 +68,9 @@ function UserSideDrawer() {
         component={AllStacks}
       />
       <Drawer.Screen
-        name="MyActivities"
+        name="MyActivityStack"
         options={{ title: "My Activities" }}
-        component={MyActivities}
+        component={MyActivityStack}
       />
       <Drawer.Screen
         name="MyShift"

@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { WaterControllerActionOPENCLOSE } from "../../redux/actions/controllerActions/waterControllerAction";
 
+import { addActivity } from "../../redux/actions/activityActions";
+
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
 
 const styles = StyleSheet.create({
@@ -26,9 +28,19 @@ const WaterController = ({
   water_error,
   loading,
   water_open_close_status,
+  addActivity,
+  currentUser,
 }) => {
   const [buttonEnable, setbuttonEnable] = useState(true);
   const [buttonEnableON, setbuttonEnableON] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
     navigation.addListener("blur", () => {
@@ -59,8 +71,27 @@ const WaterController = ({
     );
   }
   const handleOnOff = ({ openStatus }) => {
-    if (openStatus === "1" || openStatus === "0") {
+    if (openStatus === "1") {
       WaterControllerActionOPENCLOSE({ openStatus });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "ON",
+        message: "Water Tap on",
+      });
+    }
+    if (openStatus === "0") {
+      WaterControllerActionOPENCLOSE({ openStatus });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "OFF",
+        message: "Water Tap off",
+      });
     }
   };
 
@@ -140,11 +171,13 @@ const mapStateToProps = (store) => ({
   loading: store.loadinReducer.loading,
   water_error: store.controllerReducer.water_error,
   water_open_close_status: store.controllerReducer.water_open_close_status,
+  currentUser: store.userReducer.user,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
     {
       WaterControllerActionOPENCLOSE,
+      addActivity,
     },
     dispatch
   );

@@ -16,6 +16,7 @@ import {
   CleaningControllerActionSpeedLevel,
   CleaningControllerActionFORWARD_BACKWARD,
 } from "../../redux/actions/controllerActions/cleaningControllersAction";
+import { addActivity } from "../../redux/actions/activityActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
@@ -42,6 +43,8 @@ const CleaningController = ({
   motor_direction_status,
   cleaning_error,
   motor_speed_status_value,
+  addActivity,
+  currentUser,
 }) => {
   const [buttonEnable, setbuttonEnable] = useState(true);
   const [buttonEnableON, setbuttonEnableON] = useState(false);
@@ -53,6 +56,14 @@ const CleaningController = ({
     buttonEnable_motor_direction_backward,
     setbuttonEnable_motor_direction_backward,
   ] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
     navigation.addListener("blur", () => {
@@ -84,10 +95,36 @@ const CleaningController = ({
   }, [cleanin_controller_on_off_status, motor_direction_status, navigation]);
 
   const handleOnOff = ({ motorStopStartStatus }) => {
-    if (motorStopStartStatus === "1" || motorStopStartStatus === "0") {
+    // if (motorStopStartStatus === "1" || motorStopStartStatus === "0") {
+    //   CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+    //   CleaningControllerActionONOFF({ motorStopStartStatus });
+    //   CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+    // }
+    if (motorStopStartStatus === "1") {
       CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
       CleaningControllerActionONOFF({ motorStopStartStatus });
       CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "ON",
+        message: "Cleaning controller on",
+      });
+    }
+    if (motorStopStartStatus === "0") {
+      CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+      CleaningControllerActionONOFF({ motorStopStartStatus });
+      CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+      addActivity({
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        accessLevel: currentUser.accessLevel,
+        date: activityDate,
+        type: "OFF",
+        message: "Cleaning controller off",
+      });
     }
   };
 
@@ -259,6 +296,7 @@ const mapStateToProps = (store) => ({
   cleaning_error: store.controllerReducer.cleaning_error,
   motor_direction_status: store.controllerReducer.motor_direction_status,
   motor_speed_status_value: store.controllerReducer.motor_speed_status,
+  currentUser: store.userReducer.user,
 });
 const mapDispatchProps = (dispatch) =>
   bindActionCreators(
@@ -266,6 +304,7 @@ const mapDispatchProps = (dispatch) =>
       CleaningControllerActionONOFF,
       CleaningControllerActionFORWARD_BACKWARD,
       CleaningControllerActionSpeedLevel,
+      addActivity,
     },
     dispatch
   );

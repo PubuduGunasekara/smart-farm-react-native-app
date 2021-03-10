@@ -35,6 +35,7 @@ import {
   CheckShiftExist,
   CheckShiftExist_setFalse,
 } from "../../redux/actions/shiftActions/checkShiftDate";
+import { addNotifications } from "../../redux/actions/notificationActions";
 
 const styles = StyleSheet.create({
   container: {
@@ -105,6 +106,7 @@ const ShiftAllocation = ({
   CheckShiftExist,
   shiftExistStatus,
   CheckShiftExist_setFalse,
+  addNotifications,
   // userListDateCheckLoadingSuccessStatus,
   // userListLoadingSuccessStatus,
   // success_false_user_list_loading_success,
@@ -438,6 +440,16 @@ const ShiftAllocation = ({
           WorkGroupLevel: WorkGroupLeve,
           shiftId: shiftId,
         });
+        listSelected.map((item) => {
+          addNotifications({
+            userId: item.id,
+            firstName: item.firstName,
+            lastName: item.lastName,
+            accessLevel: item.accessLevel,
+            type: "ADD",
+            message: `New shift added on ${item.shiftDate}`,
+          });
+        });
       } else {
         return alert("Please allocate users.");
       }
@@ -619,9 +631,8 @@ const ShiftAllocation = ({
                           // },
                           {
                             text: "OK",
-                            onPress: () =>
-                              CheckShiftExist_setFalse(),
-                              // navigation.navigate("Home")
+                            onPress: () => CheckShiftExist_setFalse(),
+                            // navigation.navigate("Home")
                           },
                         ],
                         { cancelable: false }
@@ -727,6 +738,7 @@ const mapDispatchProps = (dispatch) =>
       success_false_user_list_loading_date_success,
       CheckShiftExist,
       CheckShiftExist_setFalse,
+      addNotifications,
     },
     dispatch
   );

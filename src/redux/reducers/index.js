@@ -4,6 +4,8 @@ import { adminReducer } from "./adminReducer";
 import { loadinReducer } from "./loadingReducer";
 import { controllerReducer } from "./controllerReducers";
 import { shiftReducer } from "./shiftReducer";
+import { notificationsReducer } from "./notificationsReducer";
+import { activityReducer } from "./activityReducer";
 
 const Reducers = combineReducers({
   userReducer,
@@ -11,6 +13,8 @@ const Reducers = combineReducers({
   loadinReducer,
   controllerReducer,
   shiftReducer,
+  notificationsReducer,
+  activityReducer,
 });
 
 export default Reducers;
