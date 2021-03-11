@@ -11,10 +11,11 @@ import {
   Platform,
 } from "react-native";
 import CheckBox from "@react-native-community/checkbox";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { Picker } from "@react-native-community/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { FlatList } from "react-native-gesture-handler";
+import moment from "moment";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
 
@@ -288,20 +289,7 @@ const ShiftAllocation = ({
 
   const showData = () => {
     return (
-      <View
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          flex: 1,
-          elevation: 100,
-          margin: 20,
-        }}
-      >
+      <View>
         <FlatList
           data={data}
           renderItem={renderItem}
@@ -451,8 +439,14 @@ const ShiftAllocation = ({
           });
         });
       } else {
-        return alert("Please allocate users.");
+        return alert("Please select users.");
       }
+    }
+  };
+
+  const oncancel = () => {
+    if (data.length !== 0) {
+      setdata([]);
     }
   };
 
@@ -463,23 +457,31 @@ const ShiftAllocation = ({
         navigationFunc={navigation.goBack}
       />
       <View style={styles.centeredView}>
-        <View style={{ flexDirection: "row", marginBottom: 20, marginTop: 10 }}>
+        <View style={{ flexDirection: "row", marginBottom: 10, marginTop: 10 }}>
           <Text
             style={{
               flex: 1,
               textAlign: "left",
               fontSize: 18,
               justifyContent: "center",
+              marginTop: 15,
             }}
           >
             Date
           </Text>
           <View style={{ flex: 5, alignContent: "flex-start" }}>
-            <Button
-              color={checkDateSelect ? "#008080" : "#000000"}
+            <TouchableOpacity
+              style={{
+                backgroundColor: `${checkDateSelect ? "#008080" : "#000000"}`,
+                alignItems: "center",
+                padding: 15,
+              }}
               onPress={showDatepicker}
-              title={checkDateSelect ? date.toDateString() : "Select Date"}
-            />
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>
+                {checkDateSelect ? date.toDateString() : "Select Date"}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -545,16 +547,24 @@ const ShiftAllocation = ({
                 textAlign: "left",
                 fontSize: 18,
                 justifyContent: "center",
+                marginTop: 6,
               }}
             >
               From
             </Text>
             <View style={{ flex: 2, alignContent: "flex-start" }}>
-              <Button
-                color="#008080"
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
                 onPress={showTimeFrompicker}
-                title={timeFrom.toTimeString()}
-              />
+              >
+                <Text style={{ color: "#fff", fontSize: 14 }}>
+                  {moment(timeFrom).format(" h:mm a")}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{ flexDirection: "row", flex: 1 }}>
@@ -564,34 +574,29 @@ const ShiftAllocation = ({
                 textAlign: "center",
                 fontSize: 18,
                 justifyContent: "center",
+                marginTop: 6,
               }}
             >
               To
             </Text>
             <View style={{ flex: 2, alignContent: "flex-start" }}>
-              <Button
-                color="#008080"
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
                 onPress={showTimeTopicker}
-                title={timeFrom.toTimeString()}
-              />
+              >
+                <Text style={{ color: "#fff", fontSize: 14 }}>
+                  {moment(timeTo).format(" h:mm a")}
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
 
         <View style={{ marginTop: 10 }}>
-          <View>
-            <Text
-              style={{
-                flex: 1,
-                textAlign: "left",
-                fontSize: 18,
-                justifyContent: "center",
-                marginTop: 10,
-              }}
-            >
-              Work Group
-            </Text>
-          </View>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 2 }}>
               <Picker
@@ -604,7 +609,6 @@ const ShiftAllocation = ({
                 style={{ margin: 0, padding: 0 }}
               >
                 <Picker.Item label="Select Access Level" value="4" />
-                {/* <Picker.Item label="Admin Level" value="0" /> */}
                 <Picker.Item label="Controller Admin Level" value="1" />
                 <Picker.Item label="Food & Water controller Level" value="2" />
                 <Picker.Item label="Cleaning Controller Level" value="3" />
@@ -624,15 +628,9 @@ const ShiftAllocation = ({
                         "Alert",
                         "Already have a shift for this group on this day.Please view all shift and update.",
                         [
-                          // {
-                          //   text: "Cancel",
-                          //   onPress: () => console.log("Cancel Pressed"),
-                          //   style: "cancel",
-                          // },
                           {
                             text: "OK",
                             onPress: () => CheckShiftExist_setFalse(),
-                            // navigation.navigate("Home")
                           },
                         ],
                         { cancelable: false }
@@ -656,7 +654,25 @@ const ShiftAllocation = ({
               Workers
             </Text>
           </View>
-          <ScrollView height="45%" style={{ margin: 20, marginTop: 0 }}>
+          <ScrollView
+            height="45%"
+            style={{
+              backgroundColor: "#b2d8d8",
+              borderWidth: 1,
+              borderRadius: 1,
+              borderColor: "#ddd",
+              borderBottomWidth: 0,
+              shadowColor: "#000",
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.8,
+              shadowRadius: 1,
+              elevation: 3,
+              marginTop: 10,
+              marginBottom: 10,
+              padding: 10,
+              marginTop: 0,
+            }}
+          >
             <View>
               {data ? (
                 <View>
@@ -669,45 +685,87 @@ const ShiftAllocation = ({
                       {data.length !== 0 ? (
                         showData()
                       ) : (
-                        <Text
-                          style={{
-                            justifyContent: "center",
-                            alignSelf: "center",
-                            color: "#d3d3d3",
-                          }}
-                        >
-                          All users of this work group has a shift for this date
-                        </Text>
+                        <View style={{ flex: 1 }}>
+                          {checkDateSelect === false ? (
+                            <View
+                              style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Text style={{ color: "#545454" }}>
+                                Select Date
+                              </Text>
+                            </View>
+                          ) : (
+                            <View
+                              style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Text
+                                style={{
+                                  color: "#545454",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                All users of this work group has a shift for
+                                this date
+                              </Text>
+                            </View>
+                          )}
+                        </View>
                       )}
                     </View>
                   )}
                 </View>
               ) : (
-                <Text
+                <View
                   style={{
+                    flex: 1,
+                    alignItems: "center",
                     justifyContent: "center",
-                    alignSelf: "center",
-                    color: "#d3d3d3",
                   }}
                 >
-                  No data
-                </Text>
+                  <Text style={{ color: "#545454", justifyContent: "center" }}>
+                    No Data
+                  </Text>
+                </View>
               )}
             </View>
           </ScrollView>
         </View>
         <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flex: 2, marginRight: 25 }}>
-            <Button color="#008080" title="Cancel" onPress={() => {}} />
+          <View style={{ flex: 1, marginRight: 25 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#008080",
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => {
+                oncancel();
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>CANCEL</Text>
+            </TouchableOpacity>
           </View>
-          <View style={{ flex: 2, marginLeft: 25 }}>
-            <Button
-              color="#008080"
-              title="Submit"
+          <View style={{ flex: 1, marginLeft: 25 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#008080",
+                alignItems: "center",
+                padding: 10,
+              }}
               onPress={() => {
                 onsubmit();
               }}
-            />
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>SUBMIT</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

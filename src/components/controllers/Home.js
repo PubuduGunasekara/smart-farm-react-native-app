@@ -5,6 +5,8 @@ import {
   Button,
   ActivityIndicator,
   StyleSheet,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 
 import { connect } from "react-redux";
@@ -20,6 +22,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     padding: 10,
+  },
+
+  text: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
+  },
+
+  btnBox: {
+    color: "#6a4595",
+    paddingTop: 10,
+    height: 45,
+    backgroundColor: "#b2d8d8",
+    alignItems: "center",
+    marginBottom: 20,
   },
 });
 
@@ -48,138 +65,207 @@ const Home = ({
 
   function levelZero() {
     return (
-      <View>
-        <Button
-          title="Cleaning Controller"
+      <ScrollView style={{ margin: 30 }}>
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("CleaningController");
           }}
-        />
-        <Button
-          title="Food Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Cleaning Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("FoodController");
           }}
-        />
-        <Button
-          title="Gate Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Food Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("GateController");
           }}
-        />
-        <Button
-          title="Water Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Gate Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("WaterController");
           }}
-        />
-        <Button
-          title="Approve User"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Water Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("ApproveUser");
           }}
-        />
-        <Button
-          title="Manage User"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Approve User</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("ManageUser");
           }}
-        />
-        <Button
-          title="Shift Allocation"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Manage User</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("ShiftAllocation");
           }}
-        />
-        <Button
-          title="All shifts"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Shift Allocation</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("ViewAllShifts");
           }}
-        />
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>All Shifts</Text>
+          </View>
+        </TouchableOpacity>
 
-        <Button
-          title="Shift Change Requests"
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("ShiftChangeRequests");
           }}
-        />
-      </View>
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Shift Change Requests</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 
   function levelOne() {
     return (
-      <View>
-        <Button
-          title="Cleaning Controller"
-          onPress={() => {
-            navigation.navigate("CleaningController");
-          }}
-        />
-        <Button
-          title="Food Controller"
-          onPress={() => {
-            navigation.navigate("FoodController");
-          }}
-        />
-        <Button
-          title="Gate Controller"
-          onPress={() => {
-            navigation.navigate("GateController");
-          }}
-        />
-        <Button
-          title="Water Controller"
-          onPress={() => {
-            navigation.navigate("WaterController");
-          }}
-        />
-      </View>
+      <ScrollView style={{ margin: 30 }}>
+        <View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("CleaningController");
+            }}
+          >
+            <View style={styles.btnBox}>
+              <Text style={styles.text}>Cleaning Controller</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("FoodController");
+            }}
+          >
+            <View style={styles.btnBox}>
+              <Text style={styles.text}>Food Controller</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("GateController");
+            }}
+          >
+            <View style={styles.btnBox}>
+              <Text style={styles.text}>Gate Controller</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("WaterController");
+            }}
+          >
+            <View style={styles.btnBox}>
+              <Text style={styles.text}>Water Controller</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 
   function levelTwo() {
     return (
-      <View>
-        <Button
-          title="Cleaning Controller"
+      <ScrollView style={{ margin: 30 }}>
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("CleaningController");
           }}
-        />
-        <Button
-          title="Gate Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Cleaning Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("GateController");
           }}
-        />
-      </View>
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Gate Controller</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 
   function levelThree() {
     return (
-      <View>
-        <Button
-          title="Food Controller"
+      <ScrollView style={{ margin: 30 }}>
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("FoodController");
           }}
-        />
-        <Button
-          title="Gate Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Food Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("GateController");
           }}
-        />
-        <Button
-          title="Water Controller"
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Gate Controller</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
           onPress={() => {
             navigation.navigate("WaterController");
           }}
-        />
-      </View>
+        >
+          <View style={styles.btnBox}>
+            <Text style={styles.text}>Water Controller</Text>
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
     );
   }
 
@@ -193,14 +279,16 @@ const Home = ({
 
   function showMessage() {
     return (
-      <View>
-        <Text
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          Please check My Shift tab for your SHIFT DETAILS.
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          marginTop: 50,
+        }}
+      >
+        <Text style={styles.text}>
+          You don not have a shift today.Please check your shift details.
         </Text>
       </View>
     );

@@ -16,9 +16,14 @@ import ViewIncident from "../src/components/UserPages/ViewIncident";
 import Home from "../src/components/controllers/Home";
 import AllActivityStack from "../src/components/extraStackPages/adminStack/activityStack";
 import MyActivityStack from "../src/components/extraStackPages/userStack/activityStack";
+import CommunicationStack from "../src/components/extraStackPages/adminStack/communicationsStack";
+import ShiftAllocationStack from "./components/extraStackPages/adminStack/shiftAllocationStack";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { Button } from "react-native";
+
+import { logout } from "../src/redux/actions/userLogin";
 
 const Drawer = createDrawerNavigator();
 
@@ -35,20 +40,20 @@ function AdminSideDrawer() {
         options={{ title: "All Activities" }}
         component={AllActivityStack}
       />
-      <Drawer.Screen
-        name="ShiftAllocation"
+      {/* <Drawer.Screen
+        name="ShiftAllocationStack"
         options={{ title: "Shift Allocation" }}
-        component={ShiftAllocation}
-      />
+        component={ShiftAllocationStack}
+      /> */}
       <Drawer.Screen
         name="ReviewIncident"
         options={{ title: "Review Incident" }}
         component={ReviewIncident}
       />
       <Drawer.Screen
-        name="Communication"
+        name="CommunicationStack"
         options={{ title: "Communication" }}
-        component={Communication}
+        component={CommunicationStack}
       />
       <Drawer.Screen
         name="About"
@@ -109,4 +114,6 @@ const mapStateToProps = (store) => ({
   currentUser: store.userReducer.user,
 });
 
-export default connect(mapStateToProps, null)(AppDrawer);
+const mapDispatchProps = (dispatch) => bindActionCreators({ logout }, dispatch);
+
+export default connect(mapStateToProps, mapDispatchProps)(AppDrawer);

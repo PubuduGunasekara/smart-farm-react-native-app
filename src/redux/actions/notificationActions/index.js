@@ -49,39 +49,38 @@ export const getNotifications = ({ userId }) => {
     db.collection("notifications")
       .orderBy("createdAt", "desc")
       .where("userId", "==", `${userId}`)
-      .onSnapshot(
-        (snapshot) => {
-          snapshot.forEach((doc) => {
-            if (doc.data().createdAt !== null) {
-              notifications.push({
-                id: doc.id,
-                createdAt: doc.data().createdAt,
-                accessLevel: doc.data().accessLevel,
-                firstName: doc.data().firstName,
-                lastName: doc.data().lastName,
-                message: doc.data().message,
-                type: doc.data().type,
-                userId: doc.data().userId,
-              });
-            }
-          });
-
-          dispatch({
-            type: NOTOFICATIONS,
-            payload: notifications,
-          });
-          dispatch({
-            type: LOADING,
-            payload: false,
-          });
-        },
-        (error) => {
-          dispatch({
-            type: LOADING,
-            payload: false,
-          });
-          console.log("Notifications error", error);
-        }
-      );
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          if (doc.data().createdAt !== null) {
+            notifications.push({
+              id: doc.id,
+              createdAt: doc.data().createdAt,
+              accessLevel: doc.data().accessLevel,
+              firstName: doc.data().firstName,
+              lastName: doc.data().lastName,
+              message: doc.data().message,
+              type: doc.data().type,
+              userId: doc.data().userId,
+            });
+          }
+        });
+        console.log("noti", notifications);
+        dispatch({
+          type: NOTOFICATIONS,
+          payload: notifications,
+        });
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
+      })
+      .catch((error) => {
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
+        console.log("Notifications error", error);
+      });
   };
 };

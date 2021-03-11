@@ -64,15 +64,14 @@ const AllStacks = ({ navigation, logout }) => {
                     />
                   </TouchableOpacity>
                 </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      logout();
-                    }}
-                  >
-                    <Text>Sign out</Text>
-                  </TouchableOpacity>
-                </View>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    logout();
+                  }}
+                >
+                  <Text>Sign out</Text>
+                </TouchableOpacity>
               </View>
             );
           },
@@ -95,17 +94,7 @@ const AllStacks = ({ navigation, logout }) => {
       <Stack.Screen
         options={() => ({
           headerTitle: `Food Controller`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -123,17 +112,7 @@ const AllStacks = ({ navigation, logout }) => {
       <Stack.Screen
         options={() => ({
           headerTitle: `Cleaning Controller`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -152,17 +131,7 @@ const AllStacks = ({ navigation, logout }) => {
         name="GateController"
         options={{
           headerTitle: `Gate Controller`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -180,17 +149,7 @@ const AllStacks = ({ navigation, logout }) => {
         name="WaterController"
         options={{
           headerTitle: `Water Controller`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -208,17 +167,7 @@ const AllStacks = ({ navigation, logout }) => {
         name="ApproveUser"
         options={{
           headerTitle: `Approve User`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -236,17 +185,7 @@ const AllStacks = ({ navigation, logout }) => {
         name="ShiftChangeRequests"
         options={{
           headerTitle: `Shift Change Requests`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -262,47 +201,36 @@ const AllStacks = ({ navigation, logout }) => {
 
       <Stack.Screen
         name="ModifyShiftFromRequests"
-        options={{
-          headerTitle: `Modify Shift From Requests`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
+        component={ModifyShiftFromRequests}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
           },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={ModifyShiftFromRequests}
+        })}
       />
 
       <Stack.Screen
         name="ManageUser"
         options={{
           headerTitle: `Manage User`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -318,75 +246,63 @@ const AllStacks = ({ navigation, logout }) => {
 
       <Stack.Screen
         name="ShiftAllocation"
-        options={{
-          headerTitle: `Shift Allocation`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
+        component={ShiftAllocation}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
           },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={ShiftAllocation}
+        })}
       />
 
       <Stack.Screen
         name="ViewAllShifts"
-        options={{
-          headerTitle: `View all shifts`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
+        component={ViewAllShifts}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
           },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={ViewAllShifts}
+        })}
       />
 
       <Stack.Screen
         name="viewSingleUserRequest"
         options={{
           headerTitle: `Approve user`,
-          headerRight: () => {
-            return (
-              <TouchableOpacity
-                onPress={() => {
-                  logout();
-                }}
-              >
-                <Text>Sign out</Text>
-              </TouchableOpacity>
-            );
-          },
+          headerRight: () => {},
           headerLeft: () => {
             return (
               <TouchableOpacity
@@ -424,15 +340,6 @@ const AllStacks = ({ navigation, logout }) => {
                       size={30}
                       color="black"
                     />
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      logout();
-                    }}
-                  >
-                    <Text>Sign out</Text>
                   </TouchableOpacity>
                 </View>
               </View>

@@ -5,7 +5,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerActions } from "@react-navigation/native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
-import AllActivities from "../../AdminPages/AllActivities";
+import Communication from "../../AdminPages/Communication";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -13,23 +13,39 @@ import { logout } from "../../../redux/actions/userLogin";
 
 const Stack = createStackNavigator();
 
-const AllActivityStack = ({ navigation, logout }) => {
+const CommunicationStack = ({ navigation, logout }) => {
   return (
     <Stack.Navigator initialRouteName="AllActivities">
       <Stack.Screen
-        name="AllActivities"
-        component={AllActivities}
+        name="Communication"
+        component={Communication}
         options={() => ({
           headerStyle: {
             backgroundColor: "#008080",
           },
           headerTintColor: "#fff",
-          headerTitle: "",
-
-          headerRight: () => {},
+          headerTitleStyle: {
+            fontWeight: "bold",
+          },
+          headerTitle: `Communication`,
+          headerRight: () => {
+            return (
+              <View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      logout();
+                    }}
+                  >
+                    <Text>Sign out</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
           headerLeft: () => {
             return (
-              <View style={{ marginLeft: 10 }}>
+              <View>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())
@@ -48,4 +64,4 @@ const AllActivityStack = ({ navigation, logout }) => {
 
 const mapDispatchProps = (dispatch) => bindActionCreators({ logout }, dispatch);
 
-export default connect(null, mapDispatchProps)(AllActivityStack);
+export default connect(null, mapDispatchProps)(CommunicationStack);

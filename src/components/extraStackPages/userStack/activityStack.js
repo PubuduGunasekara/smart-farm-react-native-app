@@ -25,13 +25,11 @@ const MyActivityStack = ({ navigation, logout }) => {
             backgroundColor: "#008080",
           },
           headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitle: `My Activities`,
+          headerTitle: "",
+
           headerRight: () => {
             return (
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
                 <View>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Notifications")}
@@ -43,21 +41,12 @@ const MyActivityStack = ({ navigation, logout }) => {
                     />
                   </TouchableOpacity>
                 </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      logout();
-                    }}
-                  >
-                    <Text>Sign out</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
             );
           },
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())
@@ -79,13 +68,11 @@ const MyActivityStack = ({ navigation, logout }) => {
             backgroundColor: "#008080",
           },
           headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitle: `Notifications`,
+          headerTitle: "",
+
           headerRight: () => {
             return (
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
                 <View>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Notifications")}
@@ -97,21 +84,12 @@ const MyActivityStack = ({ navigation, logout }) => {
                     />
                   </TouchableOpacity>
                 </View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      logout();
-                    }}
-                  >
-                    <Text>Sign out</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
             );
           },
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())

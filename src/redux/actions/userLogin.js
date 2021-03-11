@@ -115,10 +115,7 @@ export const checkLoginState = () => {
         //   type: LOADING,
         //   payload: false,
         // });
-        dispatch({
-          type: USER_LOGIN_ERROR,
-          payload: null,
-        });
+
         //stre current user
         db.collection("user")
           .doc(user.uid)
@@ -141,10 +138,7 @@ export const checkLoginState = () => {
                 shiftDate: documentSnapshot.data().shiftDate,
                 shiftStatus: documentSnapshot.data().shiftStatus,
               };
-              dispatch({
-                type: USER_LOGIN_ERROR,
-                payload: null,
-              });
+
               dispatch({
                 type: USER_LOGIN,
                 payload: userDetails,
@@ -152,13 +146,21 @@ export const checkLoginState = () => {
             }
           })
           .catch((error) => {
-            console.error(error);
+            console.error("login error ", error);
             // dispatch({
             //   type: LOADING,
             //   payload: false,
             // });
+            dispatch({
+              type: USER_LOGIN_ERROR,
+              payload: error,
+            });
           });
       } else {
+        // dispatch({
+        //   type: LOADING,
+        //   payload: false,
+        // });
         dispatch({
           type: USER_LOGIN_ERROR,
           payload: false,

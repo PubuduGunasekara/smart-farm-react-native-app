@@ -7,8 +7,13 @@ import {
   Button,
   Alert,
 } from "react-native";
-import { ScrollView, FlatList } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import CheckBox from "@react-native-community/checkbox";
+import moment from "moment";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -72,10 +77,6 @@ function ModifyShiftFromRequests({
   const [dateCkeckedIds, setDateCkeckedIds] = useState([]);
   const [requestBtnToggler, setrequestBtnToggler] = useState(false);
   useEffect(() => {
-    // ListUsersForModify({ accessLevel });
-    // ListUsersFromDateCheck({ shiftDate, accessLevel });
-    // ListDateCheckIdsFunc({ shiftDate, accessLevel });
-    // setrequestBtnToggler(false);
     if (userListForShiftUpdate && userListDateCheck && listDateCheckIds) {
       setUsersListOfAccessLevel(userListForShiftUpdate);
       setUsersListDateChecked(userListDateCheck);
@@ -83,30 +84,9 @@ function ModifyShiftFromRequests({
     }
   }, [userListForShiftUpdate, userListDateCheck, listDateCheckIds]);
 
-  // console.log("list date ckeck ids", listDateCheckIds);
-  // console.log("userListForShiftUpdate", userListForShiftUpdate);
-  // console.log(shiftId, accessLevel, shiftDate, timeTo, timeFrom, requestId);
-
-  // const mapUserList = () => {
-  //   const List = userListForShiftUpdate.map((item) => {
-  //     if (item.shiftDate == shiftDate) {
-  //       return {
-  //         ...item,
-  //         selected: true,
-  //       };
-  //     }
-  //     return {
-  //       ...item,
-  //       selected: false,
-  //     };
-  //   });
-  //   setUserList(List);
-  // };
-
   const mapUserList = () => {
     var flag = false;
     const List = usersListOfAccessLevel.map((item) => {
-      // console.log("user list date check", userListDateCheck);
       flag = false;
       return {
         ...item,
@@ -193,22 +173,38 @@ function ModifyShiftFromRequests({
         {userList.length === 0 ? (
           <View>
             {requestBtnToggler === false ? (
-              <Button
-                title="Request Data"
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
                 onPress={() => {
                   ListUsersForModify({ accessLevel });
                   ListUsersFromDateCheck({ shiftDate, accessLevel });
                   ListDateCheckIdsFunc({ shiftDate, accessLevel });
                   setrequestBtnToggler(true);
                 }}
-              />
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>
+                  Request Data
+                </Text>
+              </TouchableOpacity>
             ) : (
-              <Button
-                title="Your data is ready. Click to show"
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
                 onPress={() => {
                   mapUserList();
                 }}
-              />
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>
+                  Your data is ready. Click to show
+                </Text>
+              </TouchableOpacity>
             )}
           </View>
         ) : (
@@ -241,8 +237,6 @@ function ModifyShiftFromRequests({
   };
 
   const onsubmit = () => {
-    // console.log("initialUserListWithSelected", initialUserListWithSelected);
-    // console.log("userList", userList);
     var flag = false;
     var temp = "";
     const initListWithDateCheckId = initialUserListWithSelected.map((item) => {
@@ -264,82 +258,80 @@ function ModifyShiftFromRequests({
         }),
       };
     });
-    console.log("date check with ids", initListWithDateCheckId);
+    var tempFlag = false;
     initListWithDateCheckId.map((item) => {
       userList.map((item2) => {
         if (item.id === item2.id) {
           if (item.selected !== item2.selected) {
-            if (item.selected === true && item2.selected === false) {
-              addNotifications({
-                userId: item2.id,
-                firstName: item2.firstName,
-                lastName: item2.lastName,
-                accessLevel: item2.accessLevel,
-                type: "DELETED",
-                message: `shift deleted on ${shiftDate}`,
-              });
-              deleteDateCkeckDoc({
-                DateCheckId: item.DateCheckId[item.DateCheckId.length - 1],
-              });
-            } else {
-              addNotifications({
-                userId: item2.id,
-                firstName: item2.firstName,
-                lastName: item2.lastName,
-                accessLevel: item2.accessLevel,
-                type: "ADD",
-                message: `New shift added on ${shiftDate}`,
-              });
-              addDateCkeckDoc({
-                accessLevel: item2.accessLevel,
-                firstName: item2.firstName,
-                lastName: item2.lastName,
-                userId: item2.id,
-                shiftDate: shiftDate,
-                shiftId: shiftId,
-              });
-            }
+            tempFlag = true;
           }
         }
       });
     });
 
-    // const List2 = List.map((item) => {
-    //   if (item.selected[0] == "1") {
-    //     console.log("zero", item.selected[0]);
-    //     return {
-    //       firstName: item.firstName,
-    //       lastName: item.lastName,
-    //       accessLevel: item.accessLevel,
-    //       id: item.id,
-    //       selected: true,
-    //     };
-    //   } else {
-    //     console.log("one", item.selected.length);
-    //     return {
-    //       firstName: item.firstName,
-    //       lastName: item.lastName,
-    //       accessLevel: item.accessLevel,
-    //       id: item.id,
-    //       selected: false,
-    //     };
-    //   }
-    // });
+    if (tempFlag === false) {
+      alert("No changes have been made");
+    } else {
+      initListWithDateCheckId.map((item) => {
+        userList.map((item2) => {
+          if (item.id === item2.id) {
+            if (item.selected !== item2.selected) {
+              tempFlag = true;
+              if (item.selected === true && item2.selected === false) {
+                addNotifications({
+                  userId: item2.id,
+                  firstName: item2.firstName,
+                  lastName: item2.lastName,
+                  accessLevel: item2.accessLevel,
+                  type: "DELETED",
+                  message: `shift deleted on ${shiftDate}`,
+                });
+                deleteDateCkeckDoc({
+                  DateCheckId: item.DateCheckId[item.DateCheckId.length - 1],
+                });
+              } else {
+                addNotifications({
+                  userId: item2.id,
+                  firstName: item2.firstName,
+                  lastName: item2.lastName,
+                  accessLevel: item2.accessLevel,
+                  type: "ADD",
+                  message: `New shift added on ${shiftDate}`,
+                });
+                addDateCkeckDoc({
+                  accessLevel: item2.accessLevel,
+                  firstName: item2.firstName,
+                  lastName: item2.lastName,
+                  userId: item2.id,
+                  shiftDate: shiftDate,
+                  shiftId: shiftId,
+                });
+              }
+            }
+          }
+        });
+      });
+      const listSelected = userList.filter((item) => item.selected == true);
+      const listSelectedWithDetails = listSelected.map((item, index) => {
+        return {
+          ...item,
+          shiftDate: shiftDate,
+          timeFrom: timeFrom,
+          timeTo: timeTo,
+          shiftId: shiftId,
+        };
+      });
+      UpdateModifiedShift({
+        shiftId,
+        selectedUsersList: listSelectedWithDetails,
+      });
+    }
+  };
 
-    const listSelected = userList.filter((item) => item.selected == true);
-    const listSelectedWithDetails = listSelected.map((item, index) => {
-      return {
-        ...item,
-        shiftDate: shiftDate,
-        timeFrom: timeFrom,
-        timeTo: timeTo,
-        shiftId: shiftId,
-      };
-    });
-    UpdateModifiedShift({
-      shiftId,
-      selectedUsersList: listSelectedWithDetails,
-    });
+  const oncancel = () => {
+    if (userList.length !== 0) {
+      setUserList([]);
+    }
   };
 
   if (shiftModifyUpdate === true) {
@@ -347,11 +339,6 @@ function ModifyShiftFromRequests({
       "SUCCESS",
       "SUCCESS",
       [
-        // {
-        //   text: "Cancel",
-        //   onPress: () => console.log("Cancel Pressed"),
-        //   style: "cancel",
-        // },
         {
           text: "OK",
           onPress: () => {
@@ -369,27 +356,6 @@ function ModifyShiftFromRequests({
 
   var today = day + "-" + month + "-" + year;
 
-  // if (usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds) {
-  //   if (shiftDate < today) {
-  //     Alert.alert(
-  //       "SUCCESS",
-  //       "This is a old shift",
-  //       [
-  //         // {
-  //         //   text: "Cancel",
-  //         //   onPress: () => console.log("Cancel Pressed"),
-  //         //   style: "cancel",
-  //         // },
-  //         {
-  //           text: "OK",
-  //           onPress: () => navigation.goBack(),
-  //         },
-  //       ],
-  //       { cancelable: false }
-  //     );
-  //   }
-  // }
-
   return (
     <View>
       <TopHeaderWithGoBack
@@ -397,41 +363,82 @@ function ModifyShiftFromRequests({
         navigationFunc={navigation.goBack}
       />
       {usersListOfAccessLevel && usersListDateChecked && dateCkeckedIds ? (
-        <View>
-          <View>
-            <Text>Shift Date : {shiftDate}</Text>
-            <Text>Shift Time From : {timeTo.toDate().toTimeString()}</Text>
-            <Text>Shift Time To : {timeFrom.toDate().toTimeString()}</Text>
-          </View>
-          <View style={{ flexDirection: "column", marginTop: 10 }}>
+        <View style={{ margin: 20 }}>
+          <View style={{ flexDirection: "row", marginBottom: 8 }}>
             <View>
-              <Text
-                style={{
-                  textAlign: "left",
-                  fontSize: 18,
-                  justifyContent: "center",
-                  marginBottom: 10,
-                }}
-              >
-                Workers
+              <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                Shift Date :
               </Text>
             </View>
-            <ScrollView height="45%" style={{ margin: 20, marginTop: 0 }}>
+            <View>
+              <Text>{shiftDate}</Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "row", marginBottom: 8 }}>
+            <View>
+              <Text style={{ fontWeight: "bold", fontSize: 15 }}>Time : </Text>
+            </View>
+            <View>
+              <Text>
+                From{moment(timeFrom.toDate()).format(" h:mm a")} to
+                {moment(timeTo.toDate()).format(" h:mm a")}
+              </Text>
+            </View>
+          </View>
+
+          <View style={{ flexDirection: "column" }}>
+            <View>
+              <Text style={{ fontWeight: "bold", fontSize: 15 }}>Workers:</Text>
+            </View>
+            <ScrollView
+              height="70%"
+              style={{
+                backgroundColor: "#b2d8d8",
+                borderWidth: 1,
+                borderRadius: 1,
+                borderColor: "#ddd",
+                borderBottomWidth: 0,
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.8,
+                shadowRadius: 1,
+                elevation: 3,
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            >
               <View>{showData()}</View>
             </ScrollView>
           </View>
           <View style={{ flexDirection: "row", marginTop: 10 }}>
             <View style={{ flex: 2, marginRight: 25 }}>
-              <Button color="#008080" title="Cancel" onPress={() => {}} />
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
+                onPress={() => {
+                  oncancel();
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>CANCEL</Text>
+              </TouchableOpacity>
             </View>
             <View style={{ flex: 2, marginLeft: 25 }}>
-              <Button
-                color="#008080"
-                title="Submit"
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#008080",
+                  alignItems: "center",
+                  padding: 10,
+                }}
                 onPress={() => {
                   onsubmit();
                 }}
-              />
+              >
+                <Text style={{ color: "#fff", fontSize: 16 }}>SUBMIT</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

@@ -7,7 +7,12 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import {
+  FlatList,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import moment from "moment";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -60,19 +65,41 @@ const AllActivities = ({
     var year = currentDate.getFullYear();
 
     var activityDate = day + "-" + month + "-" + year;
+    var day1 = date.getDate(); //change theese values
+    var month1 = date.getMonth() + 1;
+    var year1 = date.getFullYear();
 
-    showAllActivities({
-      activityDate: activityDate,
-    });
+    var check = day1 + "-" + month1 + "-" + year1;
+    if (currentDate !== check) {
+      showAllActivities({
+        activityDate: activityDate,
+      });
+    }
   };
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ marginTop: 7, flexDirection: "row" }}>
-        <Text style={{ marginRight: 5, color: "black" }}>
-          First name : {item.firstName}
-        </Text>
-        <Text>created at: {item.createdAt.toDate().toTimeString()}</Text>
+      <View
+        style={{
+          backgroundColor: item.type === "ON" ? "#cdf0ed" : "#f9e1de",
+          padding: 10,
+        }}
+      >
+        <View>
+          <Text>{item.message}</Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1, alignItems: "flex-start" }}>
+            <Text style={{ color: "#cccccc" }}>
+              {item.firstName} {item.lastName} - (Level {item.accessLevel})
+            </Text>
+          </View>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <Text style={{ color: "#cccccc" }}>
+              {moment(item.createdAt.toDate()).calendar()}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   };
@@ -90,7 +117,6 @@ const AllActivities = ({
           shadowRadius: 3.84,
           flex: 1,
           elevation: 100,
-          margin: 20,
         }}
       >
         <FlatList
@@ -119,11 +145,22 @@ const AllActivities = ({
 
       <View style={{ flexDirection: "row", margin: 20 }}>
         <View style={{ flex: 5, alignContent: "flex-start" }}>
-          <Button
-            color={checkDateSelect ? "#008080" : "#000000"}
+          <TouchableOpacity
+            style={{
+              backgroundColor: `${checkDateSelect ? "#008080" : "#000000"}`,
+              alignItems: "center",
+              padding: 15,
+            }}
             onPress={showDatepicker}
-            title={checkDateSelect ? date.toDateString() : "Select Date"}
-          />
+          >
+            <Text style={{ color: "#fff", fontSize: 16 }}>
+              {checkDateSelect ? date.toDateString() : "Select Date"}
+            </Text>
+            {/* <Button
+              color={checkDateSelect ? "#008080" : "#000000"}
+              title={checkDateSelect ? date.toDateString() : "Select Date"}
+            /> */}
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -139,11 +176,33 @@ const AllActivities = ({
       )}
       <View>
         {activities.length !== 0 && activities ? (
-          <ScrollView height="45%" style={{ margin: 20, marginTop: 0 }}>
+          <ScrollView height="78%" style={{ marginTop: 10 }}>
             <View>{showActivities()}</View>
           </ScrollView>
         ) : (
-          <Text>No activities</Text>
+          <View style={{ flex: 1 }}>
+            {checkDateSelect === false ? (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: "#cccccc" }}>Select Date</Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text style={{ color: "#cccccc" }}>No Activity Found</Text>
+              </View>
+            )}
+          </View>
         )}
       </View>
     </View>

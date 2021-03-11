@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, Text, RefreshControl } from "react-native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import moment from "moment";
 
@@ -9,6 +9,12 @@ import { getNotifications } from "../../redux/actions/notificationActions";
 
 import TopHeaderWithGoBack from "../helperComponents/topHeaderWithGoBack";
 
+const wait = (timeout) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
+};
+
 const Notifications = ({
   navigation,
   getNotifications,
@@ -17,12 +23,22 @@ const Notifications = ({
 }) => {
   const [notificationsData, setNotificationsData] = useState(userNotifications);
   useEffect(() => {
-    getNotifications({ userId: currentUser.userId });
+    if (notificationsData.length === 0) {
+      getNotifications({ userId: currentUser.userId });
+    }
     navigation.addListener("focus", () => {
-      setNotificationsData(userNotifications);
+      getNotifications({ userId: currentUser.userId });
     });
     setNotificationsData(userNotifications);
   }, [userNotifications]);
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getNotifications({ userId: currentUser.userId });
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   const renderItem = ({ item, index }) => {
     return (
@@ -71,7 +87,13 @@ const Notifications = ({
       />
       <View>
         {notificationsData.length !== 0 && notificationsData ? (
-          <ScrollView height="80%" style={{ margin: 20, marginTop: 0 }}>
+          <ScrollView
+            height="80%"
+            style={{ margin: 20, marginTop: 0 }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
             <View>
               {showNotfications()}
               {/* {(showNotfications(), console.log("Noti", notificationsData))}

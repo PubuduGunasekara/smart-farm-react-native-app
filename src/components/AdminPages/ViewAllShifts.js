@@ -7,7 +7,13 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
-import { ScrollView, FlatList } from "react-native-gesture-handler";
+import {
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import moment from "moment";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 
 import DateTimePicker from "@react-native-community/datetimepicker";
 
@@ -92,15 +98,64 @@ const ViewAllShifts = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View>
-        <Text>start time : {item.timeFrom.toDate().toTimeString()}</Text>
-        <Text>end time : {item.timeTo.toDate().toTimeString()}</Text>
-        <Text>access Level : {item.accessLevel}</Text>
-        <Text>No of workers: {item.selectedUsersList.length}</Text>
+      <View
+        style={{
+          backgroundColor: "#b2d8d8",
+          borderWidth: 1,
+          borderRadius: 1,
+          borderColor: "#ddd",
+          borderBottomWidth: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 1,
+          elevation: 3,
+          marginBottom: 10,
+          padding: 10,
+        }}
+      >
+        <View style={{ flexDirection: "row", marginBottom: 5 }}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>Shift : </Text>
+          </View>
+          <View>
+            <Text>
+              From{moment(item.timeFrom.toDate()).format(" h:mm a")} to
+              {moment(item.timeTo.toDate()).format(" h:mm a")}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginBottom: 5 }}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+              Access Level :
+            </Text>
+          </View>
+          <View>
+            <Text>{item.accessLevel}</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginBottom: 5 }}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+              No of workers:{" "}
+            </Text>
+          </View>
+          <View>
+            <Text>{item.selectedUsersList.length}</Text>
+          </View>
+        </View>
+
         <View style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ flex: 1 }}>
-            <Button
-              title="modify"
+          <View style={{ flex: 1 }}></View>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <TouchableOpacity
+              style={{
+                alignItems: "center",
+                padding: 10,
+              }}
               onPress={() => {
                 navigation.navigate("ModifyShiftFromRequests", {
                   shiftId: item.shiftId,
@@ -110,7 +165,9 @@ const ViewAllShifts = ({
                   timeFrom: item.timeFrom,
                 });
               }}
-            />
+            >
+              <AntDesign name="edit" size={30} color="#008080" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -119,23 +176,16 @@ const ViewAllShifts = ({
 
   const showData = () => {
     return (
-      <View
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          flex: 1,
-          elevation: 100,
-          margin: 20,
-        }}
-      >
+      <View>
         {allShiftDetails.length === 0 ? (
-          <View>
-            <Text>No shifts found</Text>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ color: "#cccccc" }}>No shifts found</Text>
           </View>
         ) : (
           <View>
@@ -157,11 +207,18 @@ const ViewAllShifts = ({
         navigationFunc={navigation.goBack}
       />
       <View style={{ margin: 20 }}>
-        <Button
-          color={checkDateSelect ? "#008080" : "#000000"}
+        <TouchableOpacity
+          style={{
+            backgroundColor: `${checkDateSelect ? "#008080" : "#000000"}`,
+            alignItems: "center",
+            padding: 15,
+          }}
           onPress={showDatepicker}
-          title={checkDateSelect ? date.toDateString() : "Select Date"}
-        />
+        >
+          <Text style={{ color: "#fff", fontSize: 16 }}>
+            {checkDateSelect ? date.toDateString() : "Select Date"}
+          </Text>
+        </TouchableOpacity>
       </View>
       {showDate && (
         <DateTimePicker
@@ -173,7 +230,13 @@ const ViewAllShifts = ({
           onChange={onChangeDate}
         />
       )}
-      <ScrollView height="80%" style={{ margin: 20, marginTop: 0 }}>
+      <ScrollView
+        height="75%"
+        style={{
+          margin: 20,
+          marginTop: 0,
+        }}
+      >
         <View>{showData()}</View>
       </ScrollView>
     </View>
