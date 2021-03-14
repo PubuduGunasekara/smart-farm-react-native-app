@@ -81,12 +81,12 @@ const FoodController = ({
       FoodControllerActionCapOnOff({ openCloseStatus: "0" });
       FoodControllerActionSpeedLevel({ motorSpeed: "1" });
     });
-    navigation.addListener("focus", () => {
-      FoodControllerActionONOFF({ motorStopStartStatus: "0" });
-      FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      FoodControllerActionCapOnOff({ openCloseStatus: "2" });
-      FoodControllerActionSpeedLevel({ motorSpeed: "1" });
-    });
+    // navigation.addListener("focus", () => {
+    //   FoodControllerActionONOFF({ motorStopStartStatus: "0" });
+    //   FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+    //   FoodControllerActionCapOnOff({ openCloseStatus: "2" });
+    //   FoodControllerActionSpeedLevel({ motorSpeed: "1" });
+    // });
     if (food_controller_on_off_status === true) {
       setbuttonEnable(false);
       setbuttonEnableON(true);
@@ -185,7 +185,7 @@ const FoodController = ({
       />
       <View
         style={{
-          backgroundColor: "#ddf8f8",
+          backgroundColor: "#b2d8d8",
           alignContent: "stretch",
           marginTop: 30,
           margin: 25,
@@ -194,20 +194,56 @@ const FoodController = ({
       >
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 2, margin: 25 }}>
-            <Button
+            <TouchableOpacity
+              disabled={buttonEnableON}
+              style={{
+                backgroundColor: `${buttonEnableON ? `#cccccc` : `#008080`}`,
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => handleOnOff({ motorStopStartStatus: "1" })}
+            >
+              <Text
+                style={{
+                  color: `${buttonEnableON ? `#a8a8a8` : "#fff"}`,
+                  fontSize: 14,
+                }}
+              >
+                ON
+              </Text>
+            </TouchableOpacity>
+            {/* <Button
               color="#008080"
               disabled={buttonEnableON}
               title="On"
               onPress={() => handleOnOff({ motorStopStartStatus: "1" })}
-            />
+            /> */}
           </View>
           <View style={{ flex: 2, margin: 25 }}>
-            <Button
+            <TouchableOpacity
+              disabled={buttonEnable}
+              style={{
+                backgroundColor: `${buttonEnable ? `#cccccc` : `#008080`}`,
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => handleOnOff({ motorStopStartStatus: "0" })}
+            >
+              <Text
+                style={{
+                  color: `${buttonEnable ? `#a8a8a8` : "#fff"}`,
+                  fontSize: 14,
+                }}
+              >
+                OFF
+              </Text>
+            </TouchableOpacity>
+            {/* <Button
               color="#008080"
               disabled={buttonEnable}
               title="Off"
               onPress={() => handleOnOff({ motorStopStartStatus: "0" })}
-            />
+            /> */}
           </View>
         </View>
 
@@ -243,7 +279,12 @@ const FoodController = ({
                 }}
                 name="chevron-up-circle-outline"
                 size={80}
-                color="#008080"
+                color={
+                  buttonEnable_motor_direction_forward === true ||
+                  buttonEnable == true
+                    ? "#cccccc"
+                    : "#008080"
+                }
               />
             </TouchableOpacity>
           </View>
@@ -267,7 +308,12 @@ const FoodController = ({
                 style={{ marginRight: 0, paddingRight: 0 }}
                 name="chevron-down-circle-outline"
                 size={80}
-                color="#008080"
+                color={
+                  buttonEnable_motor_direction_backward === true ||
+                  buttonEnable == true
+                    ? "#cccccc"
+                    : "#008080"
+                }
               />
             </TouchableOpacity>
           </View>
@@ -313,20 +359,72 @@ const FoodController = ({
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 2, margin: 25 }}>
-            <Button
+            <TouchableOpacity
+              disabled={buttonEnable ? buttonEnable : buttonEnable_food_cap_on}
+              style={{
+                backgroundColor: `${
+                  buttonEnable || buttonEnable_food_cap_on
+                    ? `#cccccc`
+                    : `#008080`
+                }`,
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => handleFoodCap({ openCloseStatus: "1" })}
+            >
+              <Text
+                style={{
+                  color: `${
+                    buttonEnable || buttonEnable_food_cap_on
+                      ? `#a8a8a8`
+                      : "#fff"
+                  }`,
+                  fontSize: 14,
+                }}
+              >
+                OPEN CAP
+              </Text>
+            </TouchableOpacity>
+            {/* <Button
               color="#008080"
               disabled={buttonEnable ? buttonEnable : buttonEnable_food_cap_on}
               title="Open Cap"
               onPress={() => handleFoodCap({ openCloseStatus: "1" })}
-            />
+            /> */}
           </View>
           <View style={{ flex: 2, margin: 25 }}>
-            <Button
+            <TouchableOpacity
+              disabled={buttonEnable ? buttonEnable : buttonEnable_food_cap_off}
+              style={{
+                backgroundColor: `${
+                  buttonEnable || buttonEnable_food_cap_off
+                    ? `#cccccc`
+                    : `#008080`
+                }`,
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => handleFoodCap({ openCloseStatus: "0" })}
+            >
+              <Text
+                style={{
+                  color: `${
+                    buttonEnable || buttonEnable_food_cap_off
+                      ? `#a8a8a8`
+                      : "#fff"
+                  }`,
+                  fontSize: 14,
+                }}
+              >
+                CLOSE CAP
+              </Text>
+            </TouchableOpacity>
+            {/* <Button
               color="#008080"
               disabled={buttonEnable ? buttonEnable : buttonEnable_food_cap_off}
               title="Close Cap"
               onPress={() => handleFoodCap({ openCloseStatus: "0" })}
-            />
+            /> */}
           </View>
         </View>
       </View>

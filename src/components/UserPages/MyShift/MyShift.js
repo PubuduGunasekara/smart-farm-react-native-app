@@ -7,6 +7,8 @@ import {
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import moment from "moment";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -61,7 +63,6 @@ const MyShift = ({
     var shiftDate = day + "-" + month + "-" + year;
 
     viewMyShift({ shiftDate, accessLevel: currentUser.accessLevel });
-    console.log("inside on change", myShiftData);
   };
 
   if (loading) {
@@ -78,18 +79,43 @@ const MyShift = ({
 
   return (
     <View>
-      <TopHeaderWithGoBack
-        title={"My Shifts"}
-        navigationFunc={navigation.goBack}
-      />
+      <View
+        style={{
+          flexDirection: "row",
+          alignContent: "stretch",
+          marginTop: 5,
+        }}
+      >
+        <View style={{ alignItems: "stretch", marginLeft: 20 }}></View>
+        <View style={{ alignItems: "stretch" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              marginLeft: 0,
+              paddingLeft: 0,
+              marginTop: 3,
+            }}
+          >
+            My Shift
+          </Text>
+        </View>
+      </View>
 
       <View style={{ flexDirection: "row", margin: 20 }}>
         <View style={{ flex: 5, alignContent: "flex-start" }}>
-          <Button
-            color={checkDateSelect ? "#008080" : "#000000"}
+          <TouchableOpacity
+            style={{
+              backgroundColor: `${checkDateSelect ? "#008080" : "#000000"}`,
+              alignItems: "center",
+              padding: 15,
+            }}
             onPress={showDatepicker}
-            title={checkDateSelect ? date.toDateString() : "Select Date"}
-          />
+          >
+            <Text style={{ color: "#fff", fontSize: 16 }}>
+              {checkDateSelect ? date.toDateString() : "Select Date"}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -104,26 +130,55 @@ const MyShift = ({
         />
       )}
       {myShiftData && checkDateSelect ? (
-        <View>
-          <View
-            style={{
-              justifyContent: "flex-start",
-              alignContent: "center",
-              margin: 20,
-            }}
-          >
-            <Text>
-              Start Time : {myShiftData.timeFrom.toDate().toTimeString()}
-            </Text>
-            <Text>End Time : {myShiftData.timeTo.toDate().toTimeString()}</Text>
+        <View
+          style={{
+            backgroundColor: "#b2d8d8",
+            borderWidth: 1,
+            borderRadius: 1,
+            borderColor: "#ddd",
+            borderBottomWidth: 0,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.8,
+            shadowRadius: 1,
+            elevation: 3,
+            marginBottom: 10,
+            padding: 10,
+            margin: 20,
+            marginTop: 10,
+          }}
+        >
+          <View style={{ flexDirection: "row", marginBottom: 5 }}>
+            <View>
+              <Text style={{ fontWeight: "bold", fontSize: 15 }}>Shift : </Text>
+            </View>
+            <View>
+              <Text>
+                From{moment(myShiftData.timeFrom.toDate()).format(" h:mm a")} to
+                {moment(myShiftData.timeTo.toDate()).format(" h:mm a")}
+              </Text>
+            </View>
           </View>
+
           {date.getDay() >= new Date().getDay() ? (
-            <View style={{ flexDirection: "row", margin: 20 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                margin: 20,
+                marginBottom: 0,
+                marginRight: 0,
+              }}
+            >
               <View style={{ flex: 1 }}></View>
               <View style={{ flex: 1 }}>
-                <Button
-                  color="#008080"
-                  title="Request Shift Change"
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: `${
+                      checkDateSelect ? "#008080" : "#000000"
+                    }`,
+                    alignItems: "center",
+                    padding: 10,
+                  }}
                   onPress={() => {
                     navigation.navigate("RequestShiftChange", {
                       currentUser,
@@ -133,7 +188,11 @@ const MyShift = ({
                       shiftId: myShiftData.shiftId,
                     });
                   }}
-                />
+                >
+                  <Text style={{ color: "#fff", fontSize: 14 }}>
+                    Request Shift Change
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           ) : (

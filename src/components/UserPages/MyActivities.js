@@ -178,35 +178,35 @@ const MyActivities = ({
         />
       )}
       <View>
-        {activities.length !== 0 ? (
-          <ScrollView height="78%" style={{ marginTop: 10 }}>
+        <ScrollView height="78%" style={{ marginTop: 10 }}>
+          {activities.length !== 0 ? (
             <View>{showActivities()}</View>
-          </ScrollView>
-        ) : (
-          <View style={{ flex: 1 }}>
-            {checkDateSelect === false ? (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ color: "#cccccc" }}>Select Date</Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text style={{ color: "#cccccc" }}>No Activity Found</Text>
-              </View>
-            )}
-          </View>
-        )}
+          ) : (
+            <View style={{ flex: 1 }}>
+              {checkDateSelect === false ? (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ color: "#cccccc" }}>Select Date</Text>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ color: "#cccccc" }}>No Activity Found</Text>
+                </View>
+              )}
+            </View>
+          )}
+        </ScrollView>
       </View>
     </View>
   );

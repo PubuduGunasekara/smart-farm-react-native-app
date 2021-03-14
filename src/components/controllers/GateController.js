@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -108,7 +109,7 @@ const GateController = ({
       />
       <View
         style={{
-          backgroundColor: "#ddf8f8",
+          backgroundColor: "#b2d8d8",
           alignContent: "stretch",
           marginTop: 30,
           margin: 25,
@@ -142,20 +143,56 @@ const GateController = ({
 
           <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 2, margin: 25 }}>
-              <Button
+              <TouchableOpacity
+                disabled={buttonEnableON}
+                style={{
+                  backgroundColor: `${buttonEnableON ? `#cccccc` : `#008080`}`,
+                  alignItems: "center",
+                  padding: 10,
+                }}
+                onPress={() => handleOnOff({ openStatus: "1" })}
+              >
+                <Text
+                  style={{
+                    color: `${buttonEnableON ? `#a8a8a8` : "#fff"}`,
+                    fontSize: 14,
+                  }}
+                >
+                  OPEN
+                </Text>
+              </TouchableOpacity>
+              {/* <Button
                 color="#008080"
                 disabled={buttonEnableON}
                 title="oPEN"
                 onPress={() => handleOnOff({ openStatus: "1" })}
-              />
+              /> */}
             </View>
             <View style={{ flex: 2, margin: 25 }}>
-              <Button
+              <TouchableOpacity
+                disabled={buttonEnable}
+                style={{
+                  backgroundColor: `${buttonEnable ? `#cccccc` : `#008080`}`,
+                  alignItems: "center",
+                  padding: 10,
+                }}
+                onPress={() => handleOnOff({ openStatus: "0" })}
+              >
+                <Text
+                  style={{
+                    color: `${buttonEnable ? `#a8a8a8` : "#fff"}`,
+                    fontSize: 14,
+                  }}
+                >
+                  CLOSE
+                </Text>
+              </TouchableOpacity>
+              {/* <Button
                 color="#008080"
                 disabled={buttonEnable}
                 title="cLOSE"
                 onPress={() => handleOnOff({ openStatus: "0" })}
-              />
+              /> */}
             </View>
           </View>
         </View>

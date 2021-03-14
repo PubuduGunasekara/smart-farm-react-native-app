@@ -18,6 +18,7 @@ import AllActivityStack from "../src/components/extraStackPages/adminStack/activ
 import MyActivityStack from "../src/components/extraStackPages/userStack/activityStack";
 import CommunicationStack from "../src/components/extraStackPages/adminStack/communicationsStack";
 import ShiftAllocationStack from "./components/extraStackPages/adminStack/shiftAllocationStack";
+import CommunicationsUserStack from "./components/extraStackPages/userStack/communicationUserStacks";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -93,9 +94,9 @@ function UserSideDrawer() {
         component={ViewIncident}
       />
       <Drawer.Screen
-        name="CommunicationUser"
+        name="CommunicationsUserStack"
         options={{ title: "Communication" }}
-        component={CommunicationUser}
+        component={CommunicationsUserStack}
       />
       <Drawer.Screen
         name="About"

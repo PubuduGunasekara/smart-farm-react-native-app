@@ -24,28 +24,12 @@ const CommunicationStack = ({ navigation, logout }) => {
             backgroundColor: "#008080",
           },
           headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitle: `Communication`,
-          headerRight: () => {
-            return (
-              <View>
-                <View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      logout();
-                    }}
-                  >
-                    <Text>Sign out</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            );
-          },
+          headerTitle: "",
+
+          headerRight: () => {},
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())

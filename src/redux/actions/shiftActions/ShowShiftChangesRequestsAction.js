@@ -17,6 +17,7 @@ export const ShowShiftChangesRequest = () => {
     const db = firebase.firestore();
 
     db.collection("shiftRequestMessages")
+      .orderBy("createdAt", "desc")
       .get()
       .then((data) => {
         data.forEach((doc) => {

@@ -102,32 +102,46 @@ const Communication = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ marginTop: 7, flexDirection: "row" }}>
-        <Text style={{ marginRight: 5, color: "black" }}>{item.message}</Text>
-
-        <Text>
-          {moment(item.createdAt.toDate()).startOf("seconds").fromNow()}
-        </Text>
+      <View
+        style={{
+          backgroundColor: "#b2d8d8",
+          borderWidth: 1,
+          borderRadius: 1,
+          borderColor: "#ddd",
+          borderBottomWidth: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 1,
+          elevation: 3,
+          marginBottom: 10,
+          padding: 10,
+        }}
+      >
+        <View style={{ marginBottom: 5 }}>
+          <View>
+            <Text>{item.message}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1 }}>
+            <Text style={{ color: "#a8a8a8", fontSize: 12 }}>
+              Access level : {item.accessLevel}
+            </Text>
+          </View>
+          <View style={{ flex: 2, alignItems: "flex-end" }}>
+            <Text style={{ color: "#a8a8a8", fontSize: 12 }}>
+              {moment(item.createdAt.toDate()).calendar()}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   };
 
   const showMessage = () => {
     return (
-      <View
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          flex: 1,
-          elevation: 100,
-          margin: 20,
-        }}
-      >
+      <View>
         {console.log("calling")}
         <FlatList
           data={messagesData}
@@ -139,30 +153,46 @@ const Communication = ({
   };
 
   return (
-    <View>
-      <TopHeaderWithGoBack
-        title={"Communication"}
-        navigationFunc={navigation.goBack}
-      />
+    <KeyboardAvoidingView behavior="padding" enabled>
       <View
         style={{
           flexDirection: "row",
-          margin: 30,
+          alignContent: "stretch",
+          marginTop: 5,
+        }}
+      >
+        <View style={{ alignItems: "stretch", marginLeft: 20 }}></View>
+        <View style={{ alignItems: "stretch" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              marginLeft: 0,
+              paddingLeft: 0,
+              marginTop: 3,
+            }}
+          >
+            Communications
+          </Text>
+        </View>
+      </View>
+
+      <View
+        style={{
+          flexDirection: "row",
+          margin: 20,
           marginTop: 10,
           marginBottom: 0,
         }}
       >
         <View style={{ flex: 2 }}>
-          <Text style={{ margin: 0, paddingTop: 15 }}>Audience : </Text>
-        </View>
-
-        <View style={{ flex: 3 }}>
           <Picker
             selectedValue={WorkGroupLevel}
             onValueChange={(level, itemIndex) => {
               submitWorkGroupLevel({ level });
             }}
-            style={{ paddingBottom: 10 }}
+            color="#008080"
+            style={{ margin: 0, padding: 0 }}
           >
             <Picker.Item label="Select Access Level" value="4" />
             <Picker.Item label="Controller Admin Level" value="1" />
@@ -171,10 +201,10 @@ const Communication = ({
           </Picker>
         </View>
       </View>
-      <View style={{ margin: 30, marginTop: 20 }}>
+      <View style={{ margin: 20, marginTop: 20 }}>
         <View
           style={{
-            backgroundColor: "#ddf8f8",
+            backgroundColor: "#b2d8d8",
             borderWidth: 1,
             borderRadius: 1,
             borderColor: "#ddd",
@@ -189,7 +219,7 @@ const Communication = ({
           <TextInput
             editable
             multiline={true}
-            numberOfLines={4}
+            numberOfLines={6}
             maxHeight={80}
             value={message}
             placeholder="Enter message"
@@ -200,18 +230,25 @@ const Communication = ({
         <View style={{ flexDirection: "row", marginTop: 20 }}>
           <View style={{ flex: 1 }}></View>
           <View style={{ flex: 1 }}>
-            <Button
-              color="#008080"
-              title="Send"
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#008080",
+                alignItems: "center",
+                padding: 10,
+              }}
               onPress={() => {
                 onsubmit();
               }}
-            />
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>SEND</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
-      <View style={{ margin: 30, marginTop: 10 }}>
-        <Text>Previous messages</Text>
+      <View style={{ margin: 20, marginTop: 10 }}>
+        <Text style={{ marginBottom: 10, fontWeight: "bold" }}>
+          Previous Messages
+        </Text>
         <View>
           {messagesData.length !== 0 && messagesData ? (
             <View>
@@ -220,17 +257,23 @@ const Communication = ({
                   <ActivityIndicator size="large" color="#008080" />
                 </View>
               ) : (
-                <ScrollView height="62%" style={{ margin: 20, marginTop: 0 }}>
-                  {showMessage()}
-                </ScrollView>
+                <ScrollView height="70%">{showMessage()}</ScrollView>
               )}
             </View>
           ) : (
-            <Text>No Message</Text>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "#cccccc" }}>No Messages</Text>
+            </View>
           )}
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

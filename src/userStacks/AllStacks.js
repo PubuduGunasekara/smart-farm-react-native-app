@@ -49,7 +49,7 @@ const AllStacks = ({ navigation, logout }) => {
           headerTitleStyle: {
             fontWeight: "bold",
           },
-          headerTitle: `Home`,
+          headerTitle: "",
           headerRight: () => {
             return (
               <View style={{ flexDirection: "row" }}>
@@ -92,75 +92,175 @@ const AllStacks = ({ navigation, logout }) => {
       />
 
       <Stack.Screen
+        name="FoodController"
+        component={FoodController}
         options={() => ({
-          headerTitle: `Food Controller`,
-          headerRight: () => {},
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
         })}
-        name="FoodController"
-        component={FoodController}
       />
 
       <Stack.Screen
+        name="CleaningController"
+        component={CleaningController}
         options={() => ({
-          headerTitle: `Cleaning Controller`,
-          headerRight: () => {},
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
         })}
-        name="CleaningController"
-        component={CleaningController}
       />
 
       <Stack.Screen
         name="GateController"
-        options={{
-          headerTitle: `Gate Controller`,
-          headerRight: () => {},
-          headerLeft: () => {
+        component={GateController}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             );
           },
-        }}
-        component={GateController}
+          headerLeft: () => {
+            return (
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
       />
 
       <Stack.Screen
         name="WaterController"
-        options={{
-          headerTitle: `Water Controller`,
-          headerRight: () => {},
-          headerLeft: () => {
+        component={WaterController}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
             );
           },
-        }}
-        component={WaterController}
+          headerLeft: () => {
+            return (
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
       />
 
       <Stack.Screen
@@ -183,20 +283,29 @@ const AllStacks = ({ navigation, logout }) => {
 
       <Stack.Screen
         name="ShiftChangeRequests"
-        options={{
-          headerTitle: `Shift Change Requests`,
+        component={ShiftChangeRequests}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
           headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={ShiftChangeRequests}
+        })}
       />
 
       <Stack.Screen

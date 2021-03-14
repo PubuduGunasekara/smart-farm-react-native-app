@@ -286,6 +286,7 @@ const ShiftAllocation = ({
       </View>
     );
   };
+  console.log("shiftExistStatus", shiftExistStatus);
 
   const showData = () => {
     return (
@@ -630,7 +631,10 @@ const ShiftAllocation = ({
                         [
                           {
                             text: "OK",
-                            onPress: () => CheckShiftExist_setFalse(),
+                            onPress: () => {
+                              // CheckShiftExist_setFalse(),
+                              setshiftExistValue(true);
+                            },
                           },
                         ],
                         { cancelable: false }

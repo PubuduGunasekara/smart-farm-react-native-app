@@ -103,7 +103,7 @@ const WaterController = ({
       />
       <View
         style={{
-          backgroundColor: "#ddf8f8",
+          backgroundColor: "#b2d8d8",
           alignContent: "stretch",
           marginTop: 30,
           margin: 25,

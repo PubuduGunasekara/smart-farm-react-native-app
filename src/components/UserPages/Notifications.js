@@ -23,9 +23,9 @@ const Notifications = ({
 }) => {
   const [notificationsData, setNotificationsData] = useState(userNotifications);
   useEffect(() => {
-    if (notificationsData.length === 0) {
-      getNotifications({ userId: currentUser.userId });
-    }
+    // if (notificationsData.length === 0 && currentUser.accessLevel !== "0") {
+    //   getNotifications({ userId: currentUser.userId });
+    // }
     navigation.addListener("focus", () => {
       getNotifications({ userId: currentUser.userId });
     });
@@ -42,14 +42,23 @@ const Notifications = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ marginTop: 7, flexDirection: "row" }}>
-        <Text style={{ marginRight: 5, color: "black" }}>
-          First name : {item.firstName}
-        </Text>
-
-        <Text>
-          {moment(item.createdAt.toDate()).startOf("seconds").fromNow()}
-        </Text>
+      <View
+        style={{
+          backgroundColor: item.type === "ADD" ? "#cdf0ed" : "#f9e1de",
+          padding: 10,
+        }}
+      >
+        <View>
+          <Text>{item.message}</Text>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1 }}></View>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <Text style={{ color: "#cccccc" }}>
+              {moment(item.createdAt.toDate()).calendar()}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   };
@@ -67,7 +76,6 @@ const Notifications = ({
           shadowRadius: 3.84,
           flex: 1,
           elevation: 100,
-          margin: 20,
         }}
       >
         <FlatList
@@ -86,23 +94,39 @@ const Notifications = ({
         navigationFunc={navigation.goBack}
       />
       <View>
-        {notificationsData.length !== 0 && notificationsData ? (
-          <ScrollView
-            height="80%"
-            style={{ margin: 20, marginTop: 0 }}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-          >
+        <ScrollView
+          height="90%"
+          style={{ marginTop: 10 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {notificationsData.length !== 0 && notificationsData ? (
+            // <ScrollView
+            //   height="90%"
+            //   style={{ marginTop: 10 }}
+            //   refreshControl={
+            //     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            //   }
+            // >
             <View>
               {showNotfications()}
               {/* {(showNotfications(), console.log("Noti", notificationsData))}
               <Text>{JSON.stringify(notificationsData)}</Text> */}
             </View>
-          </ScrollView>
-        ) : (
-          <Text>No notifications</Text>
-        )}
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                margin: 20,
+              }}
+            >
+              <Text style={{ color: "#cccccc" }}>No Notifications</Text>
+            </View>
+          )}
+        </ScrollView>
       </View>
     </View>
   );

@@ -27,9 +27,9 @@ const CommunicationUser = ({
       getMessageUser({ accessLevel: currentUser.accessLevel });
     });
 
-    if (userMessageData.length === 0) {
-      getMessageUser({ accessLevel: currentUser.accessLevel });
-    }
+    // if (userMessageData.length === 0) {
+    //   getMessageUser({ accessLevel: currentUser.accessLevel });
+    // }
     setUserMessageData(userMessages);
   }, [userMessages]);
 
@@ -43,32 +43,42 @@ const CommunicationUser = ({
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ marginTop: 7, flexDirection: "row" }}>
-        <Text style={{ marginRight: 5, color: "black" }}>{item.message}</Text>
-
-        <Text>
-          {moment(item.createdAt.toDate()).startOf("seconds").fromNow()}
-        </Text>
+      <View
+        style={{
+          backgroundColor: "#b2d8d8",
+          borderWidth: 1,
+          borderRadius: 1,
+          borderColor: "#ddd",
+          borderBottomWidth: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 1,
+          elevation: 3,
+          marginBottom: 10,
+          padding: 10,
+        }}
+      >
+        <View style={{ marginBottom: 5 }}>
+          <View>
+            <Text>{item.message}</Text>
+          </View>
+        </View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={{ flex: 1 }}></View>
+          <View style={{ flex: 2, alignItems: "flex-end" }}>
+            <Text style={{ color: "#a8a8a8", fontSize: 12 }}>
+              {moment(item.createdAt.toDate()).calendar()}
+            </Text>
+          </View>
+        </View>
       </View>
     );
   };
 
   const showMessage = () => {
     return (
-      <View
-        style={{
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          flex: 1,
-          elevation: 100,
-          margin: 20,
-        }}
-      >
+      <View>
         <FlatList
           data={userMessageData}
           renderItem={renderItem}
@@ -80,28 +90,56 @@ const CommunicationUser = ({
 
   return (
     <View>
-      <TopHeaderWithGoBack
-        title={"Communications"}
-        navigationFunc={navigation.goBack}
-      />
-      <View style={{ height: "90%" }}>
-        {userMessageData.length !== 0 && userMessageData ? (
-          <ScrollView
-            height="80%"
-            style={{ margin: 20, marginTop: 0 }}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
+      <View
+        style={{
+          flexDirection: "row",
+          alignContent: "stretch",
+          marginTop: 5,
+        }}
+      >
+        <View style={{ alignItems: "stretch", marginLeft: 20 }}></View>
+        <View style={{ alignItems: "stretch" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              marginLeft: 0,
+              paddingLeft: 0,
+              marginTop: 3,
+            }}
           >
-            <View>
+            Communications
+          </Text>
+        </View>
+      </View>
+
+      <View>
+        <ScrollView
+          height="92%"
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {userMessageData.length !== 0 && userMessageData ? (
+            <View
+              style={{
+                margin: 20,
+              }}
+            >
               {showMessage()}
-              {/* {(showNotfications(), console.log("Noti", notificationsData))}
-              <Text>{JSON.stringify(notificationsData)}</Text> */}
             </View>
-          </ScrollView>
-        ) : (
-          <Text>No messages</Text>
-        )}
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ color: "#cccccc" }}>No Messages</Text>
+            </View>
+          )}
+        </ScrollView>
       </View>
     </View>
   );
