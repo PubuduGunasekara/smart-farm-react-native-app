@@ -8,6 +8,11 @@ import { notificationsReducer } from "./notificationsReducer";
 import { activityReducer } from "./activityReducer";
 import { communicationReducer } from "./communicationReducer";
 
+// import EmployeeReducer from "./EmployeeReducer";
+import CreateUserReducer from "./CreateUserReducer";
+import EditUserReducer from "./EditUserReducer";
+import IncidentReducer from "./incidentReducer";
+
 const Reducers = combineReducers({
   userReducer,
   adminReducer,
@@ -17,6 +22,12 @@ const Reducers = combineReducers({
   notificationsReducer,
   activityReducer,
   communicationReducer,
+
+  //phase 2
+  // employee: EmployeeReducer,
+  CreateUserReducer: CreateUserReducer,
+  editUserReducer: EditUserReducer,
+  incidentReducer: IncidentReducer,
 });
 
 export default Reducers;

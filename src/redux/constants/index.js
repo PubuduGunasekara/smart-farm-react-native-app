@@ -54,3 +54,19 @@ export const MESSAGE_ADMIN_ERROR = "MESSAGE_ADMIN_ERROR";
 export const MESSAGE_USER_ERROR = "MESSAGE_USER_ERROR";
 export const ADMIN_MESSAGES = "ADMIN_MESSAGES";
 export const USER_MESSAGES = "USER_MESSAGES";
+
+//phase 2
+export const EMPLOYEE_FETCH_SUCCESS = "employee_fect_success";
+export const EMPLOYEE_UPDATE = "employee_update";
+export const EMPLOYEE_SAVE_SUCCESS = "employee_save_success";
+export const VIEW_ALL_USER = "view_all_user";
+export const View_USERS_EMPTY = "view_users_empty";
+export const CREATE_USER_SUCCESS = "create_user_success";
+export const CREATE_USER_ERROR = "create_user_error";
+export const USER_SAVE_SUCCESS = "user_save_success";
+export const USER_SAVE_ERROR = "user_save_error";
+export const USER_UPDATE = "user_update";
+export const INCIDENT_SUCCESS = "incident_success";
+export const INCIDENT_ERROR = "incident_error";
+export const INCIDENT_LIST = "incident_list";
+export const INCIDENT_ADMIN_LIST = "incident_admin_list";

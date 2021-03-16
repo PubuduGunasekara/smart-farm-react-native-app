@@ -30,6 +30,9 @@ import CommunicationStack from "../src/components/extraStackPages/adminStack/com
 import ShiftAllocationStack from "./components/extraStackPages/adminStack/shiftAllocationStack";
 import CommunicationsUserStack from "./components/extraStackPages/userStack/communicationUserStacks";
 import AboutStack from "../src/components/extraStackPages/AboutStack";
+import ReportIncidentUserStack from "../src/components/extraStackPages/userStack/reportIncidentStack";
+import ViewIncidentUserStack from "../src/components/extraStackPages/userStack/viewIncidentStack";
+import ReviewIncidentStack from "../src/components/extraStackPages/adminStack/ReviewInsidentStack";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -205,9 +208,9 @@ const AppDrawer = ({ currentUser, logout }) => {
         component={ShiftAllocationStack}
       /> */}
         <Drawer.Screen
-          name="ReviewIncident"
+          name="ReviewIncidentStack"
           options={{ title: "Review Incident" }}
-          component={ReviewIncident}
+          component={ReviewIncidentStack}
         />
         <Drawer.Screen
           name="CommunicationStack"
@@ -248,14 +251,14 @@ const AppDrawer = ({ currentUser, logout }) => {
           component={MyShiftHome}
         />
         <Drawer.Screen
-          name="ReportIncident"
+          name="ReportIncidentUserStack"
           options={{ title: "Report Incident" }}
-          component={ReportIncident}
+          component={ReportIncidentUserStack}
         />
         <Drawer.Screen
-          name="ViewIncident"
+          name="ViewIncidentUserStack"
           options={{ title: "View Incident" }}
-          component={ViewIncident}
+          component={ViewIncidentUserStack}
         />
         <Drawer.Screen
           name="CommunicationsUserStack"

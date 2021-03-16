@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   StatusBar,
+  ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import firebase from "firebase";
@@ -22,15 +23,6 @@ import { bindActionCreators } from "redux";
 import { userRegister } from "../../redux/actions/userRegister";
 
 const styles = StyleSheet.create({
-  spinnerContainer: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  horizontal: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 10,
-  },
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
@@ -47,12 +39,13 @@ const styles = StyleSheet.create({
   },
 
   image1: {
+    height: 100,
     paddingLeft: 160,
-    paddingTop: 70,
+    paddingTop: 50,
   },
 
   row: {
-    marginTop: 10,
+    // marginTop: 10,
     flexDirection: "row",
     alignItems: "flex-start",
     height: 20,
@@ -78,8 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: "#000000",
     borderBottomWidth: 0.5,
-    marginBottom: 20,
-    paddingTop: 30,
   },
 
   txtinput: {
@@ -163,116 +154,148 @@ const Register = ({
   }
 
   return (
-    // <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+    // new return
+
+    <View>
+      <View style={{ marginTop: 20, marginBottom: 10 }}>
+        <TopHeaderWithGoBack
+          title={"Register"}
+          navigationFunc={navigation.goBack}
+        />
+      </View>
+
+      <KeyboardAvoidingView contentContainerStyle={styles.container}>
+        <View style={styles.row}>
+          <TouchableOpacity>
+            <View style={styles.image1}>
+              <Feather name="user" size={50} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.centerView}>
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                value={firstName}
+                maxLength={25}
+                placeholder="First name"
+                onChangeText={(firstName) => setFirstName(firstName)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                value={lastName}
+                placeholder="Last name"
+                onChangeText={(lastName) => setLastName(lastName)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                value={email}
+                placeholder="Email"
+                onChangeText={(email) => setEmail(email)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                value={password}
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={(password) => setPassword(password)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.inputWrap}>
+              <TextInput
+                value={confirmPassword}
+                placeholder="Confirm password"
+                secureTextEntry={true}
+                onChangeText={(confirmPassword) =>
+                  setConfirmPassword(confirmPassword)
+                }
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View>
+              <TouchableOpacity
+                onPress={() => {
+                  onSignUp();
+                }}
+                style={styles.submitContainer}
+              >
+                <Text style={styles.link1}>Register</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.row2}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Login")}
+              style={styles.submitContainer}
+            >
+              <Text style={styles.link2}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View></View>
+      </KeyboardAvoidingView>
+    </View>
+
+    // <View style={{ backgroundColor: "white" }}>
     //   <TopHeaderWithGoBack
     //     title={"Register"}
     //     navigationFunc={navigation.goBack}
     //   />
-    //   <View>
-    //     <StatusBar barStyle="dark-content" />
-    //     <View
-    //       style={{
-    //         marginTop: 50,
-    //         justifyContent: "center",
-    //         alignItems: "center",
-    //       }}
-    //     ></View>
-    //   </View>
-
-    //   <View style={styles.row}>
-    //     <TouchableOpacity>
-    //       <View style={styles.image1}>
-    //         <Feather name="user" size={50} />
-    //       </View>
-    //     </TouchableOpacity>
-    //   </View>
-
-    //   <View style={styles.centerView}>
-    //     <View style={styles.row}>
-    //       <View style={styles.inputWrap}>
-    //         <TextInput style={styles.txtinput} placeholder="First name" />
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row}>
-    //       <View style={styles.inputWrap}>
-    //         <TextInput style={styles.txtinput} placeholder="Last name" />
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row}>
-    //       <View style={styles.inputWrap}>
-    //         <TextInput style={styles.txtinput} placeholder="Email" />
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row}>
-    //       <View style={styles.inputWrap}>
-    //         <TextInput style={styles.txtinput} placeholder="Password" />
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row}>
-    //       <View style={styles.inputWrap}>
-    //         <TextInput style={styles.txtinput} placeholder="Confirm password" />
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row}>
-    //       <View>
-    //         <TouchableOpacity style={styles.submitContainer}>
-    //           <Text style={styles.link1}>Register</Text>
-    //         </TouchableOpacity>
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.row2}>
-    //       <TouchableOpacity style={styles.submitContainer}>
-    //         <Text style={styles.link2}>Cancel</Text>
-    //       </TouchableOpacity>
-    //     </View>
-    //   </View>
-    //   <View></View>
-    // </KeyboardAvoidingView>
-    <View style={{ backgroundColor: "white" }}>
-      <TopHeaderWithGoBack
-        title={"Register"}
-        navigationFunc={navigation.goBack}
-      />
-      <TextInput
-        value={firstName}
-        placeholder="First name"
-        onChangeText={(firstName) => setFirstName(firstName)}
-      />
-      <TextInput
-        value={lastName}
-        placeholder="Last name"
-        onChangeText={(lastName) => setLastName(lastName)}
-      />
-      <TextInput
-        value={email}
-        placeholder="Email"
-        onChangeText={(email) => setEmail(email)}
-      />
-      <TextInput
-        value={password}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TextInput
-        value={confirmPassword}
-        placeholder="Confirm password"
-        secureTextEntry={true}
-        onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-      />
-      <Button
-        onPress={() => {
-          onSignUp();
-        }}
-        title="SIgn Up"
-      />
-    </View>
+    //   <TextInput
+    //     value={firstName}
+    //     maxLength={25}
+    //     placeholder="First name"
+    //     onChangeText={(firstName) => setFirstName(firstName)}
+    //   />
+    //   <TextInput
+    //     value={lastName}
+    //     placeholder="Last name"
+    //     onChangeText={(lastName) => setLastName(lastName)}
+    //   />
+    //   <TextInput
+    //     value={email}
+    //     placeholder="Email"
+    //     onChangeText={(email) => setEmail(email)}
+    //   />
+    //   <TextInput
+    //     value={password}
+    //     placeholder="Password"
+    //     secureTextEntry={true}
+    //     onChangeText={(password) => setPassword(password)}
+    //   />
+    //   <TextInput
+    //     value={confirmPassword}
+    //     placeholder="Confirm password"
+    //     secureTextEntry={true}
+    //     onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
+    //   />
+    //   {/* error ? <Text>jhdhjdj</Text> : null */}
+    //   <Button
+    //     onPress={() => {
+    //       onSignUp();
+    //     }}
+    //     title="SIgn Up"
+    //   />
+    // </View>
   );
 };
 

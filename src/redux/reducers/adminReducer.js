@@ -8,6 +8,10 @@ import {
   APPROVE_SUCCESS,
   ERROR_USER_REQUEST,
   DELETE_SUCCESS,
+  VIEW_ALL_USER,
+  View_USERS_EMPTY,
+  INCIDENT_LIST,
+  INCIDENT_ADMIN_LIST,
 } from "../constants";
 
 export const adminReducer = (
@@ -16,7 +20,11 @@ export const adminReducer = (
     approveSuccess: false,
     useRequestError: false,
     deleteSuccess: false,
+    userEmpty: false,
+    user: "",
+    incidentList: "",
   },
+
   action
 ) => {
   switch (action.type) {
@@ -45,6 +53,20 @@ export const adminReducer = (
         ...state,
         deleteSuccess: action.payload,
       };
+    case VIEW_ALL_USER:
+      return {
+        ...state,
+        viewUserList: action.payload,
+      };
+
+    case View_USERS_EMPTY:
+      return {
+        ...state,
+        userEmpty: action.payload,
+      };
+
+    case INCIDENT_ADMIN_LIST:
+      return { ...state, incidentList: action.payload };
     default:
       return state;
   }
