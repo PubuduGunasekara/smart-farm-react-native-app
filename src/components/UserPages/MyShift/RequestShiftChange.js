@@ -85,7 +85,7 @@ const RequestShiftChange = ({
   if (shiftRequestMessage === true) {
     Alert.alert(
       "SUCCESS",
-      "Your request has beed submitted.",
+      "Your request has been submitted.",
       [
         {
           text: "OK",

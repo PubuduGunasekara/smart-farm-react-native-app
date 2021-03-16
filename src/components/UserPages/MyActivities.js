@@ -136,10 +136,28 @@ const MyActivities = ({
 
   return (
     <View>
-      <TopHeaderWithGoBack
-        title={"My Activities"}
-        navigationFunc={navigation.goBack}
-      />
+      <View
+        style={{
+          flexDirection: "row",
+          alignContent: "stretch",
+          marginTop: 5,
+        }}
+      >
+        <View style={{ alignItems: "stretch", marginLeft: 20 }}></View>
+        <View style={{ alignItems: "stretch" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              marginLeft: 0,
+              paddingLeft: 0,
+              marginTop: 3,
+            }}
+          >
+            My Activities
+          </Text>
+        </View>
+      </View>
 
       <View style={{ flexDirection: "row", margin: 20 }}>
         <View style={{ flex: 5, alignContent: "flex-start" }}>

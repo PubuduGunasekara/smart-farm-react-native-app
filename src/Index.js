@@ -1,10 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Text, View, StyleSheet, BackHandler, Alert } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import AppDrawer from "./AppDrawer";
 import { AuthStack } from "./AuthStack";
-
-import NetInfo from "@react-native-community/netinfo";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -27,29 +25,6 @@ const Index = ({ currentUser, checkLoginState }) => {
 
   useEffect(() => {
     checkLoginState();
-    NetInfo.fetch().then((state) => {
-      if (state.isConnected === false) {
-        Alert.alert(
-          "Warning",
-          "No Internet!",
-          [
-            // {
-            //   text: "Cancel",
-            //   onPress: () => console.log("Cancel Pressed"),
-            //   style: "cancel",
-            // },
-            {
-              text: "OK",
-              onPress: () => BackHandler.exitApp(),
-            },
-          ],
-          { cancelable: false }
-        );
-      }
-
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-    });
   }, []);
 
   // const backAction = () => {

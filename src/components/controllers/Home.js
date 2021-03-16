@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
@@ -54,10 +53,10 @@ const Home = ({
 
     var shiftDate = day + "-" + month + "-" + year;
 
-    CheckShiftDate({ shiftDate });
-    navigation.addListener("blur", () => {
-      CheckShiftDate({ shiftDate });
-    });
+    // CheckShiftDate({ shiftDate });
+    // navigation.addListener("blur", () => {
+    //   CheckShiftDate({ shiftDate });
+    // });
     navigation.addListener("focus", () => {
       CheckShiftDate({ shiftDate });
     });
@@ -207,7 +206,7 @@ const Home = ({
     );
   }
 
-  function levelTwo() {
+  function levelThree() {
     return (
       <ScrollView style={{ margin: 30 }}>
         <TouchableOpacity
@@ -233,7 +232,7 @@ const Home = ({
     );
   }
 
-  function levelThree() {
+  function levelTwo() {
     return (
       <ScrollView style={{ margin: 30 }}>
         <TouchableOpacity

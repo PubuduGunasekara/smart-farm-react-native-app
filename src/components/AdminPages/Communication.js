@@ -126,7 +126,7 @@ const Communication = ({
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 1 }}>
             <Text style={{ color: "#a8a8a8", fontSize: 12 }}>
-              Access level : {item.accessLevel}
+              Level - {item.accessLevel}
             </Text>
           </View>
           <View style={{ flex: 2, alignItems: "flex-end" }}>

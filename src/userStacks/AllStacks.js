@@ -46,13 +46,11 @@ const AllStacks = ({ navigation, logout }) => {
             backgroundColor: "#008080",
           },
           headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
           headerTitle: "",
+
           headerRight: () => {
             return (
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
                 <View>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Notifications")}
@@ -64,20 +62,12 @@ const AllStacks = ({ navigation, logout }) => {
                     />
                   </TouchableOpacity>
                 </View>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    logout();
-                  }}
-                >
-                  <Text>Sign out</Text>
-                </TouchableOpacity>
               </View>
             );
           },
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())
@@ -439,7 +429,7 @@ const AllStacks = ({ navigation, logout }) => {
           headerTitle: `Notifications`,
           headerRight: () => {
             return (
-              <View style={{ flexDirection: "row" }}>
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
                 <View>
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Notifications")}
@@ -456,7 +446,7 @@ const AllStacks = ({ navigation, logout }) => {
           },
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())

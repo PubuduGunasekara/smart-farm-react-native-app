@@ -1,5 +1,14 @@
-import React from "react";
-import { StyleSheet, StatusBar, SafeAreaView } from "react-native";
+import React, { useEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  BackHandler,
+  Alert,
+  StatusBar,
+  SafeAreaView,
+} from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { AuthProvider } from "./AuthProvider";
 import Index from "./Index";
 import { Provider } from "react-redux";
@@ -22,6 +31,31 @@ const styles = StyleSheet.create({
 });
 
 export const Providers = ({}) => {
+  useEffect(() => {
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+    });
+  }, []);
   return (
     <Provider store={store}>
       <Index />

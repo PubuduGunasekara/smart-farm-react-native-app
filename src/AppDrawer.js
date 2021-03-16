@@ -9,6 +9,7 @@ import {
 import { Avatar } from "react-native-elements";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { DrawerActions } from "@react-navigation/native";
 
 import AllStacks from "./userStacks/AllStacks";
 import About from "../src/components/About";
@@ -28,6 +29,7 @@ import MyActivityStack from "../src/components/extraStackPages/userStack/activit
 import CommunicationStack from "../src/components/extraStackPages/adminStack/communicationsStack";
 import ShiftAllocationStack from "./components/extraStackPages/adminStack/shiftAllocationStack";
 import CommunicationsUserStack from "./components/extraStackPages/userStack/communicationUserStacks";
+import AboutStack from "../src/components/extraStackPages/AboutStack";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -66,87 +68,6 @@ const Drawer = createDrawerNavigator();
 //         />
 //       </View>
 //     </View>
-//   );
-// }
-
-// function AdminSideDrawer() {
-//   return (
-//     <Drawer.Navigator
-//       drawerContent={(props) => <CustomDrawerContent {...props} />}
-//     >
-//       <Drawer.Screen
-//         name="AllStacks"
-//         options={{ title: "Home" }}
-//         component={AllStacks}
-//       />
-//       <Drawer.Screen
-//         name="AllActivityStack"
-//         options={{ title: "All Activities" }}
-//         component={AllActivityStack}
-//       />
-//       {/* <Drawer.Screen
-//         name="ShiftAllocationStack"
-//         options={{ title: "Shift Allocation" }}
-//         component={ShiftAllocationStack}
-//       /> */}
-//       <Drawer.Screen
-//         name="ReviewIncident"
-//         options={{ title: "Review Incident" }}
-//         component={ReviewIncident}
-//       />
-//       <Drawer.Screen
-//         name="CommunicationStack"
-//         options={{ title: "Communication" }}
-//         component={CommunicationStack}
-//       />
-//       <Drawer.Screen
-//         name="About"
-//         options={{ title: "About" }}
-//         component={About}
-//       />
-//     </Drawer.Navigator>
-//   );
-// }
-
-// function UserSideDrawer() {
-//   return (
-//     <Drawer.Navigator>
-//       <Drawer.Screen
-//         name="AllStacks"
-//         options={{ title: "Home" }}
-//         component={AllStacks}
-//       />
-//       <Drawer.Screen
-//         name="MyActivityStack"
-//         options={{ title: "My Activities" }}
-//         component={MyActivityStack}
-//       />
-//       <Drawer.Screen
-//         name="MyShift"
-//         options={{ title: "My Shifts" }}
-//         component={MyShiftHome}
-//       />
-//       <Drawer.Screen
-//         name="ReportIncident"
-//         options={{ title: "Report Incident" }}
-//         component={ReportIncident}
-//       />
-//       <Drawer.Screen
-//         name="ViewIncident"
-//         options={{ title: "View Incident" }}
-//         component={ViewIncident}
-//       />
-//       <Drawer.Screen
-//         name="CommunicationsUserStack"
-//         options={{ title: "Communication" }}
-//         component={CommunicationsUserStack}
-//       />
-//       <Drawer.Screen
-//         name="About"
-//         options={{ title: "About" }}
-//         component={About}
-//       />
-//     </Drawer.Navigator>
 //   );
 // }
 
@@ -251,7 +172,7 @@ const AppDrawer = ({ currentUser, logout }) => {
             )}
             label="Sign Out"
             onPress={() => {
-              logout();
+              logout(), props.navigation.dispatch(DrawerActions.closeDrawer());
             }}
           />
         </View>
@@ -294,9 +215,9 @@ const AppDrawer = ({ currentUser, logout }) => {
           component={CommunicationStack}
         />
         <Drawer.Screen
-          name="About"
+          name="AboutStack"
           options={{ title: "About" }}
-          component={About}
+          component={AboutStack}
         />
       </Drawer.Navigator>
     );
@@ -342,9 +263,9 @@ const AppDrawer = ({ currentUser, logout }) => {
           component={CommunicationsUserStack}
         />
         <Drawer.Screen
-          name="About"
+          name="AboutStack"
           options={{ title: "About" }}
-          component={About}
+          component={AboutStack}
         />
       </Drawer.Navigator>
     );
