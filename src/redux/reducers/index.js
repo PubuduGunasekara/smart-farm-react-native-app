@@ -8,7 +8,7 @@ import { notificationsReducer } from "./notificationsReducer";
 import { activityReducer } from "./activityReducer";
 import { communicationReducer } from "./communicationReducer";
 
-// import EmployeeReducer from "./EmployeeReducer";
+import EmployeeReducer from "./EmployeeReducer";
 import CreateUserReducer from "./CreateUserReducer";
 import EditUserReducer from "./EditUserReducer";
 import IncidentReducer from "./incidentReducer";
@@ -24,7 +24,7 @@ const Reducers = combineReducers({
   communicationReducer,
 
   //phase 2
-  // employee: EmployeeReducer,
+  employee: EmployeeReducer,
   CreateUserReducer: CreateUserReducer,
   editUserReducer: EditUserReducer,
   incidentReducer: IncidentReducer,

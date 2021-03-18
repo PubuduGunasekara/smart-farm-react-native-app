@@ -3,11 +3,18 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { DrawerActions } from "@react-navigation/native";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  MaterialIcons,
+  FontAwesome,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 import MyShift from "../MyShift/MyShift";
 import RequestShiftChange from "../MyShift/RequestShiftChange";
 import Notifications from "../Notifications";
+import EmployeeEdit from "../../EditProfile";
+import ViewProfile from "../../ViewProfile";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -40,6 +47,13 @@ const MyShiftHome = ({ logout, navigation }) => {
                       size={30}
                       color="black"
                     />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -85,6 +99,13 @@ const MyShiftHome = ({ logout, navigation }) => {
                     />
                   </TouchableOpacity>
                 </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
+                  </TouchableOpacity>
+                </View>
               </View>
             );
           },
@@ -124,8 +145,69 @@ const MyShiftHome = ({ logout, navigation }) => {
                     onPress={() => navigation.navigate("Notifications")}
                   >
                     <MaterialIcons
-                      name="notifications-on"
+                      name="notifications-none"
                       size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
+      />
+
+      <Stack.Screen
+        name="ViewProfile"
+        component={ViewProfile}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("EmployeeEdit")}
+                  >
+                    <MaterialCommunityIcons
+                      name="account-edit"
+                      size={28}
                       color="black"
                     />
                   </TouchableOpacity>
@@ -135,7 +217,57 @@ const MyShiftHome = ({ logout, navigation }) => {
           },
           headerLeft: () => {
             return (
-              <View>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
+      />
+
+      <Stack.Screen
+        name="EmployeeEdit"
+        component={EmployeeEdit}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <View style={{ marginLeft: 10 }}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.dispatch(DrawerActions.openDrawer())
