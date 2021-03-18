@@ -70,3 +70,4 @@ export const INCIDENT_SUCCESS = "incident_success";
 export const INCIDENT_ERROR = "incident_error";
 export const INCIDENT_LIST = "incident_list";
 export const INCIDENT_ADMIN_LIST = "incident_admin_list";
+export const USER_LOGIN_FALSE = "USER_LOGIN_FALSE";

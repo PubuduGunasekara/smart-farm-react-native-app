@@ -1,4 +1,9 @@
-import { USER_LOGIN, USER_LOGIN_ERROR, LOADING } from "../constants";
+import {
+  USER_LOGIN,
+  USER_LOGIN_ERROR,
+  LOADING,
+  USER_LOGIN_FALSE,
+} from "../constants";
 import firebase from "firebase";
 
 export const userLogin = ({ email, password }) => {
@@ -24,9 +29,9 @@ export const userLogin = ({ email, password }) => {
             .doc(firebase.auth().currentUser.uid)
             .get()
             .then((documentSnapshot) => {
-              //console.log("User exists: ", documentSnapshot.exists);
+              console.log("User exists: ", documentSnapshot.exists);
 
-              if (documentSnapshot.exists) {
+              if (documentSnapshot.exists === true) {
                 userDetails = {
                   userId: documentSnapshot.id,
                   accessLevel: documentSnapshot.data().accessLevel,
@@ -50,6 +55,16 @@ export const userLogin = ({ email, password }) => {
                   type: USER_LOGIN,
                   payload: userDetails,
                 });
+              } else {
+                dispatch({
+                  type: LOADING,
+                  payload: false,
+                });
+                dispatch({
+                  type: USER_LOGIN_FALSE,
+                  payload: true,
+                });
+                console.log("inside not exist");
               }
             })
             .catch((error) => {
@@ -60,7 +75,7 @@ export const userLogin = ({ email, password }) => {
               });
               dispatch({
                 type: USER_LOGIN_ERROR,
-                payload: error,
+                payload: true,
               });
             });
         }
@@ -102,6 +117,15 @@ export const userLogin = ({ email, password }) => {
   };
 };
 
+export const existFalseRemove = () => {
+  return (dispatch) => {
+    dispatch({
+      type: USER_LOGIN_FALSE,
+      payload: false,
+    });
+  };
+};
+
 export const checkLoginState = () => {
   const db = firebase.firestore();
   return (dispatch) => {
@@ -124,7 +148,7 @@ export const checkLoginState = () => {
           .then((documentSnapshot) => {
             //console.log("User exists: ", documentSnapshot.exists);
 
-            if (documentSnapshot.exists) {
+            if (documentSnapshot.exists === true) {
               //console.log("User data: ", documentSnapshot.data());
               // dispatch({
               //   type: LOADING,
@@ -145,6 +169,16 @@ export const checkLoginState = () => {
                 type: USER_LOGIN,
                 payload: userDetails,
               });
+            } else {
+              dispatch({
+                type: LOADING,
+                payload: false,
+              });
+              dispatch({
+                type: USER_LOGIN_FALSE,
+                payload: true,
+              });
+              console.log("inside not exist");
             }
           })
           .catch((error) => {
