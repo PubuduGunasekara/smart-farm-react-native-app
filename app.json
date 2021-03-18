@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "smart-farm-application",
-    "slug": "smart-farm-application",
+    "name": "Smart Farm",
+    "slug": "smart-farm",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,6 +28,8 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": "",
+    "githubUrl": "https://github.com/PubuduPraneeth/smart-farm-1.1.0"
   }
 }
