@@ -258,20 +258,29 @@ const AllStacks = ({ navigation, logout }) => {
 
       <Stack.Screen
         name="ApproveUser"
-        options={{
-          headerTitle: `Approve User`,
+        component={ApproveUser}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
           headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={ApproveUser}
+        })}
       />
 
       <Stack.Screen
@@ -492,20 +501,29 @@ const AllStacks = ({ navigation, logout }) => {
 
       <Stack.Screen
         name="viewSingleUserRequest"
-        options={{
-          headerTitle: `Approve user`,
+        component={viewSingleUserRequest}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
           headerRight: () => {},
           headerLeft: () => {
             return (
-              <TouchableOpacity
-                onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-              >
-                <AntDesign name="Search" size={100} color="red" />
-              </TouchableOpacity>
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
             );
           },
-        }}
-        component={viewSingleUserRequest}
+        })}
       />
 
       <Stack.Screen

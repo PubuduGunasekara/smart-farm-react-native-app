@@ -54,9 +54,9 @@ const WaterController = ({
       setbuttonEnableON(false);
     }
 
-    navigation.addListener("focus", () => {
-      WaterControllerActionOPENCLOSE({ openStatus: "0" });
-    });
+    // navigation.addListener("focus", () => {
+    //   WaterControllerActionOPENCLOSE({ openStatus: "0" });
+    // });
   }, [water_open_close_status, navigation]);
 
   if (water_error) {

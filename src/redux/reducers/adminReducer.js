@@ -23,6 +23,7 @@ export const adminReducer = (
     userEmpty: false,
     user: "",
     incidentList: "",
+    usersList: [],
   },
 
   action

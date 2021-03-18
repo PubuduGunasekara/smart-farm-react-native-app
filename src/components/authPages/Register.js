@@ -9,8 +9,11 @@ import {
   Alert,
   KeyboardAvoidingView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   StatusBar,
   ScrollView,
+  Platform,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import firebase from "firebase";
@@ -20,12 +23,13 @@ import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWith
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { userRegister } from "../../redux/actions/userRegister";
+import { userRegister, success_false } from "../../redux/actions/userRegister";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    height: "100%",
+    width: "100%",
   },
 
   text: {
@@ -47,10 +51,8 @@ const styles = StyleSheet.create({
   row: {
     // marginTop: 10,
     flexDirection: "row",
-    alignItems: "flex-start",
-    height: 20,
-    paddingRight: 50,
-    marginBottom: 30,
+    justifyContent: "center",
+    marginTop: 15,
   },
 
   row2: {
@@ -63,14 +65,17 @@ const styles = StyleSheet.create({
   },
 
   centerView: {
-    paddingTop: 70,
-    paddingLeft: 40,
+    paddingTop: 50,
+    padding: 20,
+
+    flexDirection: "column",
   },
 
   inputWrap: {
-    flex: 1,
+    marginTop: 15,
     borderColor: "#000000",
     borderBottomWidth: 0.5,
+    padding: 5,
   },
 
   txtinput: {
@@ -107,6 +112,15 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     marginTop: 30,
   },
+  spinnerContainer: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
 });
 
 const Register = ({
@@ -114,6 +128,8 @@ const Register = ({
   registerSuccess,
   userRegister,
   navigation,
+  loading,
+  success_false,
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -121,317 +137,312 @@ const Register = ({
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
-  const [loading, setloading] = useState(false);
+  const [emailValid, setemailValid] = useState(false);
+  const [passwordValid, setpasswordValid] = useState(false);
+  const [confirmPwValid, setconfirmPwValid] = useState(false);
+  const [firstNameValid, setfirstNameValid] = useState(false);
+  const [lastNameValid, setlastNameValid] = useState(false);
+  const [passwordNotMatch, setpasswordNotMatch] = useState(false);
+  const [emailFormatValid, setemailFormatValid] = useState(false);
 
   const onSignUp = () => {
-    userRegister({ firstName, lastName, email, password });
-    setFirstName("");
-    setLastName("");
-    setPassword("");
-    setConfirmPassword("");
-    setEmail("");
-    // if (registerError) {
-    //   alert(registerError);
-    //   setloading(false);
-    // }
-
-    // if (registerSuccess) {
-    //   alert(registerSuccess);
-    //   setloading(false);
-    // }
-
-    // if (!registerSuccess && !registerError) {
-    //   setloading(true);
-    // }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (firstName === "") {
+      setfirstNameValid(true);
+    } else if (lastName === "") {
+      setlastNameValid(true);
+      setfirstNameValid(false);
+    } else if (email === "") {
+      setemailValid(true);
+      setlastNameValid(false);
+      setfirstNameValid(false);
+    } else if (reg.test(email) === false) {
+      setemailFormatValid(true);
+      setemailValid(false);
+      setlastNameValid(false);
+      setfirstNameValid(false);
+    } else if (password === "") {
+      setpasswordValid(true);
+      setemailFormatValid(false);
+      setemailValid(false);
+      setlastNameValid(false);
+      setfirstNameValid(false);
+    } else if (confirmPassword === "") {
+      setconfirmPwValid(true);
+      setpasswordValid(false);
+      setemailValid(false);
+      setlastNameValid(false);
+      setfirstNameValid(false);
+    } else {
+      setfirstNameValid(false);
+      setlastNameValid(false);
+      setemailValid(false);
+      setpasswordValid(false);
+      setconfirmPwValid(false);
+      if (password !== confirmPassword) {
+        setpasswordNotMatch(true);
+      } else {
+        setpasswordNotMatch(false);
+        userRegister({ firstName, lastName, email, password });
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setConfirmPassword("");
+        setEmail("");
+      }
+    }
   };
 
   if (loading) {
     return (
       <View style={[styles.spinnerContainer, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
+        <ActivityIndicator size="large" color="#008080" />
       </View>
     );
   }
 
+  if (registerSuccess === true) {
+    Alert.alert(
+      "SUCCESS",
+      "Your request has been registered successfully.",
+      [
+        // {
+        //   text: "Cancel",
+        //   onPress: () => console.log("Cancel Pressed"),
+        //   style: "cancel",
+        // },
+        {
+          text: "OK",
+          onPress: () => (success_false(), navigation.navigate("Login")),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  if (registerError) {
+    Alert.alert(
+      "ERROR",
+      `${registerError}`,
+      [
+        // {
+        //   text: "Cancel",
+        //   onPress: () => console.log("Cancel Pressed"),
+        //   style: "cancel",
+        // },
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("Login"),
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  const oncancel = () => {
+    setpasswordNotMatch(false);
+    setemailFormatValid(false);
+    setfirstNameValid(false);
+    setlastNameValid(false);
+    setemailValid(false);
+    setpasswordValid(false);
+    setconfirmPwValid(false);
+    setFirstName("");
+    setLastName("");
+    setPassword("");
+    setConfirmPassword("");
+    setEmail("");
+  };
+
   return (
-    // new return
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View>
+        <View style={{ marginTop: 20, marginBottom: 10 }}>
+          <TopHeaderWithGoBack
+            title={"Register"}
+            navigationFunc={navigation.goBack}
+          />
+        </View>
 
-    <View>
-      <View style={{ marginTop: 20, marginBottom: 10 }}>
-        <TopHeaderWithGoBack
-          title={"Register"}
-          navigationFunc={navigation.goBack}
-        />
-      </View>
-
-      <KeyboardAvoidingView contentContainerStyle={styles.container}>
-        <View style={styles.row}>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 40,
+          }}
+        >
           <TouchableOpacity>
-            <View style={styles.image1}>
+            <View>
               <Feather name="user" size={50} />
             </View>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.centerView}>
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
-              <TextInput
-                value={firstName}
-                maxLength={25}
-                placeholder="First name"
-                onChangeText={(firstName) => setFirstName(firstName)}
-              />
-            </View>
-          </View>
+        <View>
+          <KeyboardAvoidingView style={styles.centerView} behavior="position">
+            <TextInput
+              style={styles.inputWrap}
+              value={firstName}
+              maxLength={25}
+              placeholder="First name"
+              onChangeText={(firstName) => setFirstName(firstName)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="default"
+              returnKeyType="next"
+              blurOnSubmit={true}
+              enablesReturnKeyAutomatically={true}
+              keyboardAppearance="default"
+            />
+            {firstNameValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  First name cannot be empty
+                </Text>
+              </View>
+            ) : null}
 
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
-              <TextInput
-                value={lastName}
-                placeholder="Last name"
-                onChangeText={(lastName) => setLastName(lastName)}
-              />
-            </View>
-          </View>
+            <TextInput
+              style={styles.inputWrap}
+              value={lastName}
+              placeholder="Last name"
+              onChangeText={(lastName) => setLastName(lastName)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="default"
+              returnKeyType="next"
+              blurOnSubmit={true}
+              enablesReturnKeyAutomatically={true}
+              keyboardAppearance="default"
+            />
+            {lastNameValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Last name cannot be empty
+                </Text>
+              </View>
+            ) : null}
 
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
-              <TextInput
-                value={email}
-                placeholder="Email"
-                onChangeText={(email) => setEmail(email)}
-              />
-            </View>
-          </View>
+            <TextInput
+              style={styles.inputWrap}
+              value={email}
+              placeholder="Email"
+              onChangeText={(email) => setEmail(email)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              returnKeyType="next"
+              blurOnSubmit={true}
+              enablesReturnKeyAutomatically={true}
+              keyboardAppearance="default"
+            />
+            {emailValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Email cannot be empty
+                </Text>
+              </View>
+            ) : null}
+            {emailFormatValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Wrong Email
+                </Text>
+              </View>
+            ) : null}
 
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
-              <TextInput
-                value={password}
-                placeholder="Password"
-                secureTextEntry={true}
-                onChangeText={(password) => setPassword(password)}
-              />
-            </View>
-          </View>
+            <TextInput
+              style={styles.inputWrap}
+              value={password}
+              placeholder="Password"
+              secureTextEntry={true}
+              onChangeText={(password) => setPassword(password)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              blurOnSubmit={true}
+              keyboardAppearance="default"
+            />
+            {passwordValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Password cannot be empty
+                </Text>
+              </View>
+            ) : null}
 
-          <View style={styles.row}>
-            <View style={styles.inputWrap}>
-              <TextInput
-                value={confirmPassword}
-                placeholder="Confirm password"
-                secureTextEntry={true}
-                onChangeText={(confirmPassword) =>
-                  setConfirmPassword(confirmPassword)
-                }
-              />
-            </View>
-          </View>
+            <TextInput
+              style={styles.inputWrap}
+              value={confirmPassword}
+              placeholder="Confirm password"
+              secureTextEntry={true}
+              onChangeText={(confirmPassword) =>
+                setConfirmPassword(confirmPassword)
+              }
+              autoCapitalize="none"
+              autoCorrect={false}
+              returnKeyType="next"
+              blurOnSubmit={true}
+              keyboardAppearance="default"
+            />
+            {passwordNotMatch === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Password not matched
+                </Text>
+              </View>
+            ) : null}
+            {confirmPwValid === true ? (
+              <View>
+                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                  Confirm password cannot be empty
+                </Text>
+              </View>
+            ) : null}
 
-          <View style={styles.row}>
-            <View>
-              <TouchableOpacity
-                onPress={() => {
-                  onSignUp();
-                }}
-                style={styles.submitContainer}
-              >
-                <Text style={styles.link1}>Register</Text>
-              </TouchableOpacity>
+            <View style={{ flexDirection: "row", marginTop: 25 }}>
+              <View style={{ flex: 1, marginRight: 25 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#008080",
+                    alignItems: "center",
+                    padding: 8,
+                  }}
+                  onPress={() => {
+                    oncancel();
+                  }}
+                >
+                  <Text style={{ color: "#fff", fontSize: 16 }}>CANCEL</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flex: 1, marginLeft: 25 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: "#008080",
+                    alignItems: "center",
+                    padding: 8,
+                  }}
+                  onPress={() => {
+                    onSignUp();
+                  }}
+                >
+                  <Text style={{ color: "#fff", fontSize: 16 }}>REGISTER</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-
-          <View style={styles.row2}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Login")}
-              style={styles.submitContainer}
-            >
-              <Text style={styles.link2}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
+          </KeyboardAvoidingView>
         </View>
-        <View></View>
-      </KeyboardAvoidingView>
-    </View>
-
-    // <View style={{ backgroundColor: "white" }}>
-    //   <TopHeaderWithGoBack
-    //     title={"Register"}
-    //     navigationFunc={navigation.goBack}
-    //   />
-    //   <TextInput
-    //     value={firstName}
-    //     maxLength={25}
-    //     placeholder="First name"
-    //     onChangeText={(firstName) => setFirstName(firstName)}
-    //   />
-    //   <TextInput
-    //     value={lastName}
-    //     placeholder="Last name"
-    //     onChangeText={(lastName) => setLastName(lastName)}
-    //   />
-    //   <TextInput
-    //     value={email}
-    //     placeholder="Email"
-    //     onChangeText={(email) => setEmail(email)}
-    //   />
-    //   <TextInput
-    //     value={password}
-    //     placeholder="Password"
-    //     secureTextEntry={true}
-    //     onChangeText={(password) => setPassword(password)}
-    //   />
-    //   <TextInput
-    //     value={confirmPassword}
-    //     placeholder="Confirm password"
-    //     secureTextEntry={true}
-    //     onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-    //   />
-    //   {/* error ? <Text>jhdhjdj</Text> : null */}
-    //   <Button
-    //     onPress={() => {
-    //       onSignUp();
-    //     }}
-    //     title="SIgn Up"
-    //   />
-    // </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const mapStateToProps = (store) => ({
   registerError: store.userReducer.registerError,
   registerSuccess: store.userReducer.registerSuccess,
+  loading: store.loadinReducer.loading,
 });
 const mapDispatchProps = (dispatch) =>
-  bindActionCreators({ userRegister }, dispatch);
+  bindActionCreators({ userRegister, success_false }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchProps)(Register);
-
-// class Register extends Component {
-//   constructor(props) {
-//     super(props);
-
-//     this.state = {
-//       firstName: "",
-//       lastName: "",
-//       dateOfBirth: "",
-//       eamil: "",
-//       password: "",
-//       confirmPassword: "",
-//     };
-
-//     this.onSignUp = this.onSignUp.bind(this);
-//   }
-
-//   async onSignUp() {
-//     const {
-//       firstName,
-//       lastName,
-//       email,
-//       password,
-//       confirmPassword,
-//     } = this.state;
-
-//     console.log(`${firstName}${lastName}${email}${password}${confirmPassword}`);
-
-//     const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-//     const data = {
-//       firstName,
-//       lastName,
-//       email,
-//       password,
-//       createdAt: timestamp,
-//     };
-
-//     firebase;
-//     //   .firestore()
-//     //   .collection("tempUser")
-//     //   .set(data)
-//     //   .then((data) => {
-//     //     //setEntityText("");
-//     //     //Keyboard.dismiss();
-//     //     console.log(data);
-//     //     alert(data);
-//     //   })
-//     //   .catch((error) => {
-//     //     alert(error);
-//     //   });
-
-//     firebase
-//       .firestore()
-//       .collection("tempUser")
-//       .get()
-//       .then((data) => {
-//         console.log("data", data.data());
-//       })
-//       .catch((error) => {
-//         console.log("error", error);
-//       });
-
-//     // await firebase
-//     //   .database()
-//     //   .ref("Users/")
-//     //   .push({
-//     //     firstName,
-//     //     lastName,
-//     //     email,
-//     //     password,
-//     //   })
-//     //   .then((data) => {
-//     //     //success callback
-//     //     console.log("data ", data);
-//     //   })
-//     //   .catch((error) => {
-//     //     //error callback
-//     //     console.log("error ", error);
-//     //   });
-
-//     // firebase
-//     //   .database()
-//     //   .ref("Users/")
-//     //   .once("value", function (snapshot) {
-//     //     console.log(snapshot.val());
-//     //   });
-
-//     // firebase.database().ref("Users/").remove();
-//   }
-
-//   render() {
-//     const { navigation } = this.props;
-
-//     return (
-//       <View>
-//         <TextInput
-//           placeholder="First name"
-//           onChangeText={(firstName) => this.setState({ firstName })}
-//         />
-//         <TextInput
-//           placeholder="Last name"
-//           onChangeText={(lastName) => this.setState({ lastName })}
-//         />
-//         <TextInput
-//           placeholder="Email"
-//           onChangeText={(email) => this.setState({ email })}
-//         />
-//         <TextInput
-//           placeholder="Password"
-//           secureTextEntry={true}
-//           onChangeText={(password) => this.setState({ password })}
-//         />
-//         <TextInput
-//           placeholder="Confirm password"
-//           secureTextEntry={true}
-//           onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
-//         />
-//         <Button onPress={() => this.onSignUp()} title="SIgn Up" />
-//       </View>
-//     );
-//   }
-// }
-
-// export default function (props) {
-//   const navigation = useNavigation();
-
-//   return <Register {...props} navigation={navigation} />;
-// }

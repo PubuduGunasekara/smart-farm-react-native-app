@@ -15,8 +15,29 @@ export const AuthStack = ({ children }) => {
       screenOptions={{ headerShown: false }}
       initialRouteName="Login"
     >
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen
+        screenOptions={{ headerShown: false }}
+        name="Login"
+        component={Login}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+        })}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+        })}
+      />
     </Stack.Navigator>
   );
 };

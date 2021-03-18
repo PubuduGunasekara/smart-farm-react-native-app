@@ -6,7 +6,13 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Platform,
+  Button,
 } from "react-native";
+
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import firebase from "firebase";
 
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -60,7 +66,52 @@ const Home = ({
     navigation.addListener("focus", () => {
       CheckShiftDate({ shiftDate });
     });
+
+    //notification permission
+    () => registerForPushNotificationsAsync();
   }, [currentUser, navigation]);
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+    if (Constants.isDevice) {
+      const {
+        status: existingStatus,
+      } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    console.log(token);
+    //update notifi token
+    const res = await firebase.firestore
+      .collection("user")
+      .doc(currentUser.uid)
+      .update({
+        expoNotificationToken: token,
+      });
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    return token;
+  }
 
   function levelZero() {
     return (

@@ -11,6 +11,8 @@ import {
   StatusBar,
   TouchableOpacity,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
@@ -43,17 +45,16 @@ const styles = StyleSheet.create({
   },
 
   row: {
-    marginTop: 10,
+    marginTop: 15,
     flexDirection: "row",
-    alignItems: "flex-start",
-    height: 20,
-    paddingRight: 50,
-    marginBottom: 30,
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   centerView: {
-    padding: 20,
+    padding: "15%",
     paddingTop: 5,
+    paddingBottom: 0,
   },
 
   box1: {
@@ -61,8 +62,8 @@ const styles = StyleSheet.create({
     color: "#6a4595",
     paddingTop: 10,
     marginLeft: 10,
-    width: 220,
-    height: 35,
+    width: "100%",
+    justifyContent: "space-between",
     backgroundColor: "#b2d8d8",
   },
 
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     color: "blue",
     fontSize: 14,
     fontWeight: "bold",
-    marginLeft: 10,
+    alignItems: "flex-start",
     textDecorationLine: "underline",
   },
 
@@ -79,17 +80,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     marginLeft: 75,
+    alignContent: "flex-end",
     textDecorationLine: "underline",
   },
 
   submitContainer: {
     backgroundColor: "#008080",
     flexDirection: "row",
-    // alignItems: 'flex-end',
-    height: 40,
-    width: 100,
-    marginLeft: 160,
-    marginBottom: 100,
+    padding: 10,
+    alignItems: "flex-end",
+    justifyContent: "center",
+    flex: 1,
   },
   btn: {
     marginTop: 170,
@@ -104,116 +105,178 @@ const styles = StyleSheet.create({
 });
 
 const Login = ({ currentUser, userLogin, loginError, navigation, loading }) => {
-  useEffect(() => {
-    loginErrorFunc();
-  }, [loginError]);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [lognErrorStatus, setlognErrorStatus] = useState(false);
+  const [empty, setEmpty] = useState(false);
 
   useEffect(() => {
     if (loginError && !currentUser) {
       loginErrorFunc();
     }
+    navigation.addListener("focus", () => {
+      setlognErrorStatus(false);
+      setEmpty(false);
+    });
     //checkLoginState();
-  }, []);
+  }, [loginError]);
 
   const onSignIn = async () => {
-    userLogin({ email, password });
-    await loginErrorFunc();
+    if (email === "" || password === "") {
+      setEmpty(true);
+      setlognErrorStatus(false);
+    } else {
+      await userLogin({ email, password });
+
+      await loginErrorFunc();
+    }
   };
 
   const loginErrorFunc = () => {
     if (loginError && currentUser == undefined) {
-      alert(loginError);
+      setEmpty(false);
+      setlognErrorStatus(true);
     }
   };
 
   if (loading) {
     return (
       <View style={[styles.spinnerContainer, styles.horizontal]}>
-        <ActivityIndicator size="large" color="#00ff00" />
+        <ActivityIndicator size="large" color="#008080" />
       </View>
     );
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-      <View>
-        <StatusBar barStyle="dark-content" />
-        <View
-          style={{
-            marginTop: 50,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            source={require("../../../assets/sfImage.png")}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <StatusBar />
+        <View>
+          <View
             style={{
-              width: 300,
-              height: 200,
-              paddingLeft: 30,
-              paddingRight: 30,
-              marginTop: 50,
+              marginTop: 30,
+              justifyContent: "center",
+              alignItems: "center",
             }}
-            resizeMode="contain"
-          ></Image>
-        </View>
-      </View>
-
-      <View style={styles.centerView}>
-        <View style={styles.row}>
-          <View>
-            <Feather name="user" size={30} />
-          </View>
-          <View style={styles.box1}>
-            <TextInput
-              value={email}
-              placeholder="Email"
-              onChangeText={(email) => setEmail(email)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <View>
-            <Feather name="lock" size={30} />
-          </View>
-          <View style={styles.box1}>
-            <TextInput
-              value={password}
-              placeholder="Password"
-              onChangeText={(password) => setPassword(password)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.row}>
-          <TouchableOpacity
-            onPress={() => {
-              onSignIn();
-            }}
-            style={styles.submitContainer}
           >
-            <Text
-              style={[
-                styles.text,
-                { color: "#ffffff", fontWeight: "600", fontSize: 16 },
-              ]}
-            >
-              Login
-            </Text>
-          </TouchableOpacity>
+            <Image
+              source={require("../../../assets/sfImage.png")}
+              style={{
+                width: 300,
+                height: 200,
+                paddingLeft: 30,
+                paddingRight: 30,
+                marginTop: 50,
+              }}
+              resizeMode="contain"
+            ></Image>
+          </View>
         </View>
 
-        <View style={styles.row}>
-          <View>
+        <View style={styles.centerView}>
+          {lognErrorStatus === true ? (
+            <View style={styles.row}>
+              <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                Wrong Email or Password
+              </Text>
+            </View>
+          ) : null}
+          {empty === true ? (
+            <View style={styles.row}>
+              <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                Email or Password may empty
+              </Text>
+            </View>
+          ) : null}
+          <View style={[styles.row]}>
+            <View>
+              <Feather name="user" size={30} />
+            </View>
+            <View style={styles.box1}>
+              <TextInput
+                value={email}
+                placeholder="Email"
+                onChangeText={(email) => setEmail(email)}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View>
+              <Feather name="lock" size={30} />
+            </View>
+            <View style={styles.box1}>
+              <TextInput
+                value={password}
+                secureTextEntry={true}
+                placeholder="Password"
+                autoCapitalize="none"
+                autoCorrect={false}
+                returnKeyType="next"
+                blurOnSubmit={true}
+                keyboardAppearance="default"
+                onChangeText={(password) => setPassword(password)}
+              />
+            </View>
+          </View>
+
+          <View
+            style={[
+              styles.row,
+              {
+                width: "100%",
+                marginLeft: 20,
+              },
+            ]}
+          >
+            <View style={{ flex: 1 }}></View>
+            <TouchableOpacity
+              onPress={() => {
+                onSignIn();
+              }}
+              style={styles.submitContainer}
+            >
+              <Text
+                style={[{ color: "#ffffff", fontWeight: "600", fontSize: 16 }]}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={[
+            {
+              marginTop: 20,
+              justifyContent: "center",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            },
+          ]}
+        >
+          <View
+            style={{
+              flex: 1,
+
+              alignItems: "flex-start",
+              marginLeft: "5%",
+            }}
+          >
             <TouchableOpacity>
               <Text style={[styles.link1]}>Forgot password?</Text>
             </TouchableOpacity>
           </View>
 
-          <View>
+          <View
+            style={{
+              flex: 1,
+
+              alignItems: "flex-end",
+              marginRight: "5%",
+            }}
+          >
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("Register");
@@ -223,33 +286,8 @@ const Login = ({ currentUser, userLogin, loginError, navigation, loading }) => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-    // <View>
-    //   <TextInput
-    //     value={email}
-    //     placeholder="Email"
-    //     onChangeText={(email) => setEmail(email)}
-    //   />
-    //   <TextInput
-    //     value={password}
-    //     placeholder="Password"
-    //     onChangeText={(password) => setPassword(password)}
-    //   />
-    //   <Button
-    //     title="Sign in"
-    //     onPress={() => {
-    //       onSignIn();
-    //     }}
-    //   />
-
-    //   <Button
-    //     title="Register"
-    //     onPress={() => {
-    //       navigation.navigate("Register");
-    //     }}
-    //   />
-    // </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 

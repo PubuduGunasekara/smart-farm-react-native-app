@@ -18,6 +18,7 @@ export const userRequestReview = () => {
     const db = firebase.firestore();
 
     db.collection("tempUser")
+      .orderBy("createdAt", "desc")
       .get()
       .then((querySnapshot) => {
         const users = [];
@@ -135,7 +136,7 @@ export const userApprove = ({
                     console.log("admin re logged error", err);
                     dispatch({
                       type: ERROR_USER_REQUEST,
-                      payload: true,
+                      payload: "Admin log in error.",
                     });
                     dispatch({
                       type: LOADING,
@@ -154,7 +155,7 @@ export const userApprove = ({
                 console.log(error, "sign out new user error");
                 dispatch({
                   type: ERROR_USER_REQUEST,
-                  payload: true,
+                  payload: "New user sign out error",
                 });
                 dispatch({
                   type: LOADING,
@@ -173,7 +174,7 @@ export const userApprove = ({
                   .catch((err) => {
                     dispatch({
                       type: ERROR_USER_REQUEST,
-                      payload: true,
+                      payload: "Admin log in error",
                     });
                     dispatch({
                       type: LOADING,
@@ -191,27 +192,34 @@ export const userApprove = ({
           .catch((error) => {
             dispatch({
               type: ERROR_USER_REQUEST,
-              payload: true,
+              payload: error,
             });
             dispatch({
               type: LOADING,
               payload: false,
             });
             console.log("new user added to firestore error", error);
-            dispatch({
-              type: ERROR_USER_REQUEST,
-              payload: true,
-            });
-            dispatch({
-              type: LOADING,
-              payload: false,
-            });
+
             //new account sign out
             firebase
               .auth()
               .signOut()
               .then((data) => {
                 console.log(data, "sign out new user successfull");
+
+                //delete new user from auth
+                var user = firebase.auth().currentUser;
+                user
+                  .delete()
+                  .then(() => {
+                    // User deleted.
+                    console.log("user deleted from auth success");
+                  })
+                  .catch((error) => {
+                    // An error happened.
+                    console.log("Delete error from auth");
+                  });
+
                 //admin re sign in
                 firebase
                   .auth()
@@ -225,7 +233,7 @@ export const userApprove = ({
                   .catch((err) => {
                     dispatch({
                       type: ERROR_USER_REQUEST,
-                      payload: true,
+                      payload: err,
                     });
                     dispatch({
                       type: LOADING,
@@ -279,16 +287,27 @@ export const userApprove = ({
               });
           });
       })
-      .catch((err) => {
-        dispatch({
-          type: ERROR_USER_REQUEST,
-          payload: true,
-        });
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          dispatch({
+            type: ERROR_USER_REQUEST,
+            payload: "That email address is already in use!",
+          });
+          console.log("That email address is already in use!");
+        }
+
+        if (error.code === "auth/invalid-email") {
+          dispatch({
+            type: ERROR_USER_REQUEST,
+            payload: "That email address is invalid!",
+          });
+          console.log("That email address is invalid!");
+        }
+
         dispatch({
           type: LOADING,
           payload: false,
         });
-        console.log(" new user created error", err);
       });
   };
 };
@@ -307,5 +326,32 @@ export const deleteUser = ({ id }) => {
         });
         console.log("User deleted!");
       });
+  };
+};
+
+export const delete_false = () => {
+  return (dispatch) => {
+    dispatch({
+      type: DELETE_SUCCESS,
+      payload: false,
+    });
+  };
+};
+
+export const error_false = () => {
+  return (dispatch) => {
+    dispatch({
+      type: ERROR_USER_REQUEST,
+      payload: false,
+    });
+  };
+};
+
+export const approve_false = () => {
+  return (dispatch) => {
+    dispatch({
+      type: APPROVE_SUCCESS,
+      payload: false,
+    });
   };
 };

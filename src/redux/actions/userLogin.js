@@ -53,7 +53,7 @@ export const userLogin = ({ email, password }) => {
               }
             })
             .catch((error) => {
-              console.error(error);
+              console.error("login error", error);
               dispatch({
                 type: LOADING,
                 payload: false,
