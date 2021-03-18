@@ -8,6 +8,7 @@ import {
   Alert,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
   ScrollView,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
@@ -26,9 +27,10 @@ const ViewUser = ({
   route,
   navigation,
   removeUser,
-  Delete_false,
   EditUser,
   deleteSuccess,
+  Delete_false,
+  loading,
 }) => {
   const {
     id,
@@ -39,16 +41,10 @@ const ViewUser = ({
     accessLevel,
   } = route.params;
 
-  // useEffect(() => {
-  //   userSave();
-  // }, []);
-
-  // const [FirstName, setFirstName] = useState(firstName);
-
-  const confirmDelete = ({ id }) => {
+  const userRemove = ({ id }) => {
     Alert.alert(
-      "DELETE",
-      "Are you sure?",
+      "WARNING",
+      "This operation will permanently delete the user. Are you sure to do this?",
       [
         {
           text: "Cancel",
@@ -58,9 +54,7 @@ const ViewUser = ({
         {
           text: "OK",
           onPress: () => {
-            removeUser({ id }),
-              Delete_false(),
-              navigation.navigate("ManageUser");
+            removeUser({ id });
           },
         },
       ],
@@ -68,55 +62,136 @@ const ViewUser = ({
     );
   };
 
+  if (deleteSuccess === true) {
+    Alert.alert(
+      "SUCCESS",
+      "User has been removed successfully.",
+      [
+        {
+          text: "OK",
+          onPress: () => {
+            Delete_false(), navigation.navigate("ManageUser");
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  }
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" color="#008080" />
+      </View>
+    );
+  }
+
   return (
-    <KeyboardAvoidingView contentContainerStyle={styles.container}>
-      <View>
-        <TopHeaderWithGoBack
-          title={`${firstName} ${lastName}`}
-          navigationFunc={navigation.goBack}
-        />
-      </View>
-      <View style={styles.image1}>
-        <Feather name="user" size={60} />
-      </View>
+    <View>
+      <TopHeaderWithGoBack
+        title={"View User"}
+        navigationFunc={navigation.goBack}
+      />
+      <View
+        style={{
+          backgroundColor: "#b2d8d8",
+          borderWidth: 1,
+          borderRadius: 1,
+          borderColor: "#ddd",
+          borderBottomWidth: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 1,
+          elevation: 3,
+          padding: 30,
+          margin: 20,
+          marginTop: 30,
+          // alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View style={{ marginBottom: 50, alignItems: "center" }}>
+          <Feather name="user" size={60} />
+        </View>
 
-      <View style={styles.centerView}>
-        <View style={styles.content}>
-          <View style={styles.row}>
-            <Text style={styles.front}> First Name:</Text>
-            <Text style={styles.txtinput}> {firstName}</Text>
+        <View style={{ flexDirection: "row", marginBottom: 20 }}>
+          <View>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+                // alignSelf: "flex-start",
+                // alignContent: "flex-start",
+              }}
+            >
+              First Name :{" "}
+            </Text>
           </View>
-
-          <View style={styles.row}>
-            <Text style={styles.front}> Last Name:</Text>
-            <Text style={styles.txtinput}> {lastName}</Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.front}> Access level:</Text>
-            <Text style={styles.txtinput}> {accessLevel}</Text>
-          </View>
-
-          <View style={styles.row}>
-            <Text style={styles.front}> Email: </Text>
-            <Text style={styles.txtinput}>{email} </Text>
+          <View>
+            <Text style={styles.textStyle}>{firstName}</Text>
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ flex: 4, alignItems: "flex-start" }}>
-            <TouchableOpacity
-              onPress={() => {
-                confirmDelete({ id });
+        <View style={{ flexDirection: "row", marginBottom: 20 }}>
+          <View>
+            <Text
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+                alignSelf: "flex-start",
               }}
-              style={styles.submitContainer}
             >
-              <Text style={styles.link1}>Remove</Text>
+              Last Name :{" "}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.textStyle}>{lastName}</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginBottom: 20 }}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+              AccessLevel :{" "}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.textStyle}>{accessLevel}</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginBottom: 10 }}>
+          <View>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>Email : </Text>
+          </View>
+          <View>
+            <Text style={styles.textStyle}>{email}</Text>
+          </View>
+        </View>
+
+        <View style={{ flexDirection: "row", marginTop: 90, marginBottom: 40 }}>
+          <View style={{ flex: 1, marginRight: 25 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#008080",
+                alignItems: "center",
+                padding: 10,
+              }}
+              onPress={() => {
+                userRemove({ id: id });
+              }}
+            >
+              <Text style={{ color: "#fff", fontSize: 16 }}>Remove</Text>
             </TouchableOpacity>
           </View>
-
-          <View style={{ flex: 1, alignItems: "flex-end" }}>
+          <View style={{ flex: 1, marginLeft: 25 }}>
             <TouchableOpacity
+              style={{
+                backgroundColor: "#008080",
+                alignItems: "center",
+                padding: 10,
+              }}
               onPress={() =>
                 navigation.navigate("EditUser", {
                   id,
@@ -125,134 +200,34 @@ const ViewUser = ({
                   accessLevel,
                 })
               }
-              style={styles.submitContainer}
             >
-              <Text style={styles.link2}>Edit</Text>
+              <Text style={{ color: "#fff", fontSize: 16 }}>Edit</Text>
             </TouchableOpacity>
           </View>
         </View>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   // flex: 1,
-  //   backgroundColor: "#ffffff",
-  // },
-
-  text: {
-    paddingTop: 10,
-    marginLeft: 28,
-  },
-
-  text1: {
-    paddingTop: 100,
+  textStyle: {
     fontSize: 18,
   },
-
-  image1: {
-    paddingLeft: 160,
-    paddingTop: 50,
-    height: 150,
-  },
-
-  row: {
-    // marginTop: 2,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    height: 20,
-    paddingRight: 10,
-    marginBottom: 20,
-    paddingLeft: 0,
-  },
-
-  row2: {
-    marginTop: -40,
-    flexDirection: "column",
-    alignItems: "flex-end",
-    height: 20,
-    marginRight: 202,
-  },
-
-  centerView: {
-    paddingLeft: 20,
-  },
-
-  content: {
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  txtinput: {
-    borderColor: "#000000",
-    fontSize: 16,
-    alignItems: "flex-start",
-    flexDirection: "row",
+  container: {
     flex: 1,
+    justifyContent: "center",
   },
-
-  link: {
-    color: "blue",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 1,
-    textDecorationLine: "underline",
-  },
-
-  link1: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 20,
-    color: "#ffffff",
-    fontWeight: "600",
-    marginTop: 8,
-  },
-
-  front: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "black",
+  horizontal: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    // flex: 1,
-  },
-  link2: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 30,
-    color: "#ffffff",
-    fontWeight: "600",
-    marginTop: 8,
-  },
-
-  submitContainer: {
-    backgroundColor: "#008080",
-    flexDirection: "row",
-    // alignItems: 'flex-end',
-    height: 40,
-    width: 100,
-    marginRight: 30,
-    marginLeft: 15,
-    marginTop: 40,
-  },
-  box1: {
-    fontSize: 14,
-    color: "#6a4595",
-    paddingTop: 5,
-    marginLeft: 10,
-    width: 200,
-    height: 30,
-    backgroundColor: "#b2d8d8",
-    // textAlign: "center",
+    justifyContent: "space-around",
+    padding: 10,
   },
 });
 
 const mapStateToProps = (store) => ({
   currentLoggedInUser: store.userReducer.user,
-
+  loading: store.loadinReducer.loading,
   deleteSuccess: store.adminReducer.deleteSuccess,
 });
 const mapDispatchProps = (dispatch) =>

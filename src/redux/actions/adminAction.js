@@ -294,6 +294,10 @@ export const employeeCreate = ({
 export const removeUser = ({ id }) => {
   return (dispatch) => {
     const db = firebase.firestore();
+    dispatch({
+      type: LOADING,
+      payload: true,
+    });
     //delete temp record
     db.collection("user")
       .doc(id)
@@ -303,7 +307,14 @@ export const removeUser = ({ id }) => {
           type: DELETE_SUCCESS,
           payload: true,
         });
+        dispatch({
+          type: LOADING,
+          payload: false,
+        });
         console.log("User deleted!");
+      })
+      .catch((err) => {
+        console.log("delete error", err);
       });
   };
 };
@@ -325,7 +336,6 @@ export const userSave = ({ FirstName, LastName, AccessLevel, id }) => {
       lastName: LastName,
       accessLevel: AccessLevel,
     };
-    console.log(id);
 
     dispatch({
       type: LOADING,
@@ -340,12 +350,12 @@ export const userSave = ({ FirstName, LastName, AccessLevel, id }) => {
       .update(data)
       .then((data) => {
         dispatch({
-          type: LOADING,
-          payload: false,
+          type: USER_SAVE_SUCCESS,
+          payload: true,
         });
         dispatch({
-          type: USER_SAVE_SUCCESS,
-          payload: data,
+          type: LOADING,
+          payload: false,
         });
       })
       .catch((err) => {
@@ -354,12 +364,14 @@ export const userSave = ({ FirstName, LastName, AccessLevel, id }) => {
   };
 };
 
-// export const employeeSaveSuccess = (dispatch) => {
-//   dispatch({
-//     type: USER_SAVE_SUCCESS,
-//     payload: data,
-//   });
-// };
+export const success_false = () => {
+  return (dispatch) => {
+    dispatch({
+      type: USER_SAVE_SUCCESS,
+      payload: false,
+    });
+  };
+};
 
 export const viewAllIncident = ({ date, firstName, lastName }) => {
   // const userId = firebase.auth().currentUser.uid;

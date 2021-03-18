@@ -1,7 +1,7 @@
 import { USER_SAVE_SUCCESS, USER_SAVE_ERROR, USER_UPDATE } from "../constants";
 
 const INITIAL_STATE = {
-  user: "",
+  user_save: false,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -11,7 +11,7 @@ export default (state = INITIAL_STATE, action) => {
     //   return { ...state, [action.payload.prop]: action.payload.value };
 
     case USER_SAVE_SUCCESS:
-      return { user: action.payload };
+      return { user_save: action.payload };
 
     default:
       return state;

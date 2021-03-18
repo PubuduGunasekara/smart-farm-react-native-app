@@ -68,10 +68,11 @@ const Home = ({
     });
 
     //notification permission
-    () => registerForPushNotificationsAsync();
+
+    () => registerForPushNotificationsAsync({ userId: currentUser.userId });
   }, [currentUser, navigation]);
 
-  async function registerForPushNotificationsAsync() {
+  async function registerForPushNotificationsAsync({ userId }) {
     let token;
     if (Constants.isDevice) {
       const {
@@ -92,13 +93,19 @@ const Home = ({
       alert("Must use physical device for Push Notifications");
     }
 
-    console.log(token);
+    console.log("user id", userId);
     //update notifi token
-    const res = await firebase.firestore
-      .collection("user")
-      .doc(currentUser.uid)
+    const db = firebase.firestore();
+    db.collection("user")
+      .doc(userId)
       .update({
         expoNotificationToken: token,
+      })
+      .then((data) => {
+        console.log("success", data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
 
     if (Platform.OS === "android") {

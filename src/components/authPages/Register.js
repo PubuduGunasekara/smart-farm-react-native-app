@@ -18,6 +18,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import firebase from "firebase";
 import { Feather } from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
 
@@ -144,6 +145,9 @@ const Register = ({
   const [lastNameValid, setlastNameValid] = useState(false);
   const [passwordNotMatch, setpasswordNotMatch] = useState(false);
   const [emailFormatValid, setemailFormatValid] = useState(false);
+
+  const [hidePass, setHidePass] = useState(true);
+  const [hideConfirmPass, setHideConfirmPass] = useState(true);
 
   const onSignUp = () => {
     let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -279,158 +283,195 @@ const Register = ({
         </View>
 
         <View>
-          <KeyboardAvoidingView style={styles.centerView} behavior="position">
-            <TextInput
-              style={styles.inputWrap}
-              value={firstName}
-              maxLength={25}
-              placeholder="First name"
-              onChangeText={(firstName) => setFirstName(firstName)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="default"
-              returnKeyType="next"
-              blurOnSubmit={true}
-              enablesReturnKeyAutomatically={true}
-              keyboardAppearance="default"
-            />
-            {firstNameValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  First name cannot be empty
-                </Text>
-              </View>
-            ) : null}
+          <ScrollView>
+            <KeyboardAvoidingView style={styles.centerView} behavior="position">
+              <TextInput
+                style={styles.inputWrap}
+                value={firstName}
+                maxLength={25}
+                placeholder="First name"
+                onChangeText={(firstName) => setFirstName(firstName)}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="default"
+                returnKeyType="next"
+                blurOnSubmit={true}
+                enablesReturnKeyAutomatically={true}
+                keyboardAppearance="default"
+              />
+              {firstNameValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    First name cannot be empty
+                  </Text>
+                </View>
+              ) : null}
 
-            <TextInput
-              style={styles.inputWrap}
-              value={lastName}
-              placeholder="Last name"
-              onChangeText={(lastName) => setLastName(lastName)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="default"
-              returnKeyType="next"
-              blurOnSubmit={true}
-              enablesReturnKeyAutomatically={true}
-              keyboardAppearance="default"
-            />
-            {lastNameValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Last name cannot be empty
-                </Text>
-              </View>
-            ) : null}
+              <TextInput
+                style={styles.inputWrap}
+                value={lastName}
+                placeholder="Last name"
+                onChangeText={(lastName) => setLastName(lastName)}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="default"
+                returnKeyType="next"
+                blurOnSubmit={true}
+                enablesReturnKeyAutomatically={true}
+                keyboardAppearance="default"
+              />
+              {lastNameValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Last name cannot be empty
+                  </Text>
+                </View>
+              ) : null}
 
-            <TextInput
-              style={styles.inputWrap}
-              value={email}
-              placeholder="Email"
-              onChangeText={(email) => setEmail(email)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="email-address"
-              returnKeyType="next"
-              blurOnSubmit={true}
-              enablesReturnKeyAutomatically={true}
-              keyboardAppearance="default"
-            />
-            {emailValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Email cannot be empty
-                </Text>
-              </View>
-            ) : null}
-            {emailFormatValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Wrong Email
-                </Text>
-              </View>
-            ) : null}
+              <TextInput
+                style={styles.inputWrap}
+                value={email}
+                placeholder="Email"
+                onChangeText={(email) => setEmail(email)}
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="email-address"
+                returnKeyType="next"
+                blurOnSubmit={true}
+                enablesReturnKeyAutomatically={true}
+                keyboardAppearance="default"
+              />
+              {emailValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Email cannot be empty
+                  </Text>
+                </View>
+              ) : null}
+              {emailFormatValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Wrong Email
+                  </Text>
+                </View>
+              ) : null}
 
-            <TextInput
-              style={styles.inputWrap}
-              value={password}
-              placeholder="Password"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-              autoCapitalize="none"
-              autoCorrect={false}
-              returnKeyType="next"
-              blurOnSubmit={true}
-              keyboardAppearance="default"
-            />
-            {passwordValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Password cannot be empty
-                </Text>
-              </View>
-            ) : null}
-
-            <TextInput
-              style={styles.inputWrap}
-              value={confirmPassword}
-              placeholder="Confirm password"
-              secureTextEntry={true}
-              onChangeText={(confirmPassword) =>
-                setConfirmPassword(confirmPassword)
-              }
-              autoCapitalize="none"
-              autoCorrect={false}
-              returnKeyType="next"
-              blurOnSubmit={true}
-              keyboardAppearance="default"
-            />
-            {passwordNotMatch === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Password not matched
-                </Text>
-              </View>
-            ) : null}
-            {confirmPwValid === true ? (
-              <View>
-                <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
-                  Confirm password cannot be empty
-                </Text>
-              </View>
-            ) : null}
-
-            <View style={{ flexDirection: "row", marginTop: 25 }}>
-              <View style={{ flex: 1, marginRight: 25 }}>
-                <TouchableOpacity
+              <View style={{ flexDirection: "row", marginBottom: 15 }}>
+                <TextInput
+                  style={[styles.inputWrap, { flex: 7 }]}
+                  value={password}
+                  placeholder="Password"
+                  secureTextEntry={hidePass ? true : false}
+                  onChangeText={(password) => setPassword(password)}
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="next"
+                  blurOnSubmit={true}
+                  keyboardAppearance="default"
+                />
+                <View
                   style={{
-                    backgroundColor: "#008080",
-                    alignItems: "center",
-                    padding: 8,
-                  }}
-                  onPress={() => {
-                    oncancel();
+                    alignItems: "flex-end",
+                    alignSelf: "center",
+                    marginTop: 7,
+                    flex: 1,
                   }}
                 >
-                  <Text style={{ color: "#fff", fontSize: 16 }}>CANCEL</Text>
-                </TouchableOpacity>
+                  <Icon
+                    name={hidePass ? "eye-slash" : "eye"}
+                    size={20}
+                    color="grey"
+                    onPress={() => setHidePass(!hidePass)}
+                  />
+                </View>
               </View>
-              <View style={{ flex: 1, marginLeft: 25 }}>
-                <TouchableOpacity
+              {passwordValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Password cannot be empty
+                  </Text>
+                </View>
+              ) : null}
+
+              <View style={{ flexDirection: "row", marginBottom: 15 }}>
+                <TextInput
+                  style={[styles.inputWrap, { flex: 7 }]}
+                  value={confirmPassword}
+                  placeholder="Confirm password"
+                  secureTextEntry={hideConfirmPass ? true : false}
+                  onChangeText={(confirmPassword) =>
+                    setConfirmPassword(confirmPassword)
+                  }
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  returnKeyType="next"
+                  blurOnSubmit={true}
+                  keyboardAppearance="default"
+                />
+                <View
                   style={{
-                    backgroundColor: "#008080",
-                    alignItems: "center",
-                    padding: 8,
-                  }}
-                  onPress={() => {
-                    onSignUp();
+                    alignItems: "flex-end",
+                    alignSelf: "center",
+                    flex: 1,
                   }}
                 >
-                  <Text style={{ color: "#fff", fontSize: 16 }}>REGISTER</Text>
-                </TouchableOpacity>
+                  <Icon
+                    name={hideConfirmPass ? "eye-slash" : "eye"}
+                    size={20}
+                    color="grey"
+                    onPress={() => setHideConfirmPass(!hideConfirmPass)}
+                  />
+                </View>
               </View>
-            </View>
-          </KeyboardAvoidingView>
+              {passwordNotMatch === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Password not matched
+                  </Text>
+                </View>
+              ) : null}
+              {confirmPwValid === true ? (
+                <View>
+                  <Text style={{ color: "#dc0000", fontWeight: "bold" }}>
+                    Confirm password cannot be empty
+                  </Text>
+                </View>
+              ) : null}
+
+              <View style={{ flexDirection: "row", marginTop: 25 }}>
+                <View style={{ flex: 1, marginRight: 25 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#008080",
+                      alignItems: "center",
+                      padding: 8,
+                    }}
+                    onPress={() => {
+                      oncancel();
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 16 }}>CANCEL</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ flex: 1, marginLeft: 25 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#008080",
+                      alignItems: "center",
+                      padding: 8,
+                    }}
+                    onPress={() => {
+                      onSignUp();
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 16 }}>
+                      REGISTER
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </KeyboardAvoidingView>
+          </ScrollView>
         </View>
       </View>
     </TouchableWithoutFeedback>

@@ -207,19 +207,6 @@ export const userApprove = ({
               .then((data) => {
                 console.log(data, "sign out new user successfull");
 
-                //delete new user from auth
-                var user = firebase.auth().currentUser;
-                user
-                  .delete()
-                  .then(() => {
-                    // User deleted.
-                    console.log("user deleted from auth success");
-                  })
-                  .catch((error) => {
-                    // An error happened.
-                    console.log("Delete error from auth");
-                  });
-
                 //admin re sign in
                 firebase
                   .auth()
