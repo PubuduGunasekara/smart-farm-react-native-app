@@ -113,21 +113,21 @@ const viewSingleUserRequest = ({
     );
   }
 
-  if (approveSuccess !== false) {
-    Alert.alert(
-      "SUCCESS",
-      "User request has been approved sucessfully.",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            approve_false(), navigation.navigate("ApproveUser");
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  }
+  // if (approveSuccess !== false) {
+  //   Alert.alert(
+  //     "SUCCESS",
+  //     "User request has been approved sucessfully.",
+  //     [
+  //       {
+  //         text: "OK",
+  //         onPress: () => {
+  //           approve_false(), navigation.navigate("ApproveUser");
+  //         },
+  //       },
+  //     ],
+  //     { cancelable: false }
+  //   );
+  // }
 
   if (deleteSuccess) {
     Alert.alert(

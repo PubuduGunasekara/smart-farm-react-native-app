@@ -31,6 +31,9 @@ class ViewProfile extends Component {
   componentDidMount() {
     //   const { personData } = this.props;
     //   this.props.watchPersonData({ personData });
+    this.props.navigation.addListener("focus", () => {
+      this.props.employeeFetch();
+    });
     this.props.employeeFetch();
   }
 

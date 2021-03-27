@@ -264,7 +264,11 @@ const Login = ({ currentUser, userLogin, loginError, navigation, loading }) => {
               marginLeft: "5%",
             }}
           >
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("ForgotPassword");
+              }}
+            >
               <Text style={[styles.link1]}>Forgot password?</Text>
             </TouchableOpacity>
           </View>

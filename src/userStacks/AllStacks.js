@@ -43,6 +43,8 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { logout } from "../redux/actions/userLogin";
 import EditUser from "../components/AdminPages/EditUser";
+import ChangeEmail from "../components/UserPages/ChangeEmail";
+import ChangePassword from "../components/UserPages/ChangePassword";
 
 const Stack = createStackNavigator();
 
@@ -706,6 +708,106 @@ const AllStacks = ({ navigation, logout }) => {
       <Stack.Screen
         name="EditUser"
         component={EditUser}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
+      />
+
+      <Stack.Screen
+        name="ChangeEmail"
+        component={ChangeEmail}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+
+          headerRight: () => {
+            return (
+              <View style={{ flexDirection: "row", marginRight: 10 }}>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Notifications")}
+                  >
+                    <MaterialIcons
+                      name="notifications-none"
+                      size={30}
+                      color="black"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginLeft: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("ViewProfile")}
+                  >
+                    <FontAwesome name="user-circle-o" size={28} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            );
+          },
+          headerLeft: () => {
+            return (
+              <View style={{ marginLeft: 10 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.dispatch(DrawerActions.openDrawer())
+                  }
+                >
+                  <AntDesign name="menu-fold" size={30} color="black" />
+                </TouchableOpacity>
+              </View>
+            );
+          },
+        })}
+      />
+
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePassword}
         options={() => ({
           headerStyle: {
             backgroundColor: "#008080",

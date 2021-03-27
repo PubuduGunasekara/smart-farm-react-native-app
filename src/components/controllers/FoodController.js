@@ -4,8 +4,10 @@ import {
   Text,
   Button,
   StyleSheet,
+  BackHandler,
   ActivityIndicator,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -75,12 +77,33 @@ const FoodController = ({
   var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
-    navigation.addListener("blur", () => {
-      FoodControllerActionONOFF({ motorStopStartStatus: "0" });
-      FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      FoodControllerActionCapOnOff({ openCloseStatus: "0" });
-      FoodControllerActionSpeedLevel({ motorSpeed: "1" });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      navigation.addListener("blur", () => {
+        FoodControllerActionONOFF({ motorStopStartStatus: "0" });
+        FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+        FoodControllerActionCapOnOff({ openCloseStatus: "0" });
+        FoodControllerActionSpeedLevel({ motorSpeed: "1" });
+      });
     });
+
     // navigation.addListener("focus", () => {
     //   FoodControllerActionONOFF({ motorStopStartStatus: "0" });
     //   FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
@@ -117,52 +140,135 @@ const FoodController = ({
   ]);
 
   const handleOnOff = ({ motorStopStartStatus }) => {
-    if (motorStopStartStatus === "1" || motorStopStartStatus === "0") {
-      FoodControllerActionSpeedLevel({ motorSpeed: "1" });
-      FoodControllerActionONOFF({ motorStopStartStatus });
-      FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      if (motorStopStartStatus === "0") {
-        FoodControllerActionCapOnOff({ openCloseStatus: "0" });
-      } else {
-        FoodControllerActionCapOnOff({ openCloseStatus: "2" });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
       }
-    }
+      if (motorStopStartStatus === "1" || motorStopStartStatus === "0") {
+        FoodControllerActionSpeedLevel({ motorSpeed: "1" });
+        FoodControllerActionONOFF({ motorStopStartStatus });
+        FoodControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+        if (motorStopStartStatus === "0") {
+          FoodControllerActionCapOnOff({ openCloseStatus: "0" });
+        } else {
+          FoodControllerActionCapOnOff({ openCloseStatus: "2" });
+        }
+      }
 
-    if (motorStopStartStatus === "1") {
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "ON",
-        message: "Food controller on",
-      });
-    }
-    if (motorStopStartStatus === "0") {
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "OFF",
-        message: "Food controller off",
-      });
-    }
+      if (motorStopStartStatus === "1") {
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "ON",
+          message: "Food controller on",
+        });
+      }
+      if (motorStopStartStatus === "0") {
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "OFF",
+          message: "Food controller off",
+        });
+      }
+    });
   };
 
   const handleForwardBackward = ({ motorDirection }) => {
-    if (motorDirection === "1" || motorDirection === "0") {
-      FoodControllerActionFORWARD_BACKWARD({ motorDirection });
-    }
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+
+      if (motorDirection === "1" || motorDirection === "0") {
+        FoodControllerActionFORWARD_BACKWARD({ motorDirection });
+      }
+    });
   };
 
   /*check this*/
   const handleSpeedLevel = ({ motorSpeed }) => {
-    FoodControllerActionSpeedLevel({ motorSpeed });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+
+      FoodControllerActionSpeedLevel({ motorSpeed });
+    });
   };
 
   const handleFoodCap = ({ openCloseStatus }) => {
-    FoodControllerActionCapOnOff({ openCloseStatus });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+
+      FoodControllerActionCapOnOff({ openCloseStatus });
+    });
   };
 
   if (food_error) {

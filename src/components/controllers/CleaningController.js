@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Button,
+  BackHandler,
   StyleSheet,
   ActivityIndicator,
 } from "react-native";
@@ -20,6 +21,7 @@ import { addActivity } from "../../redux/actions/activityActions";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import TopHeaderWithGoBack from "../../components/helperComponents/topHeaderWithGoBack";
+import NetInfo from "@react-native-community/netinfo";
 
 const styles = StyleSheet.create({
   container: {
@@ -67,9 +69,29 @@ const CleaningController = ({
 
   useEffect(() => {
     navigation.addListener("blur", () => {
-      CleaningControllerActionONOFF({ motorStopStartStatus: "0" });
-      CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+      NetInfo.fetch().then((state) => {
+        if (state.isConnected === false) {
+          Alert.alert(
+            "Warning",
+            "No Internet!",
+            [
+              // {
+              //   text: "Cancel",
+              //   onPress: () => console.log("Cancel Pressed"),
+              //   style: "cancel",
+              // },
+              {
+                text: "EXIT APP",
+                onPress: () => BackHandler.exitApp(),
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+        CleaningControllerActionONOFF({ motorStopStartStatus: "0" });
+        CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+        CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+      });
     });
 
     // navigation.addListener("focus", () => {
@@ -99,44 +121,106 @@ const CleaningController = ({
     //   CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
     //   CleaningControllerActionONOFF({ motorStopStartStatus });
     //   CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+
     // }
-    if (motorStopStartStatus === "1") {
-      CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
-      CleaningControllerActionONOFF({ motorStopStartStatus });
-      CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "ON",
-        message: "Cleaning controller on",
-      });
-    }
-    if (motorStopStartStatus === "0") {
-      CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
-      CleaningControllerActionONOFF({ motorStopStartStatus });
-      CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "OFF",
-        message: "Cleaning controller off",
-      });
-    }
+
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      if (motorStopStartStatus === "1") {
+        CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+        CleaningControllerActionONOFF({ motorStopStartStatus });
+        CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "ON",
+          message: "Cleaning controller on",
+        });
+      }
+      if (motorStopStartStatus === "0") {
+        CleaningControllerActionSpeedLevel({ motorSpeed: "1" });
+        CleaningControllerActionONOFF({ motorStopStartStatus });
+        CleaningControllerActionFORWARD_BACKWARD({ motorDirection: "2" });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "OFF",
+          message: "Cleaning controller off",
+        });
+      }
+    });
   };
 
   const handleForwardBackward = ({ motorDirection }) => {
-    if (motorDirection === "1" || motorDirection === "0") {
-      CleaningControllerActionFORWARD_BACKWARD({ motorDirection });
-    }
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      if (motorDirection === "1" || motorDirection === "0") {
+        CleaningControllerActionFORWARD_BACKWARD({ motorDirection });
+      }
+    });
   };
 
   /*check this*/
   const handleSpeedLevel = ({ motorSpeed }) => {
-    CleaningControllerActionSpeedLevel({ motorSpeed });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      CleaningControllerActionSpeedLevel({ motorSpeed });
+    });
   };
 
   if (cleaning_error) {

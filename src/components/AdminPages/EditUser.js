@@ -162,7 +162,7 @@ const EditUser = ({
           </View>
         </View>
 
-        <View style={{ flexDirection: "row", marginBottom: 15 }}>
+        {/* <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <View>
             <Text style={{ fontWeight: "bold", fontSize: 18 }}>Email : </Text>
           </View>
@@ -171,7 +171,7 @@ const EditUser = ({
               <Text style={styles.link}> Change Email</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
 
         <View style={{ flexDirection: "row", marginBottom: 5 }}>
           <View style={{ flex: 1 }}>

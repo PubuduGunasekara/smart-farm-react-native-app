@@ -5,8 +5,10 @@ import {
   Text,
   Button,
   StyleSheet,
+  BackHandler,
   ActivityIndicator,
 } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
@@ -77,28 +79,49 @@ const GateController = ({
     //   GateControllerActionOOPENCLOSE({ openStatus });
 
     // }
-    if (openStatus === "1") {
-      GateControllerActionOOPENCLOSE({ openStatus });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "ON",
-        message: "Gate open",
-      });
-    }
-    if (openStatus === "0") {
-      GateControllerActionOOPENCLOSE({ openStatus });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "OFF",
-        message: "Gate close",
-      });
-    }
+
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      if (openStatus === "1") {
+        GateControllerActionOOPENCLOSE({ openStatus });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "ON",
+          message: "Gate open",
+        });
+      }
+      if (openStatus === "0") {
+        GateControllerActionOOPENCLOSE({ openStatus });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "OFF",
+          message: "Gate close",
+        });
+      }
+    });
   };
 
   return (

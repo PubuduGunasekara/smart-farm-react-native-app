@@ -6,6 +6,7 @@ import { AuthContext } from "./AuthProvider";
 
 import Register from "../src/components/authPages/Register";
 import Login from "./components/authPages/Login";
+import ForgotPassword from "./components/authPages/ForgotPassword";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,17 @@ export const AuthStack = ({ children }) => {
       <Stack.Screen
         name="Register"
         component={Register}
+        options={() => ({
+          headerStyle: {
+            backgroundColor: "#008080",
+          },
+          headerTintColor: "#fff",
+          headerTitle: "",
+        })}
+      />
+      <Stack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
         options={() => ({
           headerStyle: {
             backgroundColor: "#008080",

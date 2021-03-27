@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+  BackHandler,
+} from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import NetInfo from "@react-native-community/netinfo";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { WaterControllerActionOPENCLOSE } from "../../redux/actions/controllerActions/waterControllerAction";
@@ -43,9 +49,30 @@ const WaterController = ({
   var activityDate = day + "-" + month + "-" + year;
 
   useEffect(() => {
-    navigation.addListener("blur", () => {
-      WaterControllerActionOPENCLOSE({ openStatus: "0" });
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      navigation.addListener("blur", () => {
+        WaterControllerActionOPENCLOSE({ openStatus: "0" });
+      });
     });
+
     if (water_open_close_status === true) {
       setbuttonEnable(false);
       setbuttonEnableON(true);
@@ -71,28 +98,48 @@ const WaterController = ({
     );
   }
   const handleOnOff = ({ openStatus }) => {
-    if (openStatus === "1") {
-      WaterControllerActionOPENCLOSE({ openStatus });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "ON",
-        message: "Water Tap on",
-      });
-    }
-    if (openStatus === "0") {
-      WaterControllerActionOPENCLOSE({ openStatus });
-      addActivity({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        accessLevel: currentUser.accessLevel,
-        date: activityDate,
-        type: "OFF",
-        message: "Water Tap off",
-      });
-    }
+    NetInfo.fetch().then((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "Warning",
+          "No Internet!",
+          [
+            // {
+            //   text: "Cancel",
+            //   onPress: () => console.log("Cancel Pressed"),
+            //   style: "cancel",
+            // },
+            {
+              text: "EXIT APP",
+              onPress: () => BackHandler.exitApp(),
+            },
+          ],
+          { cancelable: false }
+        );
+      }
+      if (openStatus === "1") {
+        WaterControllerActionOPENCLOSE({ openStatus });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "ON",
+          message: "Water Tap on",
+        });
+      }
+      if (openStatus === "0") {
+        WaterControllerActionOPENCLOSE({ openStatus });
+        addActivity({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          accessLevel: currentUser.accessLevel,
+          date: activityDate,
+          type: "OFF",
+          message: "Water Tap off",
+        });
+      }
+    });
   };
 
   return (

@@ -147,7 +147,9 @@ class EmployeeEdit extends Component {
               <Text style={{ fontWeight: "bold", fontSize: 18 }}>Email : </Text>
             </View>
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("ChangeEmail")}
+              >
                 <Text style={styles.link}> Change Email</Text>
               </TouchableOpacity>
             </View>
@@ -159,7 +161,9 @@ class EmployeeEdit extends Component {
               </Text>
             </View>
             <View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("ChangePassword")}
+              >
                 <Text style={styles.link}> Change password</Text>
               </TouchableOpacity>
             </View>
