@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   BackHandler,
+  Alert,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NetInfo from "@react-native-community/netinfo";

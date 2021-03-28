@@ -16,20 +16,22 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "package": "com.companyName.appName",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "description": "",
-    "githubUrl": "https://github.com/PubuduPraneeth/smart-farm-1.1.0"
+    "githubUrl": "put your git repo link",
+    "ios": {
+      "bundleIdentifier": "com.pubudu97.smart-farm"
+    }
   }
 }

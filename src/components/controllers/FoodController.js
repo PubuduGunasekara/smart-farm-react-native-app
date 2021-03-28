@@ -6,6 +6,7 @@ import {
   StyleSheet,
   BackHandler,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import Slider from "@react-native-community/slider";

@@ -6,6 +6,7 @@ import {
   BackHandler,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";

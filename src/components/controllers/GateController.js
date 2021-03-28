@@ -7,6 +7,7 @@ import {
   StyleSheet,
   BackHandler,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
 import { FontAwesome5 } from "@expo/vector-icons";
