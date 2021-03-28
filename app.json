@@ -31,7 +31,7 @@
     "description": "",
     "githubUrl": "put your git repo link",
     "ios": {
-      "bundleIdentifier": "com.pubudu97.smart-farm"
+      "bundleIdentifier": "com.companyName.AppName"
     }
   }
 }
